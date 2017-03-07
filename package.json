@@ -1,0 +1,22 @@
+{
+	"name": "node-prometheus",
+	"version": "0.0.1",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/codio/node-prometheus.git"
+	},
+	"main": "gen-nodejs/PrometheusService.js",
+	"description": "prometheus API",
+	"author": "Codio <support@codio.com>",
+	"bugs": {
+		"url": "https://github.com/codio/node-prometheus/issues"
+	},
+	"dependencies": {
+		"thrift": "*"
+	},
+	"directories": {
+		"lib": "gen-nodejs",
+		"thrift": "thrift"
+	}
+}

@@ -152,6 +152,7 @@ ModuleDetails.prototype.write = function(output) {
 Module = module.exports.Module = function(args) {
   this.id = null;
   this.details = null;
+  this.createdAt = null;
   this.units = null;
   if (args) {
     if (args.id !== undefined) {
@@ -163,6 +164,11 @@ Module = module.exports.Module = function(args) {
       this.details = args.details;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field details is unset!');
+    }
+    if (args.createdAt !== undefined) {
+      this.createdAt = args.createdAt;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field createdAt is unset!');
     }
     if (args.units !== undefined) {
       this.units = args.units;
@@ -199,6 +205,13 @@ Module.prototype.read = function(input) {
       }
       break;
       case 3:
+      if (ftype == Thrift.Type.I64) {
+        this.createdAt = input.readI64();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
       if (ftype == Thrift.Type.LIST) {
         var _size8 = 0;
         var _rtmp312;
@@ -240,8 +253,13 @@ Module.prototype.write = function(output) {
     this.details.write(output);
     output.writeFieldEnd();
   }
+  if (this.createdAt !== null && this.createdAt !== undefined) {
+    output.writeFieldBegin('createdAt', Thrift.Type.I64, 3);
+    output.writeI64(this.createdAt);
+    output.writeFieldEnd();
+  }
   if (this.units !== null && this.units !== undefined) {
-    output.writeFieldBegin('units', Thrift.Type.LIST, 3);
+    output.writeFieldBegin('units', Thrift.Type.LIST, 4);
     output.writeListBegin(Thrift.Type.STRUCT, this.units.length);
     for (var iter15 in this.units)
     {

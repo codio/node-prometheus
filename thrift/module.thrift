@@ -14,6 +14,5 @@ struct ModuleDetails {
 struct Module {
   1: required string id
   2: required ModuleDetails details
-  3: required i64 createdAt
-  4: optional list<unit.ModuleUnit> units
+  3: optional list<unit.ModuleUnit> units
 }

@@ -841,6 +841,115 @@ PrometheusService_getModules_result.prototype.write = function(output) {
   return;
 };
 
+PrometheusService_getModuleByUnitId_args = function(args) {
+  this.unitId = null;
+  if (args) {
+    if (args.unitId !== undefined) {
+      this.unitId = args.unitId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitId is unset!');
+    }
+  }
+};
+PrometheusService_getModuleByUnitId_args.prototype = {};
+PrometheusService_getModuleByUnitId_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getModuleByUnitId_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getModuleByUnitId_args');
+  if (this.unitId !== null && this.unitId !== undefined) {
+    output.writeFieldBegin('unitId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_getModuleByUnitId_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+  }
+};
+PrometheusService_getModuleByUnitId_result.prototype = {};
+PrometheusService_getModuleByUnitId_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new module_ttypes.Module();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getModuleByUnitId_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getModuleByUnitId_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 PrometheusService_createModule_args = function(args) {
   this.details = null;
   if (args) {
@@ -2491,6 +2600,53 @@ PrometheusServiceClient.prototype.recv_getModules = function(input,mtype,rseqid)
   }
   return callback('getModules failed: unknown result');
 };
+PrometheusServiceClient.prototype.getModuleByUnitId = function(unitId, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_getModuleByUnitId(unitId);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_getModuleByUnitId(unitId);
+  }
+};
+
+PrometheusServiceClient.prototype.send_getModuleByUnitId = function(unitId) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('getModuleByUnitId', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_getModuleByUnitId_args();
+  args.unitId = unitId;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_getModuleByUnitId = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_getModuleByUnitId_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('getModuleByUnitId failed: unknown result');
+};
 PrometheusServiceClient.prototype.createModule = function(details, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -3175,6 +3331,36 @@ PrometheusServiceProcessor.prototype.process_getModules = function(seqid, input,
     this._handler.getModules(args.ids, args.withUnits,  function (err, result) {
       var result = new PrometheusService_getModules_result((err != null ? err : {success: result}));
       output.writeMessageBegin("getModules", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_getModuleByUnitId = function(seqid, input, output) {
+  var args = new PrometheusService_getModuleByUnitId_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.getModuleByUnitId.length === 1) {
+    Q.fcall(this._handler.getModuleByUnitId, args.unitId)
+      .then(function(result) {
+        var result = new PrometheusService_getModuleByUnitId_result({success: result});
+        output.writeMessageBegin("getModuleByUnitId", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_getModuleByUnitId_result(err);
+        output.writeMessageBegin("getModuleByUnitId", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.getModuleByUnitId(args.unitId,  function (err, result) {
+      var result = new PrometheusService_getModuleByUnitId_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("getModuleByUnitId", Thrift.MessageType.REPLY, seqid);
       result.write(output);
       output.writeMessageEnd();
       output.flush();

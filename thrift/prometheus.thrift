@@ -58,6 +58,7 @@ service PrometheusService {
 
   list<module.Module> getModules(1: required list<string> ids, 2: bool withUnits = false)
 
+  module.Module getModuleByUnitId(1: required string unitId)
   module.Module createModule(1: required module.ModuleDetails details)
   module.Module updateModule(1: required string id, 2: required UpdateModuleDetails details)
       throws (1: NotFoundException nfe)

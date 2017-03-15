@@ -12,6 +12,5 @@ struct CourseDetails {
 struct Course {
   1: required string id
   2: required CourseDetails details
-  3: required i64 createdAt
-  4: required list<string> moduleIds
+  3: required list<string> moduleIds
 }

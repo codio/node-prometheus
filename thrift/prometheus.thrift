@@ -10,6 +10,10 @@ struct GetCourseResult {
   2: optional map<string, module.Module> modules
 }
 
+struct GetModuleCourseInfoResult {
+  1: required map<string, list<course.CourseInfo>> moduleCourseInfos
+}
+
 struct UpdateCourseDetails {
   1: optional string name
   2: optional string description
@@ -43,6 +47,7 @@ exception ReorderConflictException {
 }
 
 service PrometheusService {
+  GetModuleCourseInfoResult getCourseInfosByModuleIds(1: required list<string> ids)
   GetCourseResult getCourses(1: required list<string> ids, 2: bool withModules = false)
 
   course.Course createCourse(1: required course.CourseDetails details)

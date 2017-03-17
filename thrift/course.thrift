@@ -14,3 +14,8 @@ struct Course {
   2: required CourseDetails details
   3: required list<string> moduleIds
 }
+
+struct CourseInfo {
+  1: required string id
+  2: required string name
+}

@@ -132,6 +132,111 @@ GetCourseResult.prototype.write = function(output) {
   return;
 };
 
+GetModuleCourseInfoResult = module.exports.GetModuleCourseInfoResult = function(args) {
+  this.moduleCourseInfos = null;
+  if (args) {
+    if (args.moduleCourseInfos !== undefined) {
+      this.moduleCourseInfos = args.moduleCourseInfos;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field moduleCourseInfos is unset!');
+    }
+  }
+};
+GetModuleCourseInfoResult.prototype = {};
+GetModuleCourseInfoResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.MAP) {
+        var _size18 = 0;
+        var _rtmp322;
+        this.moduleCourseInfos = {};
+        var _ktype19 = 0;
+        var _vtype20 = 0;
+        _rtmp322 = input.readMapBegin();
+        _ktype19 = _rtmp322.ktype;
+        _vtype20 = _rtmp322.vtype;
+        _size18 = _rtmp322.size;
+        for (var _i23 = 0; _i23 < _size18; ++_i23)
+        {
+          var key24 = null;
+          var val25 = null;
+          key24 = input.readString();
+          var _size26 = 0;
+          var _rtmp330;
+          val25 = [];
+          var _etype29 = 0;
+          _rtmp330 = input.readListBegin();
+          _etype29 = _rtmp330.etype;
+          _size26 = _rtmp330.size;
+          for (var _i31 = 0; _i31 < _size26; ++_i31)
+          {
+            var elem32 = null;
+            elem32 = new course_ttypes.CourseInfo();
+            elem32.read(input);
+            val25.push(elem32);
+          }
+          input.readListEnd();
+          this.moduleCourseInfos[key24] = val25;
+        }
+        input.readMapEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+GetModuleCourseInfoResult.prototype.write = function(output) {
+  output.writeStructBegin('GetModuleCourseInfoResult');
+  if (this.moduleCourseInfos !== null && this.moduleCourseInfos !== undefined) {
+    output.writeFieldBegin('moduleCourseInfos', Thrift.Type.MAP, 1);
+    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.LIST, Thrift.objectLength(this.moduleCourseInfos));
+    for (var kiter33 in this.moduleCourseInfos)
+    {
+      if (this.moduleCourseInfos.hasOwnProperty(kiter33))
+      {
+        var viter34 = this.moduleCourseInfos[kiter33];
+        output.writeString(kiter33);
+        output.writeListBegin(Thrift.Type.STRUCT, viter34.length);
+        for (var iter35 in viter34)
+        {
+          if (viter34.hasOwnProperty(iter35))
+          {
+            iter35 = viter34[iter35];
+            iter35.write(output);
+          }
+        }
+        output.writeListEnd();
+      }
+    }
+    output.writeMapEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 UpdateCourseDetails = module.exports.UpdateCourseDetails = function(args) {
   this.name = null;
   this.description = null;
@@ -200,18 +305,18 @@ UpdateCourseDetails.prototype.read = function(input) {
       break;
       case 5:
       if (ftype == Thrift.Type.SET) {
-        var _size18 = 0;
-        var _rtmp322;
+        var _size36 = 0;
+        var _rtmp340;
         this.tags = [];
-        var _etype21 = 0;
-        _rtmp322 = input.readSetBegin();
-        _etype21 = _rtmp322.etype;
-        _size18 = _rtmp322.size;
-        for (var _i23 = 0; _i23 < _size18; ++_i23)
+        var _etype39 = 0;
+        _rtmp340 = input.readSetBegin();
+        _etype39 = _rtmp340.etype;
+        _size36 = _rtmp340.size;
+        for (var _i41 = 0; _i41 < _size36; ++_i41)
         {
-          var elem24 = null;
-          elem24 = input.readString();
-          this.tags.push(elem24);
+          var elem42 = null;
+          elem42 = input.readString();
+          this.tags.push(elem42);
         }
         input.readSetEnd();
       } else {
@@ -252,12 +357,12 @@ UpdateCourseDetails.prototype.write = function(output) {
   if (this.tags !== null && this.tags !== undefined) {
     output.writeFieldBegin('tags', Thrift.Type.SET, 5);
     output.writeSetBegin(Thrift.Type.STRING, this.tags.length);
-    for (var iter25 in this.tags)
+    for (var iter43 in this.tags)
     {
-      if (this.tags.hasOwnProperty(iter25))
+      if (this.tags.hasOwnProperty(iter43))
       {
-        iter25 = this.tags[iter25];
-        output.writeString(iter25);
+        iter43 = this.tags[iter43];
+        output.writeString(iter43);
       }
     }
     output.writeSetEnd();
@@ -336,18 +441,18 @@ UpdateModuleDetails.prototype.read = function(input) {
       break;
       case 5:
       if (ftype == Thrift.Type.SET) {
-        var _size26 = 0;
-        var _rtmp330;
+        var _size44 = 0;
+        var _rtmp348;
         this.tags = [];
-        var _etype29 = 0;
-        _rtmp330 = input.readSetBegin();
-        _etype29 = _rtmp330.etype;
-        _size26 = _rtmp330.size;
-        for (var _i31 = 0; _i31 < _size26; ++_i31)
+        var _etype47 = 0;
+        _rtmp348 = input.readSetBegin();
+        _etype47 = _rtmp348.etype;
+        _size44 = _rtmp348.size;
+        for (var _i49 = 0; _i49 < _size44; ++_i49)
         {
-          var elem32 = null;
-          elem32 = input.readString();
-          this.tags.push(elem32);
+          var elem50 = null;
+          elem50 = input.readString();
+          this.tags.push(elem50);
         }
         input.readSetEnd();
       } else {
@@ -388,12 +493,12 @@ UpdateModuleDetails.prototype.write = function(output) {
   if (this.tags !== null && this.tags !== undefined) {
     output.writeFieldBegin('tags', Thrift.Type.SET, 5);
     output.writeSetBegin(Thrift.Type.STRING, this.tags.length);
-    for (var iter33 in this.tags)
+    for (var iter51 in this.tags)
     {
-      if (this.tags.hasOwnProperty(iter33))
+      if (this.tags.hasOwnProperty(iter51))
       {
-        iter33 = this.tags[iter33];
-        output.writeString(iter33);
+        iter51 = this.tags[iter51];
+        output.writeString(iter51);
       }
     }
     output.writeSetEnd();

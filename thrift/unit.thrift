@@ -1,36 +1,51 @@
-namespace java com.codio.prometheus.thrift
-#@namespace scala com.codio.prometheus.thrift
+namespace java com.codio.prometheus.thrift.unit
+#@namespace scala com.codio.prometheus.thrift.unit
 
-struct UnitVersionError {
-  1: required string message
-  2: optional map<string,string> guidesErrors
+include "./assessments.thrift"
+include "./guides.thrift"
+
+struct PublishStatusInProgress {
+  1: required string taskId
 }
 
-struct UnitVersionState {
-  1: string status // INPROGRESS, SUCCESS, ARCHIVED
-  2: optional string taskId
+struct PublishStatusComplete {}
+
+struct PublishStatusError {
+  1: optional map<string,string> guidesErrors
 }
 
-union UnitVersionStatus {
-  1: UnitVersionState state
-  2: UnitVersionError error
+union PublishStatus {
+  1: PublishStatusInProgress inProgress
+  2: PublishStatusComplete complete
+  3: PublishStatusError error
 }
 
-struct UnitDetails {
+struct Details {
   1: required string name
   2: optional string description
   3: optional string imageUrl
 }
 
-struct UnitVersion {
+struct Version {
   1: required string id
   2: required string stackVersionId
-  3: required UnitVersionStatus status
+  3: optional PublishStatus status
+}
+
+struct Assessment {
+  1: required string id
+  2: required assessments.Details details
+  3: required assessments.Task task
+}
+
+struct Guides {
+  1: required string playbackMetadataJson
+  2: required list<guides.Section> sections
+  3: required list<Assessment> assessments
 }
 
 struct ModuleUnit {
   1: required string id
-  2: required UnitDetails details
-  3: optional list<UnitVersion> versions
+  2: required Details details
+  3: optional list<Version> versions
 }
-

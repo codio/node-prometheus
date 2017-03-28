@@ -1,9 +1,11 @@
 namespace java com.codio.prometheus.thrift
 #@namespace scala com.codio.prometheus.thrift
 
+include "guides.thrift"
 include "unit.thrift"
 include "module.thrift"
 include "course.thrift"
+include "unitfork.thrift"
 
 struct GetCourseResult {
   1: required list<course.Course> courses
@@ -33,7 +35,7 @@ struct UpdateUnitDetails {
 }
 
 struct ChangeStackVersionInUnitResult {
-  1: optional unit.UnitVersion unitVersion
+  1: optional unit.Version unitVersion
 }
 
 exception NotFoundException {}
@@ -41,6 +43,8 @@ exception NotFoundException {}
 exception ReorderConflictException {
   1: required module.Module currentModule
 }
+
+exception NoGuidesInUnitException {}
 
 service PrometheusService {
   list<course.Course> getCoursesByModuleIds(1: required list<string> ids)
@@ -67,7 +71,7 @@ service PrometheusService {
 
   unit.ModuleUnit addUnitToModule(
     1: required string moduleId,
-    2: required unit.UnitDetails unitDetails
+    2: required unit.Details unitDetails
   ) throws (1: NotFoundException nfe)
 
   void updateUnit(1: required string id, 2: required UpdateUnitDetails details)
@@ -90,4 +94,21 @@ service PrometheusService {
 
   void reorderUnits(1: required string moduleId, 2:  required list<string> unitIds)
       throws (1: NotFoundException nfe, 2: ReorderConflictException rce)
+
+  void createUnitFork(
+    1: required string taskId,
+    2: required string unitVersionId,
+    3: required string courseId,
+    4: required string accountId,
+    5: optional string gigaBoxSlot
+  ) throws (1: NotFoundException nfe)
+
+  unit.Guides getUnitGuides(
+    1: required string unitVersionId,
+    2: optional bool isTeacher = false
+  ) throws (1: NotFoundException nfe, 2: NoGuidesInUnitException nge)
+
+  unitfork.UnitFork getUnitForkByProjectId(1: required string projectId)
+   throws (1: NotFoundException nfe)
+  list<unitfork.UnitFork> getUnitForksByProjectIds(1: required list<string> projectIds)
 }

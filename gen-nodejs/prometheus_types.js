@@ -7,9 +7,11 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
+var guides_ttypes = require('./guides_types')
 var unit_ttypes = require('./unit_types')
 var module_ttypes = require('./module_types')
 var course_ttypes = require('./course_types')
+var unitfork_ttypes = require('./unitfork_types')
 
 
 var ttypes = module.exports = {};
@@ -510,7 +512,7 @@ ChangeStackVersionInUnitResult.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.STRUCT) {
-        this.unitVersion = new unit_ttypes.UnitVersion();
+        this.unitVersion = new unit_ttypes.Version();
         this.unitVersion.read(input);
       } else {
         input.skip(ftype);
@@ -625,6 +627,37 @@ ReorderConflictException.prototype.write = function(output) {
     this.currentModule.write(output);
     output.writeFieldEnd();
   }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+NoGuidesInUnitException = module.exports.NoGuidesInUnitException = function(args) {
+  Thrift.TException.call(this, "NoGuidesInUnitException")
+  this.name = "NoGuidesInUnitException"
+};
+Thrift.inherits(NoGuidesInUnitException, Thrift.TException);
+NoGuidesInUnitException.prototype.name = 'NoGuidesInUnitException';
+NoGuidesInUnitException.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+NoGuidesInUnitException.prototype.write = function(output) {
+  output.writeStructBegin('NoGuidesInUnitException');
   output.writeFieldStop();
   output.writeStructEnd();
   return;

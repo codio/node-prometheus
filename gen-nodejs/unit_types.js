@@ -7,24 +7,23 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
+var assessments_ttypes = require('./assessments_types')
+var guides_ttypes = require('./guides_types')
+
 
 var ttypes = module.exports = {};
-UnitVersionError = module.exports.UnitVersionError = function(args) {
-  this.message = null;
-  this.guidesErrors = null;
+PublishStatusInProgress = module.exports.PublishStatusInProgress = function(args) {
+  this.taskId = null;
   if (args) {
-    if (args.message !== undefined) {
-      this.message = args.message;
+    if (args.taskId !== undefined) {
+      this.taskId = args.taskId;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field message is unset!');
-    }
-    if (args.guidesErrors !== undefined) {
-      this.guidesErrors = args.guidesErrors;
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
     }
   }
 };
-UnitVersionError.prototype = {};
-UnitVersionError.prototype.read = function(input) {
+PublishStatusInProgress.prototype = {};
+PublishStatusInProgress.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -39,12 +38,86 @@ UnitVersionError.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.STRING) {
-        this.message = input.readString();
+        this.taskId = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 2:
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PublishStatusInProgress.prototype.write = function(output) {
+  output.writeStructBegin('PublishStatusInProgress');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PublishStatusComplete = module.exports.PublishStatusComplete = function(args) {
+};
+PublishStatusComplete.prototype = {};
+PublishStatusComplete.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PublishStatusComplete.prototype.write = function(output) {
+  output.writeStructBegin('PublishStatusComplete');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PublishStatusError = module.exports.PublishStatusError = function(args) {
+  this.guidesErrors = null;
+  if (args) {
+    if (args.guidesErrors !== undefined) {
+      this.guidesErrors = args.guidesErrors;
+    }
+  }
+};
+PublishStatusError.prototype = {};
+PublishStatusError.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
       if (ftype == Thrift.Type.MAP) {
         var _size0 = 0;
         var _rtmp34;
@@ -68,6 +141,9 @@ UnitVersionError.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 0:
+        input.skip(ftype);
+        break;
       default:
         input.skip(ftype);
     }
@@ -77,15 +153,10 @@ UnitVersionError.prototype.read = function(input) {
   return;
 };
 
-UnitVersionError.prototype.write = function(output) {
-  output.writeStructBegin('UnitVersionError');
-  if (this.message !== null && this.message !== undefined) {
-    output.writeFieldBegin('message', Thrift.Type.STRING, 1);
-    output.writeString(this.message);
-    output.writeFieldEnd();
-  }
+PublishStatusError.prototype.write = function(output) {
+  output.writeStructBegin('PublishStatusError');
   if (this.guidesErrors !== null && this.guidesErrors !== undefined) {
-    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 2);
+    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 1);
     output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.guidesErrors));
     for (var kiter8 in this.guidesErrors)
     {
@@ -104,86 +175,24 @@ UnitVersionError.prototype.write = function(output) {
   return;
 };
 
-UnitVersionState = module.exports.UnitVersionState = function(args) {
-  this.status = null;
-  this.taskId = null;
-  if (args) {
-    if (args.status !== undefined) {
-      this.status = args.status;
-    }
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
-    }
-  }
-};
-UnitVersionState.prototype = {};
-UnitVersionState.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.status = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-UnitVersionState.prototype.write = function(output) {
-  output.writeStructBegin('UnitVersionState');
-  if (this.status !== null && this.status !== undefined) {
-    output.writeFieldBegin('status', Thrift.Type.STRING, 1);
-    output.writeString(this.status);
-    output.writeFieldEnd();
-  }
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 2);
-    output.writeString(this.taskId);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-UnitVersionStatus = module.exports.UnitVersionStatus = function(args) {
-  this.state = null;
+PublishStatus = module.exports.PublishStatus = function(args) {
+  this.inProgress = null;
+  this.complete = null;
   this.error = null;
   if (args) {
-    if (args.state !== undefined) {
-      this.state = args.state;
+    if (args.inProgress !== undefined) {
+      this.inProgress = args.inProgress;
+    }
+    if (args.complete !== undefined) {
+      this.complete = args.complete;
     }
     if (args.error !== undefined) {
       this.error = args.error;
     }
   }
 };
-UnitVersionStatus.prototype = {};
-UnitVersionStatus.prototype.read = function(input) {
+PublishStatus.prototype = {};
+PublishStatus.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -198,15 +207,23 @@ UnitVersionStatus.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.STRUCT) {
-        this.state = new ttypes.UnitVersionState();
-        this.state.read(input);
+        this.inProgress = new ttypes.PublishStatusInProgress();
+        this.inProgress.read(input);
       } else {
         input.skip(ftype);
       }
       break;
       case 2:
       if (ftype == Thrift.Type.STRUCT) {
-        this.error = new ttypes.UnitVersionError();
+        this.complete = new ttypes.PublishStatusComplete();
+        this.complete.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.error = new ttypes.PublishStatusError();
         this.error.read(input);
       } else {
         input.skip(ftype);
@@ -221,15 +238,20 @@ UnitVersionStatus.prototype.read = function(input) {
   return;
 };
 
-UnitVersionStatus.prototype.write = function(output) {
-  output.writeStructBegin('UnitVersionStatus');
-  if (this.state !== null && this.state !== undefined) {
-    output.writeFieldBegin('state', Thrift.Type.STRUCT, 1);
-    this.state.write(output);
+PublishStatus.prototype.write = function(output) {
+  output.writeStructBegin('PublishStatus');
+  if (this.inProgress !== null && this.inProgress !== undefined) {
+    output.writeFieldBegin('inProgress', Thrift.Type.STRUCT, 1);
+    this.inProgress.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.complete !== null && this.complete !== undefined) {
+    output.writeFieldBegin('complete', Thrift.Type.STRUCT, 2);
+    this.complete.write(output);
     output.writeFieldEnd();
   }
   if (this.error !== null && this.error !== undefined) {
-    output.writeFieldBegin('error', Thrift.Type.STRUCT, 2);
+    output.writeFieldBegin('error', Thrift.Type.STRUCT, 3);
     this.error.write(output);
     output.writeFieldEnd();
   }
@@ -238,7 +260,7 @@ UnitVersionStatus.prototype.write = function(output) {
   return;
 };
 
-UnitDetails = module.exports.UnitDetails = function(args) {
+Details = module.exports.Details = function(args) {
   this.name = null;
   this.description = null;
   this.imageUrl = null;
@@ -256,8 +278,8 @@ UnitDetails = module.exports.UnitDetails = function(args) {
     }
   }
 };
-UnitDetails.prototype = {};
-UnitDetails.prototype.read = function(input) {
+Details.prototype = {};
+Details.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -300,8 +322,8 @@ UnitDetails.prototype.read = function(input) {
   return;
 };
 
-UnitDetails.prototype.write = function(output) {
-  output.writeStructBegin('UnitDetails');
+Details.prototype.write = function(output) {
+  output.writeStructBegin('Details');
   if (this.name !== null && this.name !== undefined) {
     output.writeFieldBegin('name', Thrift.Type.STRING, 1);
     output.writeString(this.name);
@@ -322,7 +344,7 @@ UnitDetails.prototype.write = function(output) {
   return;
 };
 
-UnitVersion = module.exports.UnitVersion = function(args) {
+Version = module.exports.Version = function(args) {
   this.id = null;
   this.stackVersionId = null;
   this.status = null;
@@ -339,13 +361,11 @@ UnitVersion = module.exports.UnitVersion = function(args) {
     }
     if (args.status !== undefined) {
       this.status = args.status;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
     }
   }
 };
-UnitVersion.prototype = {};
-UnitVersion.prototype.read = function(input) {
+Version.prototype = {};
+Version.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -374,7 +394,7 @@ UnitVersion.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRUCT) {
-        this.status = new ttypes.UnitVersionStatus();
+        this.status = new ttypes.PublishStatus();
         this.status.read(input);
       } else {
         input.skip(ftype);
@@ -389,8 +409,8 @@ UnitVersion.prototype.read = function(input) {
   return;
 };
 
-UnitVersion.prototype.write = function(output) {
-  output.writeStructBegin('UnitVersion');
+Version.prototype.write = function(output) {
+  output.writeStructBegin('Version');
   if (this.id !== null && this.id !== undefined) {
     output.writeFieldBegin('id', Thrift.Type.STRING, 1);
     output.writeString(this.id);
@@ -404,6 +424,230 @@ UnitVersion.prototype.write = function(output) {
   if (this.status !== null && this.status !== undefined) {
     output.writeFieldBegin('status', Thrift.Type.STRUCT, 3);
     this.status.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+Assessment = module.exports.Assessment = function(args) {
+  this.id = null;
+  this.details = null;
+  this.task = null;
+  if (args) {
+    if (args.id !== undefined) {
+      this.id = args.id;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
+    }
+    if (args.details !== undefined) {
+      this.details = args.details;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field details is unset!');
+    }
+    if (args.task !== undefined) {
+      this.task = args.task;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field task is unset!');
+    }
+  }
+};
+Assessment.prototype = {};
+Assessment.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.details = new assessments_ttypes.Details();
+        this.details.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.task = new assessments_ttypes.Task();
+        this.task.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+Assessment.prototype.write = function(output) {
+  output.writeStructBegin('Assessment');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.details !== null && this.details !== undefined) {
+    output.writeFieldBegin('details', Thrift.Type.STRUCT, 2);
+    this.details.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.task !== null && this.task !== undefined) {
+    output.writeFieldBegin('task', Thrift.Type.STRUCT, 3);
+    this.task.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+Guides = module.exports.Guides = function(args) {
+  this.playbackMetadataJson = null;
+  this.sections = null;
+  this.assessments = null;
+  if (args) {
+    if (args.playbackMetadataJson !== undefined) {
+      this.playbackMetadataJson = args.playbackMetadataJson;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field playbackMetadataJson is unset!');
+    }
+    if (args.sections !== undefined) {
+      this.sections = args.sections;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field sections is unset!');
+    }
+    if (args.assessments !== undefined) {
+      this.assessments = args.assessments;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessments is unset!');
+    }
+  }
+};
+Guides.prototype = {};
+Guides.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.playbackMetadataJson = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        var _size10 = 0;
+        var _rtmp314;
+        this.sections = [];
+        var _etype13 = 0;
+        _rtmp314 = input.readListBegin();
+        _etype13 = _rtmp314.etype;
+        _size10 = _rtmp314.size;
+        for (var _i15 = 0; _i15 < _size10; ++_i15)
+        {
+          var elem16 = null;
+          elem16 = new guides_ttypes.Section();
+          elem16.read(input);
+          this.sections.push(elem16);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size17 = 0;
+        var _rtmp321;
+        this.assessments = [];
+        var _etype20 = 0;
+        _rtmp321 = input.readListBegin();
+        _etype20 = _rtmp321.etype;
+        _size17 = _rtmp321.size;
+        for (var _i22 = 0; _i22 < _size17; ++_i22)
+        {
+          var elem23 = null;
+          elem23 = new ttypes.Assessment();
+          elem23.read(input);
+          this.assessments.push(elem23);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+Guides.prototype.write = function(output) {
+  output.writeStructBegin('Guides');
+  if (this.playbackMetadataJson !== null && this.playbackMetadataJson !== undefined) {
+    output.writeFieldBegin('playbackMetadataJson', Thrift.Type.STRING, 1);
+    output.writeString(this.playbackMetadataJson);
+    output.writeFieldEnd();
+  }
+  if (this.sections !== null && this.sections !== undefined) {
+    output.writeFieldBegin('sections', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRUCT, this.sections.length);
+    for (var iter24 in this.sections)
+    {
+      if (this.sections.hasOwnProperty(iter24))
+      {
+        iter24 = this.sections[iter24];
+        iter24.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.assessments !== null && this.assessments !== undefined) {
+    output.writeFieldBegin('assessments', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRUCT, this.assessments.length);
+    for (var iter25 in this.assessments)
+    {
+      if (this.assessments.hasOwnProperty(iter25))
+      {
+        iter25 = this.assessments[iter25];
+        iter25.write(output);
+      }
+    }
+    output.writeListEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -454,7 +698,7 @@ ModuleUnit.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.STRUCT) {
-        this.details = new ttypes.UnitDetails();
+        this.details = new ttypes.Details();
         this.details.read(input);
       } else {
         input.skip(ftype);
@@ -462,19 +706,19 @@ ModuleUnit.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.LIST) {
-        var _size10 = 0;
-        var _rtmp314;
+        var _size26 = 0;
+        var _rtmp330;
         this.versions = [];
-        var _etype13 = 0;
-        _rtmp314 = input.readListBegin();
-        _etype13 = _rtmp314.etype;
-        _size10 = _rtmp314.size;
-        for (var _i15 = 0; _i15 < _size10; ++_i15)
+        var _etype29 = 0;
+        _rtmp330 = input.readListBegin();
+        _etype29 = _rtmp330.etype;
+        _size26 = _rtmp330.size;
+        for (var _i31 = 0; _i31 < _size26; ++_i31)
         {
-          var elem16 = null;
-          elem16 = new ttypes.UnitVersion();
-          elem16.read(input);
-          this.versions.push(elem16);
+          var elem32 = null;
+          elem32 = new ttypes.Version();
+          elem32.read(input);
+          this.versions.push(elem32);
         }
         input.readListEnd();
       } else {
@@ -505,12 +749,12 @@ ModuleUnit.prototype.write = function(output) {
   if (this.versions !== null && this.versions !== undefined) {
     output.writeFieldBegin('versions', Thrift.Type.LIST, 3);
     output.writeListBegin(Thrift.Type.STRUCT, this.versions.length);
-    for (var iter17 in this.versions)
+    for (var iter33 in this.versions)
     {
-      if (this.versions.hasOwnProperty(iter17))
+      if (this.versions.hasOwnProperty(iter33))
       {
-        iter17 = this.versions[iter17];
-        iter17.write(output);
+        iter33 = this.versions[iter33];
+        iter33.write(output);
       }
     }
     output.writeListEnd();

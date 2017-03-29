@@ -38,6 +38,11 @@ struct ChangeStackVersionInUnitResult {
   1: optional unit.Version unitVersion
 }
 
+struct ExchangeDetails {
+  1: required string routingKey
+  2: required string exchange
+}
+
 exception NotFoundException {}
 
 exception ReorderConflictException {
@@ -97,10 +102,11 @@ service PrometheusService {
 
   void createUnitFork(
     1: required string taskId,
-    2: required string unitVersionId,
-    3: required string courseId,
-    4: required string accountId,
-    5: optional string gigaBoxSlot
+    2: required ExchangeDetails replyTo,
+    3: required string unitVersionId,
+    4: required string courseId,
+    5: required string accountId,
+    6: optional string gigaBoxSlot
   ) throws (1: NotFoundException nfe)
 
   unit.Guides getUnitGuides(

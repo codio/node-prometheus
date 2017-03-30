@@ -6,6 +6,7 @@ include "unit.thrift"
 include "module.thrift"
 include "course.thrift"
 include "unitfork.thrift"
+include "assessments.thrift"
 
 struct GetCourseResult {
   1: required list<course.Course> courses
@@ -117,4 +118,10 @@ service PrometheusService {
   unitfork.UnitFork getUnitForkByProjectId(1: required string projectId)
    throws (1: NotFoundException nfe)
   list<unitfork.UnitFork> getUnitForksByProjectIds(1: required list<string> projectIds)
+
+  assessments.CheckResult checkAssessment(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required assessments.CheckParameters params
+  )
 }

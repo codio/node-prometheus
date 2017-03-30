@@ -7,6 +7,8 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
+var common_ttypes = require('./common_types')
+
 
 var ttypes = module.exports = {};
 Details = module.exports.Details = function(args) {
@@ -183,11 +185,17 @@ ChoiceOption.prototype.write = function(output) {
 
 MultipleChoice = module.exports.MultipleChoice = function(args) {
   this.options = null;
+  this.isMultipleResponse = null;
   if (args) {
     if (args.options !== undefined) {
       this.options = args.options;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field options is unset!');
+    }
+    if (args.isMultipleResponse !== undefined) {
+      this.isMultipleResponse = args.isMultipleResponse;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field isMultipleResponse is unset!');
     }
   }
 };
@@ -226,9 +234,13 @@ MultipleChoice.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 2:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isMultipleResponse = input.readBool();
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -252,6 +264,11 @@ MultipleChoice.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.isMultipleResponse !== null && this.isMultipleResponse !== undefined) {
+    output.writeFieldBegin('isMultipleResponse', Thrift.Type.BOOL, 2);
+    output.writeBool(this.isMultipleResponse);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -371,7 +388,7 @@ FillInBlanks.prototype.write = function(output) {
   return;
 };
 
-ExternalTest = module.exports.ExternalTest = function(args) {
+ServerSideTest = module.exports.ServerSideTest = function(args) {
   this.oneTimeTest = false;
   if (args) {
     if (args.oneTimeTest !== undefined) {
@@ -379,8 +396,8 @@ ExternalTest = module.exports.ExternalTest = function(args) {
     }
   }
 };
-ExternalTest.prototype = {};
-ExternalTest.prototype.read = function(input) {
+ServerSideTest.prototype = {};
+ServerSideTest.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -412,8 +429,61 @@ ExternalTest.prototype.read = function(input) {
   return;
 };
 
-ExternalTest.prototype.write = function(output) {
-  output.writeStructBegin('ExternalTest');
+ServerSideTest.prototype.write = function(output) {
+  output.writeStructBegin('ServerSideTest');
+  if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
+    output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 1);
+    output.writeBool(this.oneTimeTest);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+Custom = module.exports.Custom = function(args) {
+  this.oneTimeTest = false;
+  if (args) {
+    if (args.oneTimeTest !== undefined) {
+      this.oneTimeTest = args.oneTimeTest;
+    }
+  }
+};
+Custom.prototype = {};
+Custom.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.BOOL) {
+        this.oneTimeTest = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+Custom.prototype.write = function(output) {
+  output.writeStructBegin('Custom');
   if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
     output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 1);
     output.writeBool(this.oneTimeTest);
@@ -480,7 +550,7 @@ Task.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRUCT) {
-        this.codeTest = new ttypes.ExternalTest();
+        this.codeTest = new ttypes.ServerSideTest();
         this.codeTest.read(input);
       } else {
         input.skip(ftype);
@@ -488,7 +558,7 @@ Task.prototype.read = function(input) {
       break;
       case 4:
       if (ftype == Thrift.Type.STRUCT) {
-        this.codeOutputCompare = new ttypes.ExternalTest();
+        this.codeOutputCompare = new ttypes.ServerSideTest();
         this.codeOutputCompare.read(input);
       } else {
         input.skip(ftype);
@@ -496,7 +566,7 @@ Task.prototype.read = function(input) {
       break;
       case 5:
       if (ftype == Thrift.Type.STRUCT) {
-        this.custom = new ttypes.ExternalTest();
+        this.custom = new ttypes.Custom();
         this.custom.read(input);
       } else {
         input.skip(ftype);
@@ -535,6 +605,849 @@ Task.prototype.write = function(output) {
   }
   if (this.custom !== null && this.custom !== undefined) {
     output.writeFieldBegin('custom', Thrift.Type.STRUCT, 5);
+    this.custom.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+MultipleChoiceResult = module.exports.MultipleChoiceResult = function(args) {
+  this.points = null;
+  this.expectedChoiceOptionIds = null;
+  this.answeredChoiceOptionIds = null;
+  if (args) {
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+    if (args.expectedChoiceOptionIds !== undefined) {
+      this.expectedChoiceOptionIds = args.expectedChoiceOptionIds;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field expectedChoiceOptionIds is unset!');
+    }
+    if (args.answeredChoiceOptionIds !== undefined) {
+      this.answeredChoiceOptionIds = args.answeredChoiceOptionIds;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answeredChoiceOptionIds is unset!');
+    }
+  }
+};
+MultipleChoiceResult.prototype = {};
+MultipleChoiceResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        var _size24 = 0;
+        var _rtmp328;
+        this.expectedChoiceOptionIds = [];
+        var _etype27 = 0;
+        _rtmp328 = input.readListBegin();
+        _etype27 = _rtmp328.etype;
+        _size24 = _rtmp328.size;
+        for (var _i29 = 0; _i29 < _size24; ++_i29)
+        {
+          var elem30 = null;
+          elem30 = input.readString();
+          this.expectedChoiceOptionIds.push(elem30);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size31 = 0;
+        var _rtmp335;
+        this.answeredChoiceOptionIds = [];
+        var _etype34 = 0;
+        _rtmp335 = input.readListBegin();
+        _etype34 = _rtmp335.etype;
+        _size31 = _rtmp335.size;
+        for (var _i36 = 0; _i36 < _size31; ++_i36)
+        {
+          var elem37 = null;
+          elem37 = input.readString();
+          this.answeredChoiceOptionIds.push(elem37);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MultipleChoiceResult.prototype.write = function(output) {
+  output.writeStructBegin('MultipleChoiceResult');
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 1);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  if (this.expectedChoiceOptionIds !== null && this.expectedChoiceOptionIds !== undefined) {
+    output.writeFieldBegin('expectedChoiceOptionIds', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRING, this.expectedChoiceOptionIds.length);
+    for (var iter38 in this.expectedChoiceOptionIds)
+    {
+      if (this.expectedChoiceOptionIds.hasOwnProperty(iter38))
+      {
+        iter38 = this.expectedChoiceOptionIds[iter38];
+        output.writeString(iter38);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.answeredChoiceOptionIds !== null && this.answeredChoiceOptionIds !== undefined) {
+    output.writeFieldBegin('answeredChoiceOptionIds', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRING, this.answeredChoiceOptionIds.length);
+    for (var iter39 in this.answeredChoiceOptionIds)
+    {
+      if (this.answeredChoiceOptionIds.hasOwnProperty(iter39))
+      {
+        iter39 = this.answeredChoiceOptionIds[iter39];
+        output.writeString(iter39);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+FillInBlanksResult = module.exports.FillInBlanksResult = function(args) {
+  this.points = null;
+  this.expectedAnswers = null;
+  this.answers = null;
+  if (args) {
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+    if (args.expectedAnswers !== undefined) {
+      this.expectedAnswers = args.expectedAnswers;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field expectedAnswers is unset!');
+    }
+    if (args.answers !== undefined) {
+      this.answers = args.answers;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answers is unset!');
+    }
+  }
+};
+FillInBlanksResult.prototype = {};
+FillInBlanksResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        var _size40 = 0;
+        var _rtmp344;
+        this.expectedAnswers = [];
+        var _etype43 = 0;
+        _rtmp344 = input.readListBegin();
+        _etype43 = _rtmp344.etype;
+        _size40 = _rtmp344.size;
+        for (var _i45 = 0; _i45 < _size40; ++_i45)
+        {
+          var elem46 = null;
+          elem46 = input.readString();
+          this.expectedAnswers.push(elem46);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size47 = 0;
+        var _rtmp351;
+        this.answers = [];
+        var _etype50 = 0;
+        _rtmp351 = input.readListBegin();
+        _etype50 = _rtmp351.etype;
+        _size47 = _rtmp351.size;
+        for (var _i52 = 0; _i52 < _size47; ++_i52)
+        {
+          var elem53 = null;
+          elem53 = input.readString();
+          this.answers.push(elem53);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+FillInBlanksResult.prototype.write = function(output) {
+  output.writeStructBegin('FillInBlanksResult');
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 1);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  if (this.expectedAnswers !== null && this.expectedAnswers !== undefined) {
+    output.writeFieldBegin('expectedAnswers', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRING, this.expectedAnswers.length);
+    for (var iter54 in this.expectedAnswers)
+    {
+      if (this.expectedAnswers.hasOwnProperty(iter54))
+      {
+        iter54 = this.expectedAnswers[iter54];
+        output.writeString(iter54);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.answers !== null && this.answers !== undefined) {
+    output.writeFieldBegin('answers', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRING, this.answers.length);
+    for (var iter55 in this.answers)
+    {
+      if (this.answers.hasOwnProperty(iter55))
+      {
+        iter55 = this.answers[iter55];
+        output.writeString(iter55);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+ServerSideTestResult = module.exports.ServerSideTestResult = function(args) {
+  this.taskId = null;
+  if (args) {
+    if (args.taskId !== undefined) {
+      this.taskId = args.taskId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
+    }
+  }
+};
+ServerSideTestResult.prototype = {};
+ServerSideTestResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.taskId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ServerSideTestResult.prototype.write = function(output) {
+  output.writeStructBegin('ServerSideTestResult');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+CustomResult = module.exports.CustomResult = function(args) {
+  this.points = null;
+  if (args) {
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+  }
+};
+CustomResult.prototype = {};
+CustomResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+CustomResult.prototype.write = function(output) {
+  output.writeStructBegin('CustomResult');
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 1);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+CheckResult = module.exports.CheckResult = function(args) {
+  this.multipleChoice = null;
+  this.fillInBlanks = null;
+  this.serverSideTest = null;
+  this.custom = null;
+  if (args) {
+    if (args.multipleChoice !== undefined) {
+      this.multipleChoice = args.multipleChoice;
+    }
+    if (args.fillInBlanks !== undefined) {
+      this.fillInBlanks = args.fillInBlanks;
+    }
+    if (args.serverSideTest !== undefined) {
+      this.serverSideTest = args.serverSideTest;
+    }
+    if (args.custom !== undefined) {
+      this.custom = args.custom;
+    }
+  }
+};
+CheckResult.prototype = {};
+CheckResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.multipleChoice = new ttypes.MultipleChoiceResult();
+        this.multipleChoice.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.fillInBlanks = new ttypes.FillInBlanksResult();
+        this.fillInBlanks.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.serverSideTest = new ttypes.ServerSideTestResult();
+        this.serverSideTest.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.custom = new ttypes.CustomResult();
+        this.custom.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+CheckResult.prototype.write = function(output) {
+  output.writeStructBegin('CheckResult');
+  if (this.multipleChoice !== null && this.multipleChoice !== undefined) {
+    output.writeFieldBegin('multipleChoice', Thrift.Type.STRUCT, 1);
+    this.multipleChoice.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.fillInBlanks !== null && this.fillInBlanks !== undefined) {
+    output.writeFieldBegin('fillInBlanks', Thrift.Type.STRUCT, 2);
+    this.fillInBlanks.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.serverSideTest !== null && this.serverSideTest !== undefined) {
+    output.writeFieldBegin('serverSideTest', Thrift.Type.STRUCT, 3);
+    this.serverSideTest.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.custom !== null && this.custom !== undefined) {
+    output.writeFieldBegin('custom', Thrift.Type.STRUCT, 4);
+    this.custom.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+MultipleChoiceParameters = module.exports.MultipleChoiceParameters = function(args) {
+  this.choiceOptionIds = null;
+  if (args) {
+    if (args.choiceOptionIds !== undefined) {
+      this.choiceOptionIds = args.choiceOptionIds;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field choiceOptionIds is unset!');
+    }
+  }
+};
+MultipleChoiceParameters.prototype = {};
+MultipleChoiceParameters.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        var _size56 = 0;
+        var _rtmp360;
+        this.choiceOptionIds = [];
+        var _etype59 = 0;
+        _rtmp360 = input.readListBegin();
+        _etype59 = _rtmp360.etype;
+        _size56 = _rtmp360.size;
+        for (var _i61 = 0; _i61 < _size56; ++_i61)
+        {
+          var elem62 = null;
+          elem62 = input.readString();
+          this.choiceOptionIds.push(elem62);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MultipleChoiceParameters.prototype.write = function(output) {
+  output.writeStructBegin('MultipleChoiceParameters');
+  if (this.choiceOptionIds !== null && this.choiceOptionIds !== undefined) {
+    output.writeFieldBegin('choiceOptionIds', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRING, this.choiceOptionIds.length);
+    for (var iter63 in this.choiceOptionIds)
+    {
+      if (this.choiceOptionIds.hasOwnProperty(iter63))
+      {
+        iter63 = this.choiceOptionIds[iter63];
+        output.writeString(iter63);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+FillInBlanksParameters = module.exports.FillInBlanksParameters = function(args) {
+  this.answers = null;
+  if (args) {
+    if (args.answers !== undefined) {
+      this.answers = args.answers;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answers is unset!');
+    }
+  }
+};
+FillInBlanksParameters.prototype = {};
+FillInBlanksParameters.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        var _size64 = 0;
+        var _rtmp368;
+        this.answers = [];
+        var _etype67 = 0;
+        _rtmp368 = input.readListBegin();
+        _etype67 = _rtmp368.etype;
+        _size64 = _rtmp368.size;
+        for (var _i69 = 0; _i69 < _size64; ++_i69)
+        {
+          var elem70 = null;
+          elem70 = input.readString();
+          this.answers.push(elem70);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+FillInBlanksParameters.prototype.write = function(output) {
+  output.writeStructBegin('FillInBlanksParameters');
+  if (this.answers !== null && this.answers !== undefined) {
+    output.writeFieldBegin('answers', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRING, this.answers.length);
+    for (var iter71 in this.answers)
+    {
+      if (this.answers.hasOwnProperty(iter71))
+      {
+        iter71 = this.answers[iter71];
+        output.writeString(iter71);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+ServerSideTestParameters = module.exports.ServerSideTestParameters = function(args) {
+  this.replyParameters = null;
+  if (args) {
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
+    }
+  }
+};
+ServerSideTestParameters.prototype = {};
+ServerSideTestParameters.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ServerSideTestParameters.prototype.write = function(output) {
+  output.writeStructBegin('ServerSideTestParameters');
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+CustomParameters = module.exports.CustomParameters = function(args) {
+  this.points = null;
+  if (args) {
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+  }
+};
+CustomParameters.prototype = {};
+CustomParameters.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+CustomParameters.prototype.write = function(output) {
+  output.writeStructBegin('CustomParameters');
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 1);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+CheckParameters = module.exports.CheckParameters = function(args) {
+  this.multipleChoice = null;
+  this.fillInBlanks = null;
+  this.serverSideTest = null;
+  this.custom = null;
+  if (args) {
+    if (args.multipleChoice !== undefined) {
+      this.multipleChoice = args.multipleChoice;
+    }
+    if (args.fillInBlanks !== undefined) {
+      this.fillInBlanks = args.fillInBlanks;
+    }
+    if (args.serverSideTest !== undefined) {
+      this.serverSideTest = args.serverSideTest;
+    }
+    if (args.custom !== undefined) {
+      this.custom = args.custom;
+    }
+  }
+};
+CheckParameters.prototype = {};
+CheckParameters.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.multipleChoice = new ttypes.MultipleChoiceParameters();
+        this.multipleChoice.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.fillInBlanks = new ttypes.FillInBlanksParameters();
+        this.fillInBlanks.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.serverSideTest = new ttypes.ServerSideTestParameters();
+        this.serverSideTest.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.custom = new ttypes.CustomParameters();
+        this.custom.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+CheckParameters.prototype.write = function(output) {
+  output.writeStructBegin('CheckParameters');
+  if (this.multipleChoice !== null && this.multipleChoice !== undefined) {
+    output.writeFieldBegin('multipleChoice', Thrift.Type.STRUCT, 1);
+    this.multipleChoice.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.fillInBlanks !== null && this.fillInBlanks !== undefined) {
+    output.writeFieldBegin('fillInBlanks', Thrift.Type.STRUCT, 2);
+    this.fillInBlanks.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.serverSideTest !== null && this.serverSideTest !== undefined) {
+    output.writeFieldBegin('serverSideTest', Thrift.Type.STRUCT, 3);
+    this.serverSideTest.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.custom !== null && this.custom !== undefined) {
+    output.writeFieldBegin('custom', Thrift.Type.STRUCT, 4);
     this.custom.write(output);
     output.writeFieldEnd();
   }

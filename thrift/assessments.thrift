@@ -45,8 +45,8 @@ union Task {
 
 struct MultipleChoiceResult {
   1: required i32 points
-  2: required list<string> expectedChoiceOptionIds
-  3: required list<string> answeredChoiceOptionIds
+  2: required set<string> expectedAnswerIds
+  3: required set<string> answerIds
 }
 
 struct FillInBlanksResult {
@@ -73,7 +73,7 @@ union CheckResult {
 
 
 struct MultipleChoiceParameters {
-  1: required list<string> choiceOptionIds
+  1: required set<string> answerIds
 }
 
 struct FillInBlanksParameters {

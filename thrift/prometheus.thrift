@@ -52,6 +52,10 @@ exception ReorderConflictException {
 
 exception NoGuidesInUnitException {}
 
+exception ArgumentException {}
+
+exception AssessmentAlreadyAnsweredException {}
+
 service PrometheusService {
   list<course.Course> getCoursesByModuleIds(1: required list<string> ids)
   GetCourseResult getCourses(1: required list<string> ids, 2: bool withModules = false)
@@ -123,5 +127,9 @@ service PrometheusService {
     1: required string unitForkProjectId,
     2: required string assessmentId,
     3: required assessments.CheckParameters params
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
   )
 }

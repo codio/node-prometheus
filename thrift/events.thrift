@@ -3,8 +3,8 @@ namespace java com.codio.prometheus.thrift.events
 
 include "./unit.thrift"
 
-const string UnitDeletedTopic = "unit.deleted"
+const string UnitForkRemovedTopic = "forks.unitForkRemoved"
 
-struct UnitRemoved {
-  1: required string unitId
+struct UnitForkRemoved {
+  1: required string projectId
 }

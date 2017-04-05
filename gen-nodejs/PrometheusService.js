@@ -3189,9 +3189,33 @@ PrometheusService_checkAssessment_args.prototype.write = function(output) {
 
 PrometheusService_checkAssessment_result = function(args) {
   this.success = null;
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
   if (args) {
     if (args.success !== undefined) {
       this.success = args.success;
+    }
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
     }
   }
 };
@@ -3217,9 +3241,30 @@ PrometheusService_checkAssessment_result.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -3234,6 +3279,21 @@ PrometheusService_checkAssessment_result.prototype.write = function(output) {
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
     this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4373,6 +4433,15 @@ PrometheusServiceClient.prototype.recv_checkAssessment = function(input,mtype,rs
   result.read(input);
   input.readMessageEnd();
 
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
   if (null !== result.success) {
     return callback(null, result.success);
   }

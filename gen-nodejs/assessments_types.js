@@ -615,23 +615,23 @@ Task.prototype.write = function(output) {
 
 MultipleChoiceResult = module.exports.MultipleChoiceResult = function(args) {
   this.points = null;
-  this.expectedChoiceOptionIds = null;
-  this.answeredChoiceOptionIds = null;
+  this.expectedAnswerIds = null;
+  this.answerIds = null;
   if (args) {
     if (args.points !== undefined) {
       this.points = args.points;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
     }
-    if (args.expectedChoiceOptionIds !== undefined) {
-      this.expectedChoiceOptionIds = args.expectedChoiceOptionIds;
+    if (args.expectedAnswerIds !== undefined) {
+      this.expectedAnswerIds = args.expectedAnswerIds;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field expectedChoiceOptionIds is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field expectedAnswerIds is unset!');
     }
-    if (args.answeredChoiceOptionIds !== undefined) {
-      this.answeredChoiceOptionIds = args.answeredChoiceOptionIds;
+    if (args.answerIds !== undefined) {
+      this.answerIds = args.answerIds;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answeredChoiceOptionIds is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answerIds is unset!');
     }
   }
 };
@@ -657,41 +657,41 @@ MultipleChoiceResult.prototype.read = function(input) {
       }
       break;
       case 2:
-      if (ftype == Thrift.Type.LIST) {
+      if (ftype == Thrift.Type.SET) {
         var _size24 = 0;
         var _rtmp328;
-        this.expectedChoiceOptionIds = [];
+        this.expectedAnswerIds = [];
         var _etype27 = 0;
-        _rtmp328 = input.readListBegin();
+        _rtmp328 = input.readSetBegin();
         _etype27 = _rtmp328.etype;
         _size24 = _rtmp328.size;
         for (var _i29 = 0; _i29 < _size24; ++_i29)
         {
           var elem30 = null;
           elem30 = input.readString();
-          this.expectedChoiceOptionIds.push(elem30);
+          this.expectedAnswerIds.push(elem30);
         }
-        input.readListEnd();
+        input.readSetEnd();
       } else {
         input.skip(ftype);
       }
       break;
       case 3:
-      if (ftype == Thrift.Type.LIST) {
+      if (ftype == Thrift.Type.SET) {
         var _size31 = 0;
         var _rtmp335;
-        this.answeredChoiceOptionIds = [];
+        this.answerIds = [];
         var _etype34 = 0;
-        _rtmp335 = input.readListBegin();
+        _rtmp335 = input.readSetBegin();
         _etype34 = _rtmp335.etype;
         _size31 = _rtmp335.size;
         for (var _i36 = 0; _i36 < _size31; ++_i36)
         {
           var elem37 = null;
           elem37 = input.readString();
-          this.answeredChoiceOptionIds.push(elem37);
+          this.answerIds.push(elem37);
         }
-        input.readListEnd();
+        input.readSetEnd();
       } else {
         input.skip(ftype);
       }
@@ -712,32 +712,32 @@ MultipleChoiceResult.prototype.write = function(output) {
     output.writeI32(this.points);
     output.writeFieldEnd();
   }
-  if (this.expectedChoiceOptionIds !== null && this.expectedChoiceOptionIds !== undefined) {
-    output.writeFieldBegin('expectedChoiceOptionIds', Thrift.Type.LIST, 2);
-    output.writeListBegin(Thrift.Type.STRING, this.expectedChoiceOptionIds.length);
-    for (var iter38 in this.expectedChoiceOptionIds)
+  if (this.expectedAnswerIds !== null && this.expectedAnswerIds !== undefined) {
+    output.writeFieldBegin('expectedAnswerIds', Thrift.Type.SET, 2);
+    output.writeSetBegin(Thrift.Type.STRING, this.expectedAnswerIds.length);
+    for (var iter38 in this.expectedAnswerIds)
     {
-      if (this.expectedChoiceOptionIds.hasOwnProperty(iter38))
+      if (this.expectedAnswerIds.hasOwnProperty(iter38))
       {
-        iter38 = this.expectedChoiceOptionIds[iter38];
+        iter38 = this.expectedAnswerIds[iter38];
         output.writeString(iter38);
       }
     }
-    output.writeListEnd();
+    output.writeSetEnd();
     output.writeFieldEnd();
   }
-  if (this.answeredChoiceOptionIds !== null && this.answeredChoiceOptionIds !== undefined) {
-    output.writeFieldBegin('answeredChoiceOptionIds', Thrift.Type.LIST, 3);
-    output.writeListBegin(Thrift.Type.STRING, this.answeredChoiceOptionIds.length);
-    for (var iter39 in this.answeredChoiceOptionIds)
+  if (this.answerIds !== null && this.answerIds !== undefined) {
+    output.writeFieldBegin('answerIds', Thrift.Type.SET, 3);
+    output.writeSetBegin(Thrift.Type.STRING, this.answerIds.length);
+    for (var iter39 in this.answerIds)
     {
-      if (this.answeredChoiceOptionIds.hasOwnProperty(iter39))
+      if (this.answerIds.hasOwnProperty(iter39))
       {
-        iter39 = this.answeredChoiceOptionIds[iter39];
+        iter39 = this.answerIds[iter39];
         output.writeString(iter39);
       }
     }
-    output.writeListEnd();
+    output.writeSetEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -1090,12 +1090,12 @@ CheckResult.prototype.write = function(output) {
 };
 
 MultipleChoiceParameters = module.exports.MultipleChoiceParameters = function(args) {
-  this.choiceOptionIds = null;
+  this.answerIds = null;
   if (args) {
-    if (args.choiceOptionIds !== undefined) {
-      this.choiceOptionIds = args.choiceOptionIds;
+    if (args.answerIds !== undefined) {
+      this.answerIds = args.answerIds;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field choiceOptionIds is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answerIds is unset!');
     }
   }
 };
@@ -1114,21 +1114,21 @@ MultipleChoiceParameters.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.LIST) {
+      if (ftype == Thrift.Type.SET) {
         var _size56 = 0;
         var _rtmp360;
-        this.choiceOptionIds = [];
+        this.answerIds = [];
         var _etype59 = 0;
-        _rtmp360 = input.readListBegin();
+        _rtmp360 = input.readSetBegin();
         _etype59 = _rtmp360.etype;
         _size56 = _rtmp360.size;
         for (var _i61 = 0; _i61 < _size56; ++_i61)
         {
           var elem62 = null;
           elem62 = input.readString();
-          this.choiceOptionIds.push(elem62);
+          this.answerIds.push(elem62);
         }
-        input.readListEnd();
+        input.readSetEnd();
       } else {
         input.skip(ftype);
       }
@@ -1147,18 +1147,18 @@ MultipleChoiceParameters.prototype.read = function(input) {
 
 MultipleChoiceParameters.prototype.write = function(output) {
   output.writeStructBegin('MultipleChoiceParameters');
-  if (this.choiceOptionIds !== null && this.choiceOptionIds !== undefined) {
-    output.writeFieldBegin('choiceOptionIds', Thrift.Type.LIST, 1);
-    output.writeListBegin(Thrift.Type.STRING, this.choiceOptionIds.length);
-    for (var iter63 in this.choiceOptionIds)
+  if (this.answerIds !== null && this.answerIds !== undefined) {
+    output.writeFieldBegin('answerIds', Thrift.Type.SET, 1);
+    output.writeSetBegin(Thrift.Type.STRING, this.answerIds.length);
+    for (var iter63 in this.answerIds)
     {
-      if (this.choiceOptionIds.hasOwnProperty(iter63))
+      if (this.answerIds.hasOwnProperty(iter63))
       {
-        iter63 = this.choiceOptionIds[iter63];
+        iter63 = this.answerIds[iter63];
         output.writeString(iter63);
       }
     }
-    output.writeListEnd();
+    output.writeSetEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();

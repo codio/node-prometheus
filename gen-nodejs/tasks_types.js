@@ -469,4 +469,59 @@ CreateUnitForkResult.prototype.write = function(output) {
   return;
 };
 
+UnitForkRemoved = module.exports.UnitForkRemoved = function(args) {
+  this.projectId = null;
+  if (args) {
+    if (args.projectId !== undefined) {
+      this.projectId = args.projectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field projectId is unset!');
+    }
+  }
+};
+UnitForkRemoved.prototype = {};
+UnitForkRemoved.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.projectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UnitForkRemoved.prototype.write = function(output) {
+  output.writeStructBegin('UnitForkRemoved');
+  if (this.projectId !== null && this.projectId !== undefined) {
+    output.writeFieldBegin('projectId', Thrift.Type.STRING, 1);
+    output.writeString(this.projectId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 ttypes.PublishUnitResultTopic = 'tasks.publishUnitResult';

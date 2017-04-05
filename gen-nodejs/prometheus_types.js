@@ -734,3 +734,65 @@ NoGuidesInUnitException.prototype.write = function(output) {
   return;
 };
 
+ArgumentException = module.exports.ArgumentException = function(args) {
+  Thrift.TException.call(this, "ArgumentException")
+  this.name = "ArgumentException"
+};
+Thrift.inherits(ArgumentException, Thrift.TException);
+ArgumentException.prototype.name = 'ArgumentException';
+ArgumentException.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ArgumentException.prototype.write = function(output) {
+  output.writeStructBegin('ArgumentException');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+AssessmentAlreadyAnsweredException = module.exports.AssessmentAlreadyAnsweredException = function(args) {
+  Thrift.TException.call(this, "AssessmentAlreadyAnsweredException")
+  this.name = "AssessmentAlreadyAnsweredException"
+};
+Thrift.inherits(AssessmentAlreadyAnsweredException, Thrift.TException);
+AssessmentAlreadyAnsweredException.prototype.name = 'AssessmentAlreadyAnsweredException';
+AssessmentAlreadyAnsweredException.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+AssessmentAlreadyAnsweredException.prototype.write = function(output) {
+  output.writeStructBegin('AssessmentAlreadyAnsweredException');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

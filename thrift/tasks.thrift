@@ -38,3 +38,7 @@ struct CreateUnitForkResult {
   1: required string taskId
   2: required CreateUnitForkStatus status
 }
+
+struct UnitForkRemoved {
+  1: required string projectId
+}

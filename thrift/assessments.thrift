@@ -3,6 +3,9 @@ namespace java com.codio.prometheus.thrift.unit.assessments
 
 include "common.thrift"
 
+struct Empty {}
+
+
 struct Details {
   1: required string name
   2: required i32 points
@@ -56,7 +59,10 @@ struct FillInBlanksResult {
 }
 
 struct ServerSideTestResult {
-  1: required string taskId
+  1: required i32 points
+  2: required i32 returnCode
+  3: required string stdout
+  4: required string stderr
 }
 
 struct CustomResult {
@@ -66,7 +72,7 @@ struct CustomResult {
 union CheckResult {
   1: MultipleChoiceResult multipleChoice
   2: FillInBlanksResult fillInBlanks
-  3: ServerSideTestResult serverSideTest
+  3: Empty serverSideTest
   4: CustomResult custom
 }
 

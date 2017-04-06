@@ -7,77 +7,21 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
-var unit_ttypes = require('./unit_types')
-var unitfork_ttypes = require('./unitfork_types')
+var common_ttypes = require('./common_types')
 
 
 var ttypes = module.exports = {};
-TaskError = module.exports.TaskError = function(args) {
-  this.message = null;
-  if (args) {
-    if (args.message !== undefined) {
-      this.message = args.message;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field message is unset!');
-    }
-  }
-};
-TaskError.prototype = {};
-TaskError.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.message = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 0:
-        input.skip(ftype);
-        break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-TaskError.prototype.write = function(output) {
-  output.writeStructBegin('TaskError');
-  if (this.message !== null && this.message !== undefined) {
-    output.writeFieldBegin('message', Thrift.Type.STRING, 1);
-    output.writeString(this.message);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
 PublishUnitTask = module.exports.PublishUnitTask = function(args) {
-  this.taskId = null;
+  this.replyParameters = null;
   this.unitId = null;
   this.unitVersionId = null;
   this.projectId = null;
   this.stackVersionId = null;
   if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
     }
     if (args.unitId !== undefined) {
       this.unitId = args.unitId;
@@ -116,8 +60,9 @@ PublishUnitTask.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
       } else {
         input.skip(ftype);
       }
@@ -161,9 +106,9 @@ PublishUnitTask.prototype.read = function(input) {
 
 PublishUnitTask.prototype.write = function(output) {
   output.writeStructBegin('PublishUnitTask');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
     output.writeFieldEnd();
   }
   if (this.unitId !== null && this.unitId !== undefined) {
@@ -191,282 +136,3 @@ PublishUnitTask.prototype.write = function(output) {
   return;
 };
 
-PublishUnitStatus = module.exports.PublishUnitStatus = function(args) {
-  this.complete = null;
-  this.error = null;
-  if (args) {
-    if (args.complete !== undefined) {
-      this.complete = args.complete;
-    }
-    if (args.error !== undefined) {
-      this.error = args.error;
-    }
-  }
-};
-PublishUnitStatus.prototype = {};
-PublishUnitStatus.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.complete = new unit_ttypes.Version();
-        this.complete.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.error = new ttypes.TaskError();
-        this.error.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-PublishUnitStatus.prototype.write = function(output) {
-  output.writeStructBegin('PublishUnitStatus');
-  if (this.complete !== null && this.complete !== undefined) {
-    output.writeFieldBegin('complete', Thrift.Type.STRUCT, 1);
-    this.complete.write(output);
-    output.writeFieldEnd();
-  }
-  if (this.error !== null && this.error !== undefined) {
-    output.writeFieldBegin('error', Thrift.Type.STRUCT, 2);
-    this.error.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-PublishUnitResult = module.exports.PublishUnitResult = function(args) {
-  this.taskId = null;
-  this.status = null;
-  if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
-    }
-    if (args.status !== undefined) {
-      this.status = args.status;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
-    }
-  }
-};
-PublishUnitResult.prototype = {};
-PublishUnitResult.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.status = new ttypes.PublishUnitStatus();
-        this.status.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-PublishUnitResult.prototype.write = function(output) {
-  output.writeStructBegin('PublishUnitResult');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
-    output.writeFieldEnd();
-  }
-  if (this.status !== null && this.status !== undefined) {
-    output.writeFieldBegin('status', Thrift.Type.STRUCT, 2);
-    this.status.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-CreateUnitForkStatus = module.exports.CreateUnitForkStatus = function(args) {
-  this.complete = null;
-  this.error = null;
-  if (args) {
-    if (args.complete !== undefined) {
-      this.complete = args.complete;
-    }
-    if (args.error !== undefined) {
-      this.error = args.error;
-    }
-  }
-};
-CreateUnitForkStatus.prototype = {};
-CreateUnitForkStatus.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.complete = new unitfork_ttypes.UnitFork();
-        this.complete.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.error = new ttypes.TaskError();
-        this.error.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-CreateUnitForkStatus.prototype.write = function(output) {
-  output.writeStructBegin('CreateUnitForkStatus');
-  if (this.complete !== null && this.complete !== undefined) {
-    output.writeFieldBegin('complete', Thrift.Type.STRUCT, 1);
-    this.complete.write(output);
-    output.writeFieldEnd();
-  }
-  if (this.error !== null && this.error !== undefined) {
-    output.writeFieldBegin('error', Thrift.Type.STRUCT, 2);
-    this.error.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-CreateUnitForkResult = module.exports.CreateUnitForkResult = function(args) {
-  this.taskId = null;
-  this.status = null;
-  if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
-    }
-    if (args.status !== undefined) {
-      this.status = args.status;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
-    }
-  }
-};
-CreateUnitForkResult.prototype = {};
-CreateUnitForkResult.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.status = new ttypes.CreateUnitForkStatus();
-        this.status.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-CreateUnitForkResult.prototype.write = function(output) {
-  output.writeStructBegin('CreateUnitForkResult');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
-    output.writeFieldEnd();
-  }
-  if (this.status !== null && this.status !== undefined) {
-    output.writeFieldBegin('status', Thrift.Type.STRUCT, 2);
-    this.status.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-ttypes.PublishUnitResultTopic = 'tasks.publishUnitResult';

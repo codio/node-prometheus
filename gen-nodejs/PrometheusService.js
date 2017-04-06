@@ -7,6 +7,7 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
+var common_ttypes = require('./common_types')
 var guides_ttypes = require('./guides_types')
 var unit_ttypes = require('./unit_types')
 var module_ttypes = require('./module_types')
@@ -1745,15 +1746,15 @@ PrometheusService_updateUnit_result.prototype.write = function(output) {
 };
 
 PrometheusService_publishUnit_args = function(args) {
-  this.taskId = null;
+  this.replyParameters = null;
   this.unitId = null;
   this.projectId = null;
   this.stackVersionId = null;
   if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
     }
     if (args.unitId !== undefined) {
       this.unitId = args.unitId;
@@ -1787,8 +1788,9 @@ PrometheusService_publishUnit_args.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
       } else {
         input.skip(ftype);
       }
@@ -1825,9 +1827,9 @@ PrometheusService_publishUnit_args.prototype.read = function(input) {
 
 PrometheusService_publishUnit_args.prototype.write = function(output) {
   output.writeStructBegin('PrometheusService_publishUnit_args');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
     output.writeFieldEnd();
   }
   if (this.unitId !== null && this.unitId !== undefined) {
@@ -2459,22 +2461,17 @@ PrometheusService_reorderUnits_result.prototype.write = function(output) {
 };
 
 PrometheusService_createUnitFork_args = function(args) {
-  this.taskId = null;
-  this.replyTo = null;
+  this.replyParameters = null;
   this.unitVersionId = null;
   this.courseId = null;
   this.accountId = null;
   this.gigaBoxSlot = null;
+  this.addSecureScripts = null;
   if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
-    }
-    if (args.replyTo !== undefined) {
-      this.replyTo = args.replyTo;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyTo is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
     }
     if (args.unitVersionId !== undefined) {
       this.unitVersionId = args.unitVersionId;
@@ -2494,6 +2491,9 @@ PrometheusService_createUnitFork_args = function(args) {
     if (args.gigaBoxSlot !== undefined) {
       this.gigaBoxSlot = args.gigaBoxSlot;
     }
+    if (args.addSecureScripts !== undefined) {
+      this.addSecureScripts = args.addSecureScripts;
+    }
   }
 };
 PrometheusService_createUnitFork_args.prototype = {};
@@ -2511,44 +2511,44 @@ PrometheusService_createUnitFork_args.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
       } else {
         input.skip(ftype);
       }
       break;
       case 2:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.replyTo = new ttypes.ExchangeDetails();
-        this.replyTo.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 3:
       if (ftype == Thrift.Type.STRING) {
         this.unitVersionId = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 4:
+      case 3:
       if (ftype == Thrift.Type.STRING) {
         this.courseId = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 5:
+      case 4:
       if (ftype == Thrift.Type.STRING) {
         this.accountId = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 6:
+      case 5:
       if (ftype == Thrift.Type.STRING) {
         this.gigaBoxSlot = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.BOOL) {
+        this.addSecureScripts = input.readBool();
       } else {
         input.skip(ftype);
       }
@@ -2564,34 +2564,34 @@ PrometheusService_createUnitFork_args.prototype.read = function(input) {
 
 PrometheusService_createUnitFork_args.prototype.write = function(output) {
   output.writeStructBegin('PrometheusService_createUnitFork_args');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
-    output.writeFieldEnd();
-  }
-  if (this.replyTo !== null && this.replyTo !== undefined) {
-    output.writeFieldBegin('replyTo', Thrift.Type.STRUCT, 2);
-    this.replyTo.write(output);
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
     output.writeFieldEnd();
   }
   if (this.unitVersionId !== null && this.unitVersionId !== undefined) {
-    output.writeFieldBegin('unitVersionId', Thrift.Type.STRING, 3);
+    output.writeFieldBegin('unitVersionId', Thrift.Type.STRING, 2);
     output.writeString(this.unitVersionId);
     output.writeFieldEnd();
   }
   if (this.courseId !== null && this.courseId !== undefined) {
-    output.writeFieldBegin('courseId', Thrift.Type.STRING, 4);
+    output.writeFieldBegin('courseId', Thrift.Type.STRING, 3);
     output.writeString(this.courseId);
     output.writeFieldEnd();
   }
   if (this.accountId !== null && this.accountId !== undefined) {
-    output.writeFieldBegin('accountId', Thrift.Type.STRING, 5);
+    output.writeFieldBegin('accountId', Thrift.Type.STRING, 4);
     output.writeString(this.accountId);
     output.writeFieldEnd();
   }
   if (this.gigaBoxSlot !== null && this.gigaBoxSlot !== undefined) {
-    output.writeFieldBegin('gigaBoxSlot', Thrift.Type.STRING, 6);
+    output.writeFieldBegin('gigaBoxSlot', Thrift.Type.STRING, 5);
     output.writeString(this.gigaBoxSlot);
+    output.writeFieldEnd();
+  }
+  if (this.addSecureScripts !== null && this.addSecureScripts !== undefined) {
+    output.writeFieldBegin('addSecureScripts', Thrift.Type.BOOL, 6);
+    output.writeBool(this.addSecureScripts);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -3937,7 +3937,7 @@ PrometheusServiceClient.prototype.recv_updateUnit = function(input,mtype,rseqid)
   }
   callback(null)
 };
-PrometheusServiceClient.prototype.publishUnit = function(taskId, unitId, projectId, stackVersionId, callback) {
+PrometheusServiceClient.prototype.publishUnit = function(replyParameters, unitId, projectId, stackVersionId, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -3948,19 +3948,19 @@ PrometheusServiceClient.prototype.publishUnit = function(taskId, unitId, project
         _defer.resolve(result);
       }
     };
-    this.send_publishUnit(taskId, unitId, projectId, stackVersionId);
+    this.send_publishUnit(replyParameters, unitId, projectId, stackVersionId);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_publishUnit(taskId, unitId, projectId, stackVersionId);
+    this.send_publishUnit(replyParameters, unitId, projectId, stackVersionId);
   }
 };
 
-PrometheusServiceClient.prototype.send_publishUnit = function(taskId, unitId, projectId, stackVersionId) {
+PrometheusServiceClient.prototype.send_publishUnit = function(replyParameters, unitId, projectId, stackVersionId) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('publishUnit', Thrift.MessageType.CALL, this.seqid());
   var args = new PrometheusService_publishUnit_args();
-  args.taskId = taskId;
+  args.replyParameters = replyParameters;
   args.unitId = unitId;
   args.projectId = projectId;
   args.stackVersionId = stackVersionId;
@@ -4186,7 +4186,7 @@ PrometheusServiceClient.prototype.recv_reorderUnits = function(input,mtype,rseqi
   }
   callback(null)
 };
-PrometheusServiceClient.prototype.createUnitFork = function(taskId, replyTo, unitVersionId, courseId, accountId, gigaBoxSlot, callback) {
+PrometheusServiceClient.prototype.createUnitFork = function(replyParameters, unitVersionId, courseId, accountId, gigaBoxSlot, addSecureScripts, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -4197,24 +4197,24 @@ PrometheusServiceClient.prototype.createUnitFork = function(taskId, replyTo, uni
         _defer.resolve(result);
       }
     };
-    this.send_createUnitFork(taskId, replyTo, unitVersionId, courseId, accountId, gigaBoxSlot);
+    this.send_createUnitFork(replyParameters, unitVersionId, courseId, accountId, gigaBoxSlot, addSecureScripts);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_createUnitFork(taskId, replyTo, unitVersionId, courseId, accountId, gigaBoxSlot);
+    this.send_createUnitFork(replyParameters, unitVersionId, courseId, accountId, gigaBoxSlot, addSecureScripts);
   }
 };
 
-PrometheusServiceClient.prototype.send_createUnitFork = function(taskId, replyTo, unitVersionId, courseId, accountId, gigaBoxSlot) {
+PrometheusServiceClient.prototype.send_createUnitFork = function(replyParameters, unitVersionId, courseId, accountId, gigaBoxSlot, addSecureScripts) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('createUnitFork', Thrift.MessageType.CALL, this.seqid());
   var args = new PrometheusService_createUnitFork_args();
-  args.taskId = taskId;
-  args.replyTo = replyTo;
+  args.replyParameters = replyParameters;
   args.unitVersionId = unitVersionId;
   args.courseId = courseId;
   args.accountId = accountId;
   args.gigaBoxSlot = gigaBoxSlot;
+  args.addSecureScripts = addSecureScripts;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
@@ -4860,7 +4860,7 @@ PrometheusServiceProcessor.prototype.process_publishUnit = function(seqid, input
   args.read(input);
   input.readMessageEnd();
   if (this._handler.publishUnit.length === 4) {
-    Q.fcall(this._handler.publishUnit, args.taskId, args.unitId, args.projectId, args.stackVersionId)
+    Q.fcall(this._handler.publishUnit, args.replyParameters, args.unitId, args.projectId, args.stackVersionId)
       .then(function(result) {
         var result = new PrometheusService_publishUnit_result({success: result});
         output.writeMessageBegin("publishUnit", Thrift.MessageType.REPLY, seqid);
@@ -4875,7 +4875,7 @@ PrometheusServiceProcessor.prototype.process_publishUnit = function(seqid, input
         output.flush();
       });
   } else {
-    this._handler.publishUnit(args.taskId, args.unitId, args.projectId, args.stackVersionId,  function (err, result) {
+    this._handler.publishUnit(args.replyParameters, args.unitId, args.projectId, args.stackVersionId,  function (err, result) {
       var result = new PrometheusService_publishUnit_result((err != null ? err : {success: result}));
       output.writeMessageBegin("publishUnit", Thrift.MessageType.REPLY, seqid);
       result.write(output);
@@ -5010,7 +5010,7 @@ PrometheusServiceProcessor.prototype.process_createUnitFork = function(seqid, in
   args.read(input);
   input.readMessageEnd();
   if (this._handler.createUnitFork.length === 6) {
-    Q.fcall(this._handler.createUnitFork, args.taskId, args.replyTo, args.unitVersionId, args.courseId, args.accountId, args.gigaBoxSlot)
+    Q.fcall(this._handler.createUnitFork, args.replyParameters, args.unitVersionId, args.courseId, args.accountId, args.gigaBoxSlot, args.addSecureScripts)
       .then(function(result) {
         var result = new PrometheusService_createUnitFork_result({success: result});
         output.writeMessageBegin("createUnitFork", Thrift.MessageType.REPLY, seqid);
@@ -5025,7 +5025,7 @@ PrometheusServiceProcessor.prototype.process_createUnitFork = function(seqid, in
         output.flush();
       });
   } else {
-    this._handler.createUnitFork(args.taskId, args.replyTo, args.unitVersionId, args.courseId, args.accountId, args.gigaBoxSlot,  function (err, result) {
+    this._handler.createUnitFork(args.replyParameters, args.unitVersionId, args.courseId, args.accountId, args.gigaBoxSlot, args.addSecureScripts,  function (err, result) {
       var result = new PrometheusService_createUnitFork_result((err != null ? err : {success: result}));
       output.writeMessageBegin("createUnitFork", Thrift.MessageType.REPLY, seqid);
       result.write(output);

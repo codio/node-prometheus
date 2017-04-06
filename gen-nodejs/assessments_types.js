@@ -11,6 +11,34 @@ var common_ttypes = require('./common_types')
 
 
 var ttypes = module.exports = {};
+Empty = module.exports.Empty = function(args) {
+};
+Empty.prototype = {};
+Empty.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+Empty.prototype.write = function(output) {
+  output.writeStructBegin('Empty');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 Details = module.exports.Details = function(args) {
   this.name = null;
   this.points = null;
@@ -878,12 +906,30 @@ FillInBlanksResult.prototype.write = function(output) {
 };
 
 ServerSideTestResult = module.exports.ServerSideTestResult = function(args) {
-  this.taskId = null;
+  this.points = null;
+  this.returnCode = null;
+  this.stdout = null;
+  this.stderr = null;
   if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
+    if (args.points !== undefined) {
+      this.points = args.points;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+    if (args.returnCode !== undefined) {
+      this.returnCode = args.returnCode;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field returnCode is unset!');
+    }
+    if (args.stdout !== undefined) {
+      this.stdout = args.stdout;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stdout is unset!');
+    }
+    if (args.stderr !== undefined) {
+      this.stderr = args.stderr;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stderr is unset!');
     }
   }
 };
@@ -902,15 +948,33 @@ ServerSideTestResult.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
       } else {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 2:
+      if (ftype == Thrift.Type.I32) {
+        this.returnCode = input.readI32();
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.stdout = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.stderr = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -922,9 +986,24 @@ ServerSideTestResult.prototype.read = function(input) {
 
 ServerSideTestResult.prototype.write = function(output) {
   output.writeStructBegin('ServerSideTestResult');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 1);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  if (this.returnCode !== null && this.returnCode !== undefined) {
+    output.writeFieldBegin('returnCode', Thrift.Type.I32, 2);
+    output.writeI32(this.returnCode);
+    output.writeFieldEnd();
+  }
+  if (this.stdout !== null && this.stdout !== undefined) {
+    output.writeFieldBegin('stdout', Thrift.Type.STRING, 3);
+    output.writeString(this.stdout);
+    output.writeFieldEnd();
+  }
+  if (this.stderr !== null && this.stderr !== undefined) {
+    output.writeFieldBegin('stderr', Thrift.Type.STRING, 4);
+    output.writeString(this.stderr);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -1039,7 +1118,7 @@ CheckResult.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRUCT) {
-        this.serverSideTest = new ttypes.ServerSideTestResult();
+        this.serverSideTest = new ttypes.Empty();
         this.serverSideTest.read(input);
       } else {
         input.skip(ftype);

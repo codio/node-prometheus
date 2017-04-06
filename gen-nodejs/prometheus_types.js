@@ -7,6 +7,7 @@ var thrift = require('thrift');
 var Thrift = thrift.Thrift;
 var Q = thrift.Q;
 
+var common_ttypes = require('./common_types')
 var guides_ttypes = require('./guides_types')
 var unit_ttypes = require('./unit_types')
 var module_ttypes = require('./module_types')
@@ -536,76 +537,6 @@ ChangeStackVersionInUnitResult.prototype.write = function(output) {
   if (this.unitVersion !== null && this.unitVersion !== undefined) {
     output.writeFieldBegin('unitVersion', Thrift.Type.STRUCT, 1);
     this.unitVersion.write(output);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-ExchangeDetails = module.exports.ExchangeDetails = function(args) {
-  this.routingKey = null;
-  this.exchange = null;
-  if (args) {
-    if (args.routingKey !== undefined) {
-      this.routingKey = args.routingKey;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field routingKey is unset!');
-    }
-    if (args.exchange !== undefined) {
-      this.exchange = args.exchange;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field exchange is unset!');
-    }
-  }
-};
-ExchangeDetails.prototype = {};
-ExchangeDetails.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.routingKey = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRING) {
-        this.exchange = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-ExchangeDetails.prototype.write = function(output) {
-  output.writeStructBegin('ExchangeDetails');
-  if (this.routingKey !== null && this.routingKey !== undefined) {
-    output.writeFieldBegin('routingKey', Thrift.Type.STRING, 1);
-    output.writeString(this.routingKey);
-    output.writeFieldEnd();
-  }
-  if (this.exchange !== null && this.exchange !== undefined) {
-    output.writeFieldBegin('exchange', Thrift.Type.STRING, 2);
-    output.writeString(this.exchange);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

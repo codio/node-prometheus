@@ -10,15 +10,9 @@ var Q = thrift.Q;
 
 var ttypes = module.exports = {};
 ReplyToExchange = module.exports.ReplyToExchange = function(args) {
-  this.taskId = null;
   this.exchange = null;
   this.routingKey = null;
   if (args) {
-    if (args.taskId !== undefined) {
-      this.taskId = args.taskId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
-    }
     if (args.exchange !== undefined) {
       this.exchange = args.exchange;
     } else {
@@ -47,19 +41,12 @@ ReplyToExchange.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.STRING) {
-        this.taskId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRING) {
         this.exchange = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 3:
+      case 2:
       if (ftype == Thrift.Type.STRING) {
         this.routingKey = input.readString();
       } else {
@@ -77,18 +64,13 @@ ReplyToExchange.prototype.read = function(input) {
 
 ReplyToExchange.prototype.write = function(output) {
   output.writeStructBegin('ReplyToExchange');
-  if (this.taskId !== null && this.taskId !== undefined) {
-    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
-    output.writeString(this.taskId);
-    output.writeFieldEnd();
-  }
   if (this.exchange !== null && this.exchange !== undefined) {
-    output.writeFieldBegin('exchange', Thrift.Type.STRING, 2);
+    output.writeFieldBegin('exchange', Thrift.Type.STRING, 1);
     output.writeString(this.exchange);
     output.writeFieldEnd();
   }
   if (this.routingKey !== null && this.routingKey !== undefined) {
-    output.writeFieldBegin('routingKey', Thrift.Type.STRING, 3);
+    output.writeFieldBegin('routingKey', Thrift.Type.STRING, 2);
     output.writeString(this.routingKey);
     output.writeFieldEnd();
   }
@@ -194,9 +176,15 @@ ReplyDestination.prototype.write = function(output) {
 };
 
 ReplyParameters = module.exports.ReplyParameters = function(args) {
+  this.taskId = null;
   this.replyTo = null;
   this.passThrough = null;
   if (args) {
+    if (args.taskId !== undefined) {
+      this.taskId = args.taskId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
+    }
     if (args.replyTo !== undefined) {
       this.replyTo = args.replyTo;
     } else {
@@ -222,6 +210,13 @@ ReplyParameters.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.taskId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
       if (ftype == Thrift.Type.STRUCT) {
         this.replyTo = new ttypes.ReplyDestination();
         this.replyTo.read(input);
@@ -229,7 +224,7 @@ ReplyParameters.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 2:
+      case 3:
       if (ftype == Thrift.Type.STRING) {
         this.passThrough = input.readString();
       } else {
@@ -247,13 +242,18 @@ ReplyParameters.prototype.read = function(input) {
 
 ReplyParameters.prototype.write = function(output) {
   output.writeStructBegin('ReplyParameters');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
   if (this.replyTo !== null && this.replyTo !== undefined) {
-    output.writeFieldBegin('replyTo', Thrift.Type.STRUCT, 1);
+    output.writeFieldBegin('replyTo', Thrift.Type.STRUCT, 2);
     this.replyTo.write(output);
     output.writeFieldEnd();
   }
   if (this.passThrough !== null && this.passThrough !== undefined) {
-    output.writeFieldBegin('passThrough', Thrift.Type.STRING, 2);
+    output.writeFieldBegin('passThrough', Thrift.Type.STRING, 3);
     output.writeString(this.passThrough);
     output.writeFieldEnd();
   }

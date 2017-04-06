@@ -1,6 +1,7 @@
 namespace java com.codio.prometheus.thrift
 #@namespace scala com.codio.prometheus.thrift
 
+include "common.thrift"
 include "guides.thrift"
 include "unit.thrift"
 include "module.thrift"
@@ -37,11 +38,6 @@ struct UpdateUnitDetails {
 
 struct ChangeStackVersionInUnitResult {
   1: optional unit.Version unitVersion
-}
-
-struct ExchangeDetails {
-  1: required string routingKey
-  2: required string exchange
 }
 
 exception NotFoundException {}
@@ -88,7 +84,7 @@ service PrometheusService {
       throws (1: NotFoundException nfe)
 
   void publishUnit(
-    1: required string taskId,
+    1: required common.ReplyParameters replyParameters,
     2: required string unitId,
     3: required string projectId,
     4: required string stackVersionId
@@ -106,12 +102,12 @@ service PrometheusService {
       throws (1: NotFoundException nfe, 2: ReorderConflictException rce)
 
   void createUnitFork(
-    1: required string taskId,
-    2: required ExchangeDetails replyTo,
-    3: required string unitVersionId,
-    4: required string courseId,
-    5: required string accountId,
-    6: optional string gigaBoxSlot
+    1: required common.ReplyParameters replyParameters,
+    2: required string unitVersionId,
+    3: required string courseId,
+    4: required string accountId,
+    5: optional string gigaBoxSlot,
+    6: optional bool addSecureScripts
   ) throws (1: NotFoundException nfe)
 
   unit.Guides getUnitGuides(

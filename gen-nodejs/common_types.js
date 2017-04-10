@@ -262,3 +262,31 @@ ReplyParameters.prototype.write = function(output) {
   return;
 };
 
+Empty = module.exports.Empty = function(args) {
+};
+Empty.prototype = {};
+Empty.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+Empty.prototype.write = function(output) {
+  output.writeStructBegin('Empty');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

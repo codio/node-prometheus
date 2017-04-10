@@ -3098,10 +3098,197 @@ PrometheusService_getUnitForksByProjectIds_result.prototype.write = function(out
   return;
 };
 
-PrometheusService_checkAssessment_args = function(args) {
+PrometheusService_restoreUnitForkContent_args = function(args) {
+  this.replyParameters = null;
+  this.userId = null;
+  this.projectId = null;
+  this.folders = null;
+  if (args) {
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
+    }
+    if (args.userId !== undefined) {
+      this.userId = args.userId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field userId is unset!');
+    }
+    if (args.projectId !== undefined) {
+      this.projectId = args.projectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field projectId is unset!');
+    }
+    if (args.folders !== undefined) {
+      this.folders = args.folders;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field folders is unset!');
+    }
+  }
+};
+PrometheusService_restoreUnitForkContent_args.prototype = {};
+PrometheusService_restoreUnitForkContent_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.userId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.projectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.LIST) {
+        var _size106 = 0;
+        var _rtmp3110;
+        this.folders = [];
+        var _etype109 = 0;
+        _rtmp3110 = input.readListBegin();
+        _etype109 = _rtmp3110.etype;
+        _size106 = _rtmp3110.size;
+        for (var _i111 = 0; _i111 < _size106; ++_i111)
+        {
+          var elem112 = null;
+          elem112 = input.readString();
+          this.folders.push(elem112);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_restoreUnitForkContent_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_restoreUnitForkContent_args');
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.userId !== null && this.userId !== undefined) {
+    output.writeFieldBegin('userId', Thrift.Type.STRING, 2);
+    output.writeString(this.userId);
+    output.writeFieldEnd();
+  }
+  if (this.projectId !== null && this.projectId !== undefined) {
+    output.writeFieldBegin('projectId', Thrift.Type.STRING, 3);
+    output.writeString(this.projectId);
+    output.writeFieldEnd();
+  }
+  if (this.folders !== null && this.folders !== undefined) {
+    output.writeFieldBegin('folders', Thrift.Type.LIST, 4);
+    output.writeListBegin(Thrift.Type.STRING, this.folders.length);
+    for (var iter113 in this.folders)
+    {
+      if (this.folders.hasOwnProperty(iter113))
+      {
+        iter113 = this.folders[iter113];
+        output.writeString(iter113);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_restoreUnitForkContent_result = function(args) {
+  this.nfe = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+  }
+};
+PrometheusService_restoreUnitForkContent_result.prototype = {};
+PrometheusService_restoreUnitForkContent_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_restoreUnitForkContent_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_restoreUnitForkContent_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkMultipleChoiceAssessment_args = function(args) {
   this.unitForkProjectId = null;
   this.assessmentId = null;
-  this.params = null;
+  this.answerIds = null;
   if (args) {
     if (args.unitForkProjectId !== undefined) {
       this.unitForkProjectId = args.unitForkProjectId;
@@ -3113,15 +3300,15 @@ PrometheusService_checkAssessment_args = function(args) {
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
     }
-    if (args.params !== undefined) {
-      this.params = args.params;
+    if (args.answerIds !== undefined) {
+      this.answerIds = args.answerIds;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field params is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answerIds is unset!');
     }
   }
 };
-PrometheusService_checkAssessment_args.prototype = {};
-PrometheusService_checkAssessment_args.prototype.read = function(input) {
+PrometheusService_checkMultipleChoiceAssessment_args.prototype = {};
+PrometheusService_checkMultipleChoiceAssessment_args.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -3149,9 +3336,21 @@ PrometheusService_checkAssessment_args.prototype.read = function(input) {
       }
       break;
       case 3:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.params = new assessments_ttypes.CheckParameters();
-        this.params.read(input);
+      if (ftype == Thrift.Type.SET) {
+        var _size114 = 0;
+        var _rtmp3118;
+        this.answerIds = [];
+        var _etype117 = 0;
+        _rtmp3118 = input.readSetBegin();
+        _etype117 = _rtmp3118.etype;
+        _size114 = _rtmp3118.size;
+        for (var _i119 = 0; _i119 < _size114; ++_i119)
+        {
+          var elem120 = null;
+          elem120 = input.readString();
+          this.answerIds.push(elem120);
+        }
+        input.readSetEnd();
       } else {
         input.skip(ftype);
       }
@@ -3165,8 +3364,8 @@ PrometheusService_checkAssessment_args.prototype.read = function(input) {
   return;
 };
 
-PrometheusService_checkAssessment_args.prototype.write = function(output) {
-  output.writeStructBegin('PrometheusService_checkAssessment_args');
+PrometheusService_checkMultipleChoiceAssessment_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkMultipleChoiceAssessment_args');
   if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
     output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
     output.writeString(this.unitForkProjectId);
@@ -3177,9 +3376,18 @@ PrometheusService_checkAssessment_args.prototype.write = function(output) {
     output.writeString(this.assessmentId);
     output.writeFieldEnd();
   }
-  if (this.params !== null && this.params !== undefined) {
-    output.writeFieldBegin('params', Thrift.Type.STRUCT, 3);
-    this.params.write(output);
+  if (this.answerIds !== null && this.answerIds !== undefined) {
+    output.writeFieldBegin('answerIds', Thrift.Type.SET, 3);
+    output.writeSetBegin(Thrift.Type.STRING, this.answerIds.length);
+    for (var iter121 in this.answerIds)
+    {
+      if (this.answerIds.hasOwnProperty(iter121))
+      {
+        iter121 = this.answerIds[iter121];
+        output.writeString(iter121);
+      }
+    }
+    output.writeSetEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -3187,7 +3395,7 @@ PrometheusService_checkAssessment_args.prototype.write = function(output) {
   return;
 };
 
-PrometheusService_checkAssessment_result = function(args) {
+PrometheusService_checkMultipleChoiceAssessment_result = function(args) {
   this.success = null;
   this.nfe = null;
   this.ae = null;
@@ -3219,8 +3427,8 @@ PrometheusService_checkAssessment_result = function(args) {
     }
   }
 };
-PrometheusService_checkAssessment_result.prototype = {};
-PrometheusService_checkAssessment_result.prototype.read = function(input) {
+PrometheusService_checkMultipleChoiceAssessment_result.prototype = {};
+PrometheusService_checkMultipleChoiceAssessment_result.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -3235,7 +3443,7 @@ PrometheusService_checkAssessment_result.prototype.read = function(input) {
     {
       case 0:
       if (ftype == Thrift.Type.STRUCT) {
-        this.success = new assessments_ttypes.CheckResult();
+        this.success = new assessments_ttypes.MultipleChoiceResult();
         this.success.read(input);
       } else {
         input.skip(ftype);
@@ -3274,8 +3482,8 @@ PrometheusService_checkAssessment_result.prototype.read = function(input) {
   return;
 };
 
-PrometheusService_checkAssessment_result.prototype.write = function(output) {
-  output.writeStructBegin('PrometheusService_checkAssessment_result');
+PrometheusService_checkMultipleChoiceAssessment_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkMultipleChoiceAssessment_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
     this.success.write(output);
@@ -3294,6 +3502,1464 @@ PrometheusService_checkAssessment_result.prototype.write = function(output) {
   if (this.aaae !== null && this.aaae !== undefined) {
     output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
     this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkFillInBlanksAssessment_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.answers = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.answers !== undefined) {
+      this.answers = args.answers;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answers is unset!');
+    }
+  }
+};
+PrometheusService_checkFillInBlanksAssessment_args.prototype = {};
+PrometheusService_checkFillInBlanksAssessment_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size122 = 0;
+        var _rtmp3126;
+        this.answers = [];
+        var _etype125 = 0;
+        _rtmp3126 = input.readListBegin();
+        _etype125 = _rtmp3126.etype;
+        _size122 = _rtmp3126.size;
+        for (var _i127 = 0; _i127 < _size122; ++_i127)
+        {
+          var elem128 = null;
+          elem128 = input.readString();
+          this.answers.push(elem128);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkFillInBlanksAssessment_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkFillInBlanksAssessment_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.answers !== null && this.answers !== undefined) {
+    output.writeFieldBegin('answers', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRING, this.answers.length);
+    for (var iter129 in this.answers)
+    {
+      if (this.answers.hasOwnProperty(iter129))
+      {
+        iter129 = this.answers[iter129];
+        output.writeString(iter129);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkFillInBlanksAssessment_result = function(args) {
+  this.success = null;
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
+    }
+  }
+};
+PrometheusService_checkFillInBlanksAssessment_result.prototype = {};
+PrometheusService_checkFillInBlanksAssessment_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new assessments_ttypes.FillInBlanksResult();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkFillInBlanksAssessment_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkFillInBlanksAssessment_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeTestAssessment_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.replyParameters = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
+    }
+  }
+};
+PrometheusService_checkCodeTestAssessment_args.prototype = {};
+PrometheusService_checkCodeTestAssessment_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeTestAssessment_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkCodeTestAssessment_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 3);
+    this.replyParameters.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeTestAssessment_result = function(args) {
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
+    }
+  }
+};
+PrometheusService_checkCodeTestAssessment_result.prototype = {};
+PrometheusService_checkCodeTestAssessment_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeTestAssessment_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkCodeTestAssessment_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeOutputCompareAssessment_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.replyParameters = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.replyParameters !== undefined) {
+      this.replyParameters = args.replyParameters;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
+    }
+  }
+};
+PrometheusService_checkCodeOutputCompareAssessment_args.prototype = {};
+PrometheusService_checkCodeOutputCompareAssessment_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeOutputCompareAssessment_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkCodeOutputCompareAssessment_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 3);
+    this.replyParameters.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeOutputCompareAssessment_result = function(args) {
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
+    }
+  }
+};
+PrometheusService_checkCodeOutputCompareAssessment_result.prototype = {};
+PrometheusService_checkCodeOutputCompareAssessment_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_checkCodeOutputCompareAssessment_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_checkCodeOutputCompareAssessment_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_submitCustomAssessmentResult_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.points = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+  }
+};
+PrometheusService_submitCustomAssessmentResult_args.prototype = {};
+PrometheusService_submitCustomAssessmentResult_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_submitCustomAssessmentResult_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_submitCustomAssessmentResult_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 3);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_submitCustomAssessmentResult_result = function(args) {
+  this.success = null;
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
+    }
+  }
+};
+PrometheusService_submitCustomAssessmentResult_result.prototype = {};
+PrometheusService_submitCustomAssessmentResult_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new assessments_ttypes.CustomResult();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_submitCustomAssessmentResult_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_submitCustomAssessmentResult_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_submitFreeTextAssessmentAnswer_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.answer = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.answer !== undefined) {
+      this.answer = args.answer;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answer is unset!');
+    }
+  }
+};
+PrometheusService_submitFreeTextAssessmentAnswer_args.prototype = {};
+PrometheusService_submitFreeTextAssessmentAnswer_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.answer = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_submitFreeTextAssessmentAnswer_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_submitFreeTextAssessmentAnswer_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.answer !== null && this.answer !== undefined) {
+    output.writeFieldBegin('answer', Thrift.Type.STRING, 3);
+    output.writeString(this.answer);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_submitFreeTextAssessmentAnswer_result = function(args) {
+  this.nfe = null;
+  this.ae = null;
+  this.aaae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args instanceof ttypes.AssessmentAlreadyAnsweredException) {
+    this.aaae = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+    if (args.aaae !== undefined) {
+      this.aaae = args.aaae;
+    }
+  }
+};
+PrometheusService_submitFreeTextAssessmentAnswer_result.prototype = {};
+PrometheusService_submitFreeTextAssessmentAnswer_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.aaae = new ttypes.AssessmentAlreadyAnsweredException();
+        this.aaae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_submitFreeTextAssessmentAnswer_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_submitFreeTextAssessmentAnswer_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.aaae !== null && this.aaae !== undefined) {
+    output.writeFieldBegin('aaae', Thrift.Type.STRUCT, 3);
+    this.aaae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_markFreeTextAssessment_args = function(args) {
+  this.unitForkProjectId = null;
+  this.assessmentId = null;
+  this.answerId = null;
+  this.points = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+    if (args.assessmentId !== undefined) {
+      this.assessmentId = args.assessmentId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentId is unset!');
+    }
+    if (args.answerId !== undefined) {
+      this.answerId = args.answerId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answerId is unset!');
+    }
+    if (args.points !== undefined) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+  }
+};
+PrometheusService_markFreeTextAssessment_args.prototype = {};
+PrometheusService_markFreeTextAssessment_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.assessmentId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.answerId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_markFreeTextAssessment_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_markFreeTextAssessment_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentId !== null && this.assessmentId !== undefined) {
+    output.writeFieldBegin('assessmentId', Thrift.Type.STRING, 2);
+    output.writeString(this.assessmentId);
+    output.writeFieldEnd();
+  }
+  if (this.answerId !== null && this.answerId !== undefined) {
+    output.writeFieldBegin('answerId', Thrift.Type.STRING, 3);
+    output.writeString(this.answerId);
+    output.writeFieldEnd();
+  }
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 4);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_markFreeTextAssessment_result = function(args) {
+  this.nfe = null;
+  this.ae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined) {
+      this.ae = args.ae;
+    }
+  }
+};
+PrometheusService_markFreeTextAssessment_result.prototype = {};
+PrometheusService_markFreeTextAssessment_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_markFreeTextAssessment_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_markFreeTextAssessment_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentScores_args = function(args) {
+  this.unitForkProjectIds = null;
+  if (args) {
+    if (args.unitForkProjectIds !== undefined) {
+      this.unitForkProjectIds = args.unitForkProjectIds;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectIds is unset!');
+    }
+  }
+};
+PrometheusService_getAssessmentScores_args.prototype = {};
+PrometheusService_getAssessmentScores_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        var _size130 = 0;
+        var _rtmp3134;
+        this.unitForkProjectIds = [];
+        var _etype133 = 0;
+        _rtmp3134 = input.readListBegin();
+        _etype133 = _rtmp3134.etype;
+        _size130 = _rtmp3134.size;
+        for (var _i135 = 0; _i135 < _size130; ++_i135)
+        {
+          var elem136 = null;
+          elem136 = input.readString();
+          this.unitForkProjectIds.push(elem136);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentScores_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getAssessmentScores_args');
+  if (this.unitForkProjectIds !== null && this.unitForkProjectIds !== undefined) {
+    output.writeFieldBegin('unitForkProjectIds', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRING, this.unitForkProjectIds.length);
+    for (var iter137 in this.unitForkProjectIds)
+    {
+      if (this.unitForkProjectIds.hasOwnProperty(iter137))
+      {
+        iter137 = this.unitForkProjectIds[iter137];
+        output.writeString(iter137);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentScores_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+  }
+};
+PrometheusService_getAssessmentScores_result.prototype = {};
+PrometheusService_getAssessmentScores_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.MAP) {
+        var _size138 = 0;
+        var _rtmp3142;
+        this.success = {};
+        var _ktype139 = 0;
+        var _vtype140 = 0;
+        _rtmp3142 = input.readMapBegin();
+        _ktype139 = _rtmp3142.ktype;
+        _vtype140 = _rtmp3142.vtype;
+        _size138 = _rtmp3142.size;
+        for (var _i143 = 0; _i143 < _size138; ++_i143)
+        {
+          var key144 = null;
+          var val145 = null;
+          key144 = input.readString();
+          val145 = input.readI32();
+          this.success[key144] = val145;
+        }
+        input.readMapEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentScores_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getAssessmentScores_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.MAP, 0);
+    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.I32, Thrift.objectLength(this.success));
+    for (var kiter146 in this.success)
+    {
+      if (this.success.hasOwnProperty(kiter146))
+      {
+        var viter147 = this.success[kiter146];
+        output.writeString(kiter146);
+        output.writeI32(viter147);
+      }
+    }
+    output.writeMapEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentAnswers_args = function(args) {
+  this.unitForkProjectId = null;
+  if (args) {
+    if (args.unitForkProjectId !== undefined) {
+      this.unitForkProjectId = args.unitForkProjectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkProjectId is unset!');
+    }
+  }
+};
+PrometheusService_getAssessmentAnswers_args.prototype = {};
+PrometheusService_getAssessmentAnswers_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitForkProjectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentAnswers_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getAssessmentAnswers_args');
+  if (this.unitForkProjectId !== null && this.unitForkProjectId !== undefined) {
+    output.writeFieldBegin('unitForkProjectId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitForkProjectId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentAnswers_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined) {
+      this.success = args.success;
+    }
+  }
+};
+PrometheusService_getAssessmentAnswers_result.prototype = {};
+PrometheusService_getAssessmentAnswers_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.MAP) {
+        var _size148 = 0;
+        var _rtmp3152;
+        this.success = {};
+        var _ktype149 = 0;
+        var _vtype150 = 0;
+        _rtmp3152 = input.readMapBegin();
+        _ktype149 = _rtmp3152.ktype;
+        _vtype150 = _rtmp3152.vtype;
+        _size148 = _rtmp3152.size;
+        for (var _i153 = 0; _i153 < _size148; ++_i153)
+        {
+          var key154 = null;
+          var val155 = null;
+          key154 = input.readString();
+          val155 = new assessments_ttypes.CheckResult();
+          val155.read(input);
+          this.success[key154] = val155;
+        }
+        input.readMapEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getAssessmentAnswers_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getAssessmentAnswers_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.MAP, 0);
+    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRUCT, Thrift.objectLength(this.success));
+    for (var kiter156 in this.success)
+    {
+      if (this.success.hasOwnProperty(kiter156))
+      {
+        var viter157 = this.success[kiter156];
+        output.writeString(kiter156);
+        viter157.write(output);
+      }
+    }
+    output.writeMapEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -4389,7 +6055,7 @@ PrometheusServiceClient.prototype.recv_getUnitForksByProjectIds = function(input
   }
   return callback('getUnitForksByProjectIds failed: unknown result');
 };
-PrometheusServiceClient.prototype.checkAssessment = function(unitForkProjectId, assessmentId, params, callback) {
+PrometheusServiceClient.prototype.restoreUnitForkContent = function(replyParameters, userId, projectId, folders, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -4400,27 +6066,28 @@ PrometheusServiceClient.prototype.checkAssessment = function(unitForkProjectId, 
         _defer.resolve(result);
       }
     };
-    this.send_checkAssessment(unitForkProjectId, assessmentId, params);
+    this.send_restoreUnitForkContent(replyParameters, userId, projectId, folders);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_checkAssessment(unitForkProjectId, assessmentId, params);
+    this.send_restoreUnitForkContent(replyParameters, userId, projectId, folders);
   }
 };
 
-PrometheusServiceClient.prototype.send_checkAssessment = function(unitForkProjectId, assessmentId, params) {
+PrometheusServiceClient.prototype.send_restoreUnitForkContent = function(replyParameters, userId, projectId, folders) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('checkAssessment', Thrift.MessageType.CALL, this.seqid());
-  var args = new PrometheusService_checkAssessment_args();
-  args.unitForkProjectId = unitForkProjectId;
-  args.assessmentId = assessmentId;
-  args.params = params;
+  output.writeMessageBegin('restoreUnitForkContent', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_restoreUnitForkContent_args();
+  args.replyParameters = replyParameters;
+  args.userId = userId;
+  args.projectId = projectId;
+  args.folders = folders;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
 };
 
-PrometheusServiceClient.prototype.recv_checkAssessment = function(input,mtype,rseqid) {
+PrometheusServiceClient.prototype.recv_restoreUnitForkContent = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -4429,7 +6096,56 @@ PrometheusServiceClient.prototype.recv_checkAssessment = function(input,mtype,rs
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new PrometheusService_checkAssessment_result();
+  var result = new PrometheusService_restoreUnitForkContent_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  callback(null)
+};
+PrometheusServiceClient.prototype.checkMultipleChoiceAssessment = function(unitForkProjectId, assessmentId, answerIds, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkMultipleChoiceAssessment(unitForkProjectId, assessmentId, answerIds);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkMultipleChoiceAssessment(unitForkProjectId, assessmentId, answerIds);
+  }
+};
+
+PrometheusServiceClient.prototype.send_checkMultipleChoiceAssessment = function(unitForkProjectId, assessmentId, answerIds) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkMultipleChoiceAssessment', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_checkMultipleChoiceAssessment_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.answerIds = answerIds;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_checkMultipleChoiceAssessment = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_checkMultipleChoiceAssessment_result();
   result.read(input);
   input.readMessageEnd();
 
@@ -4445,7 +6161,435 @@ PrometheusServiceClient.prototype.recv_checkAssessment = function(input,mtype,rs
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('checkAssessment failed: unknown result');
+  return callback('checkMultipleChoiceAssessment failed: unknown result');
+};
+PrometheusServiceClient.prototype.checkFillInBlanksAssessment = function(unitForkProjectId, assessmentId, answers, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkFillInBlanksAssessment(unitForkProjectId, assessmentId, answers);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkFillInBlanksAssessment(unitForkProjectId, assessmentId, answers);
+  }
+};
+
+PrometheusServiceClient.prototype.send_checkFillInBlanksAssessment = function(unitForkProjectId, assessmentId, answers) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkFillInBlanksAssessment', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_checkFillInBlanksAssessment_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.answers = answers;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_checkFillInBlanksAssessment = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_checkFillInBlanksAssessment_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('checkFillInBlanksAssessment failed: unknown result');
+};
+PrometheusServiceClient.prototype.checkCodeTestAssessment = function(unitForkProjectId, assessmentId, replyParameters, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkCodeTestAssessment(unitForkProjectId, assessmentId, replyParameters);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkCodeTestAssessment(unitForkProjectId, assessmentId, replyParameters);
+  }
+};
+
+PrometheusServiceClient.prototype.send_checkCodeTestAssessment = function(unitForkProjectId, assessmentId, replyParameters) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkCodeTestAssessment', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_checkCodeTestAssessment_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.replyParameters = replyParameters;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_checkCodeTestAssessment = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_checkCodeTestAssessment_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
+  callback(null)
+};
+PrometheusServiceClient.prototype.checkCodeOutputCompareAssessment = function(unitForkProjectId, assessmentId, replyParameters, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_checkCodeOutputCompareAssessment(unitForkProjectId, assessmentId, replyParameters);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_checkCodeOutputCompareAssessment(unitForkProjectId, assessmentId, replyParameters);
+  }
+};
+
+PrometheusServiceClient.prototype.send_checkCodeOutputCompareAssessment = function(unitForkProjectId, assessmentId, replyParameters) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('checkCodeOutputCompareAssessment', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_checkCodeOutputCompareAssessment_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.replyParameters = replyParameters;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_checkCodeOutputCompareAssessment = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_checkCodeOutputCompareAssessment_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
+  callback(null)
+};
+PrometheusServiceClient.prototype.submitCustomAssessmentResult = function(unitForkProjectId, assessmentId, points, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_submitCustomAssessmentResult(unitForkProjectId, assessmentId, points);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_submitCustomAssessmentResult(unitForkProjectId, assessmentId, points);
+  }
+};
+
+PrometheusServiceClient.prototype.send_submitCustomAssessmentResult = function(unitForkProjectId, assessmentId, points) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('submitCustomAssessmentResult', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_submitCustomAssessmentResult_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.points = points;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_submitCustomAssessmentResult = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_submitCustomAssessmentResult_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('submitCustomAssessmentResult failed: unknown result');
+};
+PrometheusServiceClient.prototype.submitFreeTextAssessmentAnswer = function(unitForkProjectId, assessmentId, answer, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_submitFreeTextAssessmentAnswer(unitForkProjectId, assessmentId, answer);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_submitFreeTextAssessmentAnswer(unitForkProjectId, assessmentId, answer);
+  }
+};
+
+PrometheusServiceClient.prototype.send_submitFreeTextAssessmentAnswer = function(unitForkProjectId, assessmentId, answer) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('submitFreeTextAssessmentAnswer', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_submitFreeTextAssessmentAnswer_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.answer = answer;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_submitFreeTextAssessmentAnswer = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_submitFreeTextAssessmentAnswer_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  if (null !== result.aaae) {
+    return callback(result.aaae);
+  }
+  callback(null)
+};
+PrometheusServiceClient.prototype.markFreeTextAssessment = function(unitForkProjectId, assessmentId, answerId, points, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_markFreeTextAssessment(unitForkProjectId, assessmentId, answerId, points);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_markFreeTextAssessment(unitForkProjectId, assessmentId, answerId, points);
+  }
+};
+
+PrometheusServiceClient.prototype.send_markFreeTextAssessment = function(unitForkProjectId, assessmentId, answerId, points) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('markFreeTextAssessment', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_markFreeTextAssessment_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.assessmentId = assessmentId;
+  args.answerId = answerId;
+  args.points = points;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_markFreeTextAssessment = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_markFreeTextAssessment_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
+  }
+  callback(null)
+};
+PrometheusServiceClient.prototype.getAssessmentScores = function(unitForkProjectIds, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_getAssessmentScores(unitForkProjectIds);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_getAssessmentScores(unitForkProjectIds);
+  }
+};
+
+PrometheusServiceClient.prototype.send_getAssessmentScores = function(unitForkProjectIds) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('getAssessmentScores', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_getAssessmentScores_args();
+  args.unitForkProjectIds = unitForkProjectIds;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_getAssessmentScores = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_getAssessmentScores_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('getAssessmentScores failed: unknown result');
+};
+PrometheusServiceClient.prototype.getAssessmentAnswers = function(unitForkProjectId, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_getAssessmentAnswers(unitForkProjectId);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_getAssessmentAnswers(unitForkProjectId);
+  }
+};
+
+PrometheusServiceClient.prototype.send_getAssessmentAnswers = function(unitForkProjectId) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('getAssessmentAnswers', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_getAssessmentAnswers_args();
+  args.unitForkProjectId = unitForkProjectId;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_getAssessmentAnswers = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_getAssessmentAnswers_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('getAssessmentAnswers failed: unknown result');
 };
 PrometheusServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler
@@ -5125,29 +7269,299 @@ PrometheusServiceProcessor.prototype.process_getUnitForksByProjectIds = function
   }
 }
 
-PrometheusServiceProcessor.prototype.process_checkAssessment = function(seqid, input, output) {
-  var args = new PrometheusService_checkAssessment_args();
+PrometheusServiceProcessor.prototype.process_restoreUnitForkContent = function(seqid, input, output) {
+  var args = new PrometheusService_restoreUnitForkContent_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.checkAssessment.length === 3) {
-    Q.fcall(this._handler.checkAssessment, args.unitForkProjectId, args.assessmentId, args.params)
+  if (this._handler.restoreUnitForkContent.length === 4) {
+    Q.fcall(this._handler.restoreUnitForkContent, args.replyParameters, args.userId, args.projectId, args.folders)
       .then(function(result) {
-        var result = new PrometheusService_checkAssessment_result({success: result});
-        output.writeMessageBegin("checkAssessment", Thrift.MessageType.REPLY, seqid);
+        var result = new PrometheusService_restoreUnitForkContent_result({success: result});
+        output.writeMessageBegin("restoreUnitForkContent", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
       }, function (err) {
-        var result = new PrometheusService_checkAssessment_result(err);
-        output.writeMessageBegin("checkAssessment", Thrift.MessageType.REPLY, seqid);
+        var result = new PrometheusService_restoreUnitForkContent_result(err);
+        output.writeMessageBegin("restoreUnitForkContent", Thrift.MessageType.REPLY, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
       });
   } else {
-    this._handler.checkAssessment(args.unitForkProjectId, args.assessmentId, args.params,  function (err, result) {
-      var result = new PrometheusService_checkAssessment_result((err != null ? err : {success: result}));
-      output.writeMessageBegin("checkAssessment", Thrift.MessageType.REPLY, seqid);
+    this._handler.restoreUnitForkContent(args.replyParameters, args.userId, args.projectId, args.folders,  function (err, result) {
+      var result = new PrometheusService_restoreUnitForkContent_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("restoreUnitForkContent", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_checkMultipleChoiceAssessment = function(seqid, input, output) {
+  var args = new PrometheusService_checkMultipleChoiceAssessment_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkMultipleChoiceAssessment.length === 3) {
+    Q.fcall(this._handler.checkMultipleChoiceAssessment, args.unitForkProjectId, args.assessmentId, args.answerIds)
+      .then(function(result) {
+        var result = new PrometheusService_checkMultipleChoiceAssessment_result({success: result});
+        output.writeMessageBegin("checkMultipleChoiceAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_checkMultipleChoiceAssessment_result(err);
+        output.writeMessageBegin("checkMultipleChoiceAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkMultipleChoiceAssessment(args.unitForkProjectId, args.assessmentId, args.answerIds,  function (err, result) {
+      var result = new PrometheusService_checkMultipleChoiceAssessment_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("checkMultipleChoiceAssessment", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_checkFillInBlanksAssessment = function(seqid, input, output) {
+  var args = new PrometheusService_checkFillInBlanksAssessment_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkFillInBlanksAssessment.length === 3) {
+    Q.fcall(this._handler.checkFillInBlanksAssessment, args.unitForkProjectId, args.assessmentId, args.answers)
+      .then(function(result) {
+        var result = new PrometheusService_checkFillInBlanksAssessment_result({success: result});
+        output.writeMessageBegin("checkFillInBlanksAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_checkFillInBlanksAssessment_result(err);
+        output.writeMessageBegin("checkFillInBlanksAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkFillInBlanksAssessment(args.unitForkProjectId, args.assessmentId, args.answers,  function (err, result) {
+      var result = new PrometheusService_checkFillInBlanksAssessment_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("checkFillInBlanksAssessment", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_checkCodeTestAssessment = function(seqid, input, output) {
+  var args = new PrometheusService_checkCodeTestAssessment_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkCodeTestAssessment.length === 3) {
+    Q.fcall(this._handler.checkCodeTestAssessment, args.unitForkProjectId, args.assessmentId, args.replyParameters)
+      .then(function(result) {
+        var result = new PrometheusService_checkCodeTestAssessment_result({success: result});
+        output.writeMessageBegin("checkCodeTestAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_checkCodeTestAssessment_result(err);
+        output.writeMessageBegin("checkCodeTestAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkCodeTestAssessment(args.unitForkProjectId, args.assessmentId, args.replyParameters,  function (err, result) {
+      var result = new PrometheusService_checkCodeTestAssessment_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("checkCodeTestAssessment", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_checkCodeOutputCompareAssessment = function(seqid, input, output) {
+  var args = new PrometheusService_checkCodeOutputCompareAssessment_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.checkCodeOutputCompareAssessment.length === 3) {
+    Q.fcall(this._handler.checkCodeOutputCompareAssessment, args.unitForkProjectId, args.assessmentId, args.replyParameters)
+      .then(function(result) {
+        var result = new PrometheusService_checkCodeOutputCompareAssessment_result({success: result});
+        output.writeMessageBegin("checkCodeOutputCompareAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_checkCodeOutputCompareAssessment_result(err);
+        output.writeMessageBegin("checkCodeOutputCompareAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.checkCodeOutputCompareAssessment(args.unitForkProjectId, args.assessmentId, args.replyParameters,  function (err, result) {
+      var result = new PrometheusService_checkCodeOutputCompareAssessment_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("checkCodeOutputCompareAssessment", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_submitCustomAssessmentResult = function(seqid, input, output) {
+  var args = new PrometheusService_submitCustomAssessmentResult_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.submitCustomAssessmentResult.length === 3) {
+    Q.fcall(this._handler.submitCustomAssessmentResult, args.unitForkProjectId, args.assessmentId, args.points)
+      .then(function(result) {
+        var result = new PrometheusService_submitCustomAssessmentResult_result({success: result});
+        output.writeMessageBegin("submitCustomAssessmentResult", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_submitCustomAssessmentResult_result(err);
+        output.writeMessageBegin("submitCustomAssessmentResult", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.submitCustomAssessmentResult(args.unitForkProjectId, args.assessmentId, args.points,  function (err, result) {
+      var result = new PrometheusService_submitCustomAssessmentResult_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("submitCustomAssessmentResult", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_submitFreeTextAssessmentAnswer = function(seqid, input, output) {
+  var args = new PrometheusService_submitFreeTextAssessmentAnswer_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.submitFreeTextAssessmentAnswer.length === 3) {
+    Q.fcall(this._handler.submitFreeTextAssessmentAnswer, args.unitForkProjectId, args.assessmentId, args.answer)
+      .then(function(result) {
+        var result = new PrometheusService_submitFreeTextAssessmentAnswer_result({success: result});
+        output.writeMessageBegin("submitFreeTextAssessmentAnswer", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_submitFreeTextAssessmentAnswer_result(err);
+        output.writeMessageBegin("submitFreeTextAssessmentAnswer", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.submitFreeTextAssessmentAnswer(args.unitForkProjectId, args.assessmentId, args.answer,  function (err, result) {
+      var result = new PrometheusService_submitFreeTextAssessmentAnswer_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("submitFreeTextAssessmentAnswer", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_markFreeTextAssessment = function(seqid, input, output) {
+  var args = new PrometheusService_markFreeTextAssessment_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.markFreeTextAssessment.length === 4) {
+    Q.fcall(this._handler.markFreeTextAssessment, args.unitForkProjectId, args.assessmentId, args.answerId, args.points)
+      .then(function(result) {
+        var result = new PrometheusService_markFreeTextAssessment_result({success: result});
+        output.writeMessageBegin("markFreeTextAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_markFreeTextAssessment_result(err);
+        output.writeMessageBegin("markFreeTextAssessment", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.markFreeTextAssessment(args.unitForkProjectId, args.assessmentId, args.answerId, args.points,  function (err, result) {
+      var result = new PrometheusService_markFreeTextAssessment_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("markFreeTextAssessment", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_getAssessmentScores = function(seqid, input, output) {
+  var args = new PrometheusService_getAssessmentScores_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.getAssessmentScores.length === 1) {
+    Q.fcall(this._handler.getAssessmentScores, args.unitForkProjectIds)
+      .then(function(result) {
+        var result = new PrometheusService_getAssessmentScores_result({success: result});
+        output.writeMessageBegin("getAssessmentScores", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_getAssessmentScores_result(err);
+        output.writeMessageBegin("getAssessmentScores", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.getAssessmentScores(args.unitForkProjectIds,  function (err, result) {
+      var result = new PrometheusService_getAssessmentScores_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("getAssessmentScores", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_getAssessmentAnswers = function(seqid, input, output) {
+  var args = new PrometheusService_getAssessmentAnswers_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.getAssessmentAnswers.length === 1) {
+    Q.fcall(this._handler.getAssessmentAnswers, args.unitForkProjectId)
+      .then(function(result) {
+        var result = new PrometheusService_getAssessmentAnswers_result({success: result});
+        output.writeMessageBegin("getAssessmentAnswers", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_getAssessmentAnswers_result(err);
+        output.writeMessageBegin("getAssessmentAnswers", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.getAssessmentAnswers(args.unitForkProjectId,  function (err, result) {
+      var result = new PrometheusService_getAssessmentAnswers_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("getAssessmentAnswers", Thrift.MessageType.REPLY, seqid);
       result.write(output);
       output.writeMessageEnd();
       output.flush();

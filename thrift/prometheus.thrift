@@ -119,13 +119,88 @@ service PrometheusService {
    throws (1: NotFoundException nfe)
   list<unitfork.UnitFork> getUnitForksByProjectIds(1: required list<string> projectIds)
 
-  assessments.CheckResult checkAssessment(
+  void restoreUnitForkContent(
+    1: required common.ReplyParameters replyParameters,
+    2: required string userId,
+    3: required string projectId,
+    4: required list<string> folders
+  ) throws (1: NotFoundException nfe)
+
+
+  /// Assessments
+
+  assessments.MultipleChoiceResult checkMultipleChoiceAssessment(
     1: required string unitForkProjectId,
     2: required string assessmentId,
-    3: required assessments.CheckParameters params
+    3: required set<string> answerIds
   ) throws (
     1: NotFoundException nfe,
     2: ArgumentException ae,
     3: AssessmentAlreadyAnsweredException aaae
   )
+
+  assessments.FillInBlanksResult checkFillInBlanksAssessment(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required list<string> answers
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void checkCodeTestAssessment(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required common.ReplyParameters replyParameters
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void checkCodeOutputCompareAssessment(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required common.ReplyParameters replyParameters
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  assessments.CustomResult submitCustomAssessmentResult(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required i32 points
+    // TODO: answer ?
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void submitFreeTextAssessmentAnswer(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required string answer
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void markFreeTextAssessment(
+    1: required string unitForkProjectId,
+    2: required string assessmentId,
+    3: required string answerId,
+    4: required i32 points
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
+  )
+
+  map<string, i32> getAssessmentScores(1: required list<string> unitForkProjectIds);
+
+  map<string, assessments.CheckResult> getAssessmentAnswers(1: required string unitForkProjectId);
 }

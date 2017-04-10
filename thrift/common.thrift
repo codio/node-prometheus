@@ -18,3 +18,5 @@ struct ReplyParameters {
   2: required ReplyDestination replyTo
   3: optional string passThrough
 }
+
+struct Empty {}

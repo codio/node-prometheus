@@ -3,8 +3,6 @@ namespace java com.codio.prometheus.thrift.unit.assessments
 
 include "common.thrift"
 
-struct Empty {}
-
 
 struct Details {
   1: required string name
@@ -36,12 +34,17 @@ struct Custom {
   1: optional bool oneTimeTest = false
 }
 
+struct FreeText {
+  1: optional bool oneTimeTest = false
+}
+
 union Task {
   1: MultipleChoice multipleChoice
   2: FillInBlanks fillInBlanks
   3: ServerSideTest codeTest
   4: ServerSideTest codeOutputCompare
   5: Custom custom
+  6: FreeText freeText
 }
 
 
@@ -65,6 +68,22 @@ struct ServerSideTestResult {
   4: required string stderr
 }
 
+
+struct FreeTextDone {
+  1: required i32 points
+}
+
+union FreeTextStatus {
+  1: common.Empty pending
+  2: FreeTextDone done
+}
+
+struct FreeTextAnswer {
+  1: required string id
+  2: required string answer
+  3: required FreeTextStatus status
+}
+
 struct CustomResult {
   1: required i32 points
 }
@@ -72,34 +91,8 @@ struct CustomResult {
 union CheckResult {
   1: MultipleChoiceResult multipleChoice
   2: FillInBlanksResult fillInBlanks
-  3: Empty serverSideTest
-  4: CustomResult custom
-}
-
-
-
-struct MultipleChoiceParameters {
-  1: required set<string> answerIds
-}
-
-struct FillInBlanksParameters {
-  1: required list<string> answers
-}
-
-
-struct ServerSideTestParameters {
-  1: required common.ReplyParameters replyParameters
-}
-
-struct CustomParameters {
-  1: required i32 points
-  // TODO: answer ?
-}
-
-union CheckParameters {
-  1: MultipleChoiceParameters multipleChoice
-  2: FillInBlanksParameters fillInBlanks
-  3: ServerSideTestParameters serverSideTest
-  4: CustomParameters custom
-  // TODO: free text
+  3: ServerSideTestResult codeTest
+  4: ServerSideTestResult codeOutputCompare
+  5: CustomResult custom
+  6: FreeTextAnswer freeText
 }

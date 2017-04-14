@@ -175,6 +175,7 @@ PrometheusService_getCoursesByModuleIds_result.prototype.write = function(output
 PrometheusService_getCourses_args = function(args) {
   this.ids = null;
   this.withModules = false;
+  this.withRemoved = false;
   if (args) {
     if (args.ids !== undefined) {
       this.ids = args.ids;
@@ -183,6 +184,9 @@ PrometheusService_getCourses_args = function(args) {
     }
     if (args.withModules !== undefined) {
       this.withModules = args.withModules;
+    }
+    if (args.withRemoved !== undefined) {
+      this.withRemoved = args.withRemoved;
     }
   }
 };
@@ -227,6 +231,13 @@ PrometheusService_getCourses_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.BOOL) {
+        this.withRemoved = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -255,6 +266,11 @@ PrometheusService_getCourses_args.prototype.write = function(output) {
   if (this.withModules !== null && this.withModules !== undefined) {
     output.writeFieldBegin('withModules', Thrift.Type.BOOL, 2);
     output.writeBool(this.withModules);
+    output.writeFieldEnd();
+  }
+  if (this.withRemoved !== null && this.withRemoved !== undefined) {
+    output.writeFieldBegin('withRemoved', Thrift.Type.BOOL, 3);
+    output.writeBool(this.withRemoved);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -835,6 +851,7 @@ PrometheusService_deleteCourse_result.prototype.write = function(output) {
 PrometheusService_getModules_args = function(args) {
   this.ids = null;
   this.withUnits = false;
+  this.withRemoved = false;
   if (args) {
     if (args.ids !== undefined) {
       this.ids = args.ids;
@@ -843,6 +860,9 @@ PrometheusService_getModules_args = function(args) {
     }
     if (args.withUnits !== undefined) {
       this.withUnits = args.withUnits;
+    }
+    if (args.withRemoved !== undefined) {
+      this.withRemoved = args.withRemoved;
     }
   }
 };
@@ -887,6 +907,13 @@ PrometheusService_getModules_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.BOOL) {
+        this.withRemoved = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -915,6 +942,11 @@ PrometheusService_getModules_args.prototype.write = function(output) {
   if (this.withUnits !== null && this.withUnits !== undefined) {
     output.writeFieldBegin('withUnits', Thrift.Type.BOOL, 2);
     output.writeBool(this.withUnits);
+    output.writeFieldEnd();
+  }
+  if (this.withRemoved !== null && this.withRemoved !== undefined) {
+    output.writeFieldBegin('withRemoved', Thrift.Type.BOOL, 3);
+    output.writeBool(this.withRemoved);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -5023,7 +5055,7 @@ PrometheusServiceClient.prototype.recv_getCoursesByModuleIds = function(input,mt
   }
   return callback('getCoursesByModuleIds failed: unknown result');
 };
-PrometheusServiceClient.prototype.getCourses = function(ids, withModules, callback) {
+PrometheusServiceClient.prototype.getCourses = function(ids, withModules, withRemoved, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5034,20 +5066,21 @@ PrometheusServiceClient.prototype.getCourses = function(ids, withModules, callba
         _defer.resolve(result);
       }
     };
-    this.send_getCourses(ids, withModules);
+    this.send_getCourses(ids, withModules, withRemoved);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_getCourses(ids, withModules);
+    this.send_getCourses(ids, withModules, withRemoved);
   }
 };
 
-PrometheusServiceClient.prototype.send_getCourses = function(ids, withModules) {
+PrometheusServiceClient.prototype.send_getCourses = function(ids, withModules, withRemoved) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('getCourses', Thrift.MessageType.CALL, this.seqid());
   var args = new PrometheusService_getCourses_args();
   args.ids = ids;
   args.withModules = withModules;
+  args.withRemoved = withRemoved;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
@@ -5264,7 +5297,7 @@ PrometheusServiceClient.prototype.recv_deleteCourse = function(input,mtype,rseqi
   }
   callback(null)
 };
-PrometheusServiceClient.prototype.getModules = function(ids, withUnits, callback) {
+PrometheusServiceClient.prototype.getModules = function(ids, withUnits, withRemoved, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -5275,20 +5308,21 @@ PrometheusServiceClient.prototype.getModules = function(ids, withUnits, callback
         _defer.resolve(result);
       }
     };
-    this.send_getModules(ids, withUnits);
+    this.send_getModules(ids, withUnits, withRemoved);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_getModules(ids, withUnits);
+    this.send_getModules(ids, withUnits, withRemoved);
   }
 };
 
-PrometheusServiceClient.prototype.send_getModules = function(ids, withUnits) {
+PrometheusServiceClient.prototype.send_getModules = function(ids, withUnits, withRemoved) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('getModules', Thrift.MessageType.CALL, this.seqid());
   var args = new PrometheusService_getModules_args();
   args.ids = ids;
   args.withUnits = withUnits;
+  args.withRemoved = withRemoved;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
@@ -6643,8 +6677,8 @@ PrometheusServiceProcessor.prototype.process_getCourses = function(seqid, input,
   var args = new PrometheusService_getCourses_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.getCourses.length === 2) {
-    Q.fcall(this._handler.getCourses, args.ids, args.withModules)
+  if (this._handler.getCourses.length === 3) {
+    Q.fcall(this._handler.getCourses, args.ids, args.withModules, args.withRemoved)
       .then(function(result) {
         var result = new PrometheusService_getCourses_result({success: result});
         output.writeMessageBegin("getCourses", Thrift.MessageType.REPLY, seqid);
@@ -6659,7 +6693,7 @@ PrometheusServiceProcessor.prototype.process_getCourses = function(seqid, input,
         output.flush();
       });
   } else {
-    this._handler.getCourses(args.ids, args.withModules,  function (err, result) {
+    this._handler.getCourses(args.ids, args.withModules, args.withRemoved,  function (err, result) {
       var result = new PrometheusService_getCourses_result((err != null ? err : {success: result}));
       output.writeMessageBegin("getCourses", Thrift.MessageType.REPLY, seqid);
       result.write(output);
@@ -6793,8 +6827,8 @@ PrometheusServiceProcessor.prototype.process_getModules = function(seqid, input,
   var args = new PrometheusService_getModules_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.getModules.length === 2) {
-    Q.fcall(this._handler.getModules, args.ids, args.withUnits)
+  if (this._handler.getModules.length === 3) {
+    Q.fcall(this._handler.getModules, args.ids, args.withUnits, args.withRemoved)
       .then(function(result) {
         var result = new PrometheusService_getModules_result({success: result});
         output.writeMessageBegin("getModules", Thrift.MessageType.REPLY, seqid);
@@ -6809,7 +6843,7 @@ PrometheusServiceProcessor.prototype.process_getModules = function(seqid, input,
         output.flush();
       });
   } else {
-    this._handler.getModules(args.ids, args.withUnits,  function (err, result) {
+    this._handler.getModules(args.ids, args.withUnits, args.withRemoved,  function (err, result) {
       var result = new PrometheusService_getModules_result((err != null ? err : {success: result}));
       output.writeMessageBegin("getModules", Thrift.MessageType.REPLY, seqid);
       result.write(output);

@@ -54,7 +54,8 @@ exception AssessmentAlreadyAnsweredException {}
 
 service PrometheusService {
   list<course.Course> getCoursesByModuleIds(1: required list<string> ids)
-  GetCourseResult getCourses(1: required list<string> ids, 2: bool withModules = false)
+  GetCourseResult getCourses(1: required list<string> ids, 2: bool withModules = false,
+      3: bool withRemoved = false)
 
   course.Course createCourse(1: required course.CourseDetails details)
 
@@ -67,7 +68,8 @@ service PrometheusService {
   void deleteCourse(1: required string id) throws (1: NotFoundException nfe)
 
 
-  list<module.Module> getModules(1: required list<string> ids, 2: bool withUnits = false)
+  list<module.Module> getModules(1: required list<string> ids, 2: bool withUnits = false,
+      3: bool withRemoved = false)
 
   module.Module getModuleByUnitId(1: required string unitId)
   module.Module createModule(1: required module.ModuleDetails details)

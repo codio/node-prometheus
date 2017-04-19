@@ -8,6 +8,7 @@ include "module.thrift"
 include "course.thrift"
 include "unitfork.thrift"
 include "assessments.thrift"
+include "assessmentResults.thrift"
 
 struct GetCourseResult {
   1: required list<course.Course> courses
@@ -39,6 +40,8 @@ struct UpdateUnitDetails {
 struct ChangeStackVersionInUnitResult {
   1: optional unit.Version unitVersion
 }
+
+typedef map<string, string> UnitToLatestStartableVersion
 
 exception NotFoundException {}
 
@@ -103,6 +106,8 @@ service PrometheusService {
   void reorderUnits(1: required string moduleId, 2:  required list<string> unitIds)
       throws (1: NotFoundException nfe, 2: ReorderConflictException rce)
 
+  map<string, UnitToLatestStartableVersion> getLatestUnitVersions(1: required list<string> moduleIds)
+
   void createUnitFork(
     1: required common.ReplyParameters replyParameters,
     2: required string unitVersionId,
@@ -131,7 +136,7 @@ service PrometheusService {
 
   /// Assessments
 
-  assessments.MultipleChoiceResult checkMultipleChoiceAssessment(
+  assessmentResults.MultipleChoiceAttempt checkMultipleChoiceAssessment(
     1: required string unitForkProjectId,
     2: required string assessmentId,
     3: required set<string> answerIds
@@ -141,7 +146,7 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
-  assessments.FillInBlanksResult checkFillInBlanksAssessment(
+  assessmentResults.FillInBlanksAttempt checkFillInBlanksAssessment(
     1: required string unitForkProjectId,
     2: required string assessmentId,
     3: required list<string> answers
@@ -149,6 +154,11 @@ service PrometheusService {
     1: NotFoundException nfe,
     2: ArgumentException ae,
     3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void storeCodeTestPartialPoints(1: required string partialPointsKey, 2: required i32 points) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
   )
 
   void checkCodeTestAssessment(
@@ -171,7 +181,7 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
-  assessments.CustomResult submitCustomAssessmentResult(
+  assessmentResults.CustomTaskAttempt submitCustomAssessmentResult(
     1: required string unitForkProjectId,
     2: required string assessmentId,
     3: required i32 points
@@ -204,5 +214,5 @@ service PrometheusService {
 
   map<string, i32> getAssessmentScores(1: required list<string> unitForkProjectIds);
 
-  map<string, assessments.CheckResult> getAssessmentAnswers(1: required string unitForkProjectId);
+  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkProjectId);
 }

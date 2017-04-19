@@ -14,6 +14,7 @@ var module_ttypes = require('./module_types')
 var course_ttypes = require('./course_types')
 var unitfork_ttypes = require('./unitfork_types')
 var assessments_ttypes = require('./assessments_types')
+var assessmentResults_ttypes = require('./assessmentResults_types')
 
 
 var ttypes = module.exports = {};

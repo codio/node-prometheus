@@ -96,8 +96,12 @@ PublishStatusComplete.prototype.write = function(output) {
 };
 
 PublishStatusError = module.exports.PublishStatusError = function(args) {
+  this.message = null;
   this.guidesErrors = null;
   if (args) {
+    if (args.message !== undefined) {
+      this.message = args.message;
+    }
     if (args.guidesErrors !== undefined) {
       this.guidesErrors = args.guidesErrors;
     }
@@ -118,6 +122,13 @@ PublishStatusError.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.message = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
       if (ftype == Thrift.Type.MAP) {
         var _size0 = 0;
         var _rtmp34;
@@ -141,9 +152,6 @@ PublishStatusError.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
-        input.skip(ftype);
-        break;
       default:
         input.skip(ftype);
     }
@@ -155,8 +163,13 @@ PublishStatusError.prototype.read = function(input) {
 
 PublishStatusError.prototype.write = function(output) {
   output.writeStructBegin('PublishStatusError');
+  if (this.message !== null && this.message !== undefined) {
+    output.writeFieldBegin('message', Thrift.Type.STRING, 1);
+    output.writeString(this.message);
+    output.writeFieldEnd();
+  }
   if (this.guidesErrors !== null && this.guidesErrors !== undefined) {
-    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 1);
+    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 2);
     output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.guidesErrors));
     for (var kiter8 in this.guidesErrors)
     {

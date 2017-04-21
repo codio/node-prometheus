@@ -95,6 +95,12 @@ service PrometheusService {
     4: required string stackVersionId
   ) throws (1: NotFoundException nfe)
 
+  void migrateFromS3Archive(
+    1: required string unitId,
+    2: required string archiveS3Key,
+    3: required string stackVersionId
+  ) throws (1: NotFoundException nfe)
+
   ChangeStackVersionInUnitResult changeStackVersionInUnit(
     1: required string unitId,
     2: required string stackVersionId

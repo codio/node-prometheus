@@ -96,12 +96,8 @@ PublishStatusComplete.prototype.write = function(output) {
 };
 
 PublishStatusError = module.exports.PublishStatusError = function(args) {
-  this.message = null;
   this.guidesErrors = null;
   if (args) {
-    if (args.message !== undefined) {
-      this.message = args.message;
-    }
     if (args.guidesErrors !== undefined) {
       this.guidesErrors = args.guidesErrors;
     }
@@ -122,13 +118,6 @@ PublishStatusError.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.STRING) {
-        this.message = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
       if (ftype == Thrift.Type.MAP) {
         var _size0 = 0;
         var _rtmp34;
@@ -152,6 +141,9 @@ PublishStatusError.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 0:
+        input.skip(ftype);
+        break;
       default:
         input.skip(ftype);
     }
@@ -163,13 +155,8 @@ PublishStatusError.prototype.read = function(input) {
 
 PublishStatusError.prototype.write = function(output) {
   output.writeStructBegin('PublishStatusError');
-  if (this.message !== null && this.message !== undefined) {
-    output.writeFieldBegin('message', Thrift.Type.STRING, 1);
-    output.writeString(this.message);
-    output.writeFieldEnd();
-  }
   if (this.guidesErrors !== null && this.guidesErrors !== undefined) {
-    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 2);
+    output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 1);
     output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.guidesErrors));
     for (var kiter8 in this.guidesErrors)
     {
@@ -361,6 +348,7 @@ Version = module.exports.Version = function(args) {
   this.id = null;
   this.stackVersionId = null;
   this.status = null;
+  this.createdAt = null;
   if (args) {
     if (args.id !== undefined) {
       this.id = args.id;
@@ -374,6 +362,11 @@ Version = module.exports.Version = function(args) {
     }
     if (args.status !== undefined) {
       this.status = args.status;
+    }
+    if (args.createdAt !== undefined) {
+      this.createdAt = args.createdAt;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field createdAt is unset!');
     }
   }
 };
@@ -413,6 +406,13 @@ Version.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.createdAt = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -437,6 +437,11 @@ Version.prototype.write = function(output) {
   if (this.status !== null && this.status !== undefined) {
     output.writeFieldBegin('status', Thrift.Type.STRUCT, 3);
     this.status.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.createdAt !== null && this.createdAt !== undefined) {
+    output.writeFieldBegin('createdAt', Thrift.Type.STRING, 4);
+    output.writeString(this.createdAt);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

@@ -1943,6 +1943,152 @@ PrometheusService_publishUnit_result.prototype.write = function(output) {
   return;
 };
 
+PrometheusService_migrateFromS3Archive_args = function(args) {
+  this.unitId = null;
+  this.archiveS3Key = null;
+  this.stackVersionId = null;
+  if (args) {
+    if (args.unitId !== undefined) {
+      this.unitId = args.unitId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitId is unset!');
+    }
+    if (args.archiveS3Key !== undefined) {
+      this.archiveS3Key = args.archiveS3Key;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field archiveS3Key is unset!');
+    }
+    if (args.stackVersionId !== undefined) {
+      this.stackVersionId = args.stackVersionId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stackVersionId is unset!');
+    }
+  }
+};
+PrometheusService_migrateFromS3Archive_args.prototype = {};
+PrometheusService_migrateFromS3Archive_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.archiveS3Key = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.stackVersionId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_migrateFromS3Archive_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_migrateFromS3Archive_args');
+  if (this.unitId !== null && this.unitId !== undefined) {
+    output.writeFieldBegin('unitId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitId);
+    output.writeFieldEnd();
+  }
+  if (this.archiveS3Key !== null && this.archiveS3Key !== undefined) {
+    output.writeFieldBegin('archiveS3Key', Thrift.Type.STRING, 2);
+    output.writeString(this.archiveS3Key);
+    output.writeFieldEnd();
+  }
+  if (this.stackVersionId !== null && this.stackVersionId !== undefined) {
+    output.writeFieldBegin('stackVersionId', Thrift.Type.STRING, 3);
+    output.writeString(this.stackVersionId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+PrometheusService_migrateFromS3Archive_result = function(args) {
+  this.nfe = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined) {
+      this.nfe = args.nfe;
+    }
+  }
+};
+PrometheusService_migrateFromS3Archive_result.prototype = {};
+PrometheusService_migrateFromS3Archive_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_migrateFromS3Archive_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_migrateFromS3Archive_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 PrometheusService_changeStackVersionInUnit_args = function(args) {
   this.unitId = null;
   this.stackVersionId = null;
@@ -6018,6 +6164,55 @@ PrometheusServiceClient.prototype.recv_publishUnit = function(input,mtype,rseqid
   }
   callback(null)
 };
+PrometheusServiceClient.prototype.migrateFromS3Archive = function(unitId, archiveS3Key, stackVersionId, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_migrateFromS3Archive(unitId, archiveS3Key, stackVersionId);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_migrateFromS3Archive(unitId, archiveS3Key, stackVersionId);
+  }
+};
+
+PrometheusServiceClient.prototype.send_migrateFromS3Archive = function(unitId, archiveS3Key, stackVersionId) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('migrateFromS3Archive', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_migrateFromS3Archive_args();
+  args.unitId = unitId;
+  args.archiveS3Key = archiveS3Key;
+  args.stackVersionId = stackVersionId;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_migrateFromS3Archive = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_migrateFromS3Archive_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  callback(null)
+};
 PrometheusServiceClient.prototype.changeStackVersionInUnit = function(unitId, stackVersionId, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -7485,6 +7680,36 @@ PrometheusServiceProcessor.prototype.process_publishUnit = function(seqid, input
     this._handler.publishUnit(args.replyParameters, args.unitId, args.projectId, args.stackVersionId,  function (err, result) {
       var result = new PrometheusService_publishUnit_result((err != null ? err : {success: result}));
       output.writeMessageBegin("publishUnit", Thrift.MessageType.REPLY, seqid);
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+PrometheusServiceProcessor.prototype.process_migrateFromS3Archive = function(seqid, input, output) {
+  var args = new PrometheusService_migrateFromS3Archive_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.migrateFromS3Archive.length === 3) {
+    Q.fcall(this._handler.migrateFromS3Archive, args.unitId, args.archiveS3Key, args.stackVersionId)
+      .then(function(result) {
+        var result = new PrometheusService_migrateFromS3Archive_result({success: result});
+        output.writeMessageBegin("migrateFromS3Archive", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new PrometheusService_migrateFromS3Archive_result(err);
+        output.writeMessageBegin("migrateFromS3Archive", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.migrateFromS3Archive(args.unitId, args.archiveS3Key, args.stackVersionId,  function (err, result) {
+      var result = new PrometheusService_migrateFromS3Archive_result((err != null ? err : {success: result}));
+      output.writeMessageBegin("migrateFromS3Archive", Thrift.MessageType.REPLY, seqid);
       result.write(output);
       output.writeMessageEnd();
       output.flush();

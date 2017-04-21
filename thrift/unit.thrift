@@ -11,8 +11,7 @@ struct PublishStatusInProgress {
 struct PublishStatusComplete {}
 
 struct PublishStatusError {
-  1: string message
-  2: optional map<string,string> guidesErrors
+  1: optional map<string,string> guidesErrors
 }
 
 union PublishStatus {
@@ -31,6 +30,7 @@ struct Version {
   1: required string id
   2: required string stackVersionId
   3: optional PublishStatus status
+  4: required string createdAt
 }
 
 struct Assessment {

@@ -12,7 +12,6 @@ var ttypes = module.exports = {};
 UnitFork = module.exports.UnitFork = function(args) {
   this.unitVersionId = null;
   this.accountId = null;
-  this.courseId = null;
   this.projectId = null;
   this.secondsSpentIn = null;
   if (args) {
@@ -25,11 +24,6 @@ UnitFork = module.exports.UnitFork = function(args) {
       this.accountId = args.accountId;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field accountId is unset!');
-    }
-    if (args.courseId !== undefined) {
-      this.courseId = args.courseId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field courseId is unset!');
     }
     if (args.projectId !== undefined) {
       this.projectId = args.projectId;
@@ -73,19 +67,12 @@ UnitFork.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRING) {
-        this.courseId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 4:
-      if (ftype == Thrift.Type.STRING) {
         this.projectId = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 5:
+      case 4:
       if (ftype == Thrift.Type.I64) {
         this.secondsSpentIn = input.readI64();
       } else {
@@ -113,18 +100,13 @@ UnitFork.prototype.write = function(output) {
     output.writeString(this.accountId);
     output.writeFieldEnd();
   }
-  if (this.courseId !== null && this.courseId !== undefined) {
-    output.writeFieldBegin('courseId', Thrift.Type.STRING, 3);
-    output.writeString(this.courseId);
-    output.writeFieldEnd();
-  }
   if (this.projectId !== null && this.projectId !== undefined) {
-    output.writeFieldBegin('projectId', Thrift.Type.STRING, 4);
+    output.writeFieldBegin('projectId', Thrift.Type.STRING, 3);
     output.writeString(this.projectId);
     output.writeFieldEnd();
   }
   if (this.secondsSpentIn !== null && this.secondsSpentIn !== undefined) {
-    output.writeFieldBegin('secondsSpentIn', Thrift.Type.I64, 5);
+    output.writeFieldBegin('secondsSpentIn', Thrift.Type.I64, 4);
     output.writeI64(this.secondsSpentIn);
     output.writeFieldEnd();
   }

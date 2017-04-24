@@ -117,10 +117,9 @@ service PrometheusService {
   void createUnitFork(
     1: required common.ReplyParameters replyParameters,
     2: required string unitVersionId,
-    3: required string courseId,
-    4: required string accountId,
-    5: optional string gigaBoxSlot,
-    6: optional bool addSecureScripts
+    3: required string accountId,
+    4: optional string gigaBoxSlot,
+    5: optional bool addSecureScripts
   ) throws (1: NotFoundException nfe)
 
   unit.Guides getUnitGuides(
@@ -152,6 +151,14 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
+  assessmentResults.MultipleChoiceAttempt checkMultipleChoiceAssessmentForAuthor(
+    1: required string assessmentJson,
+    2: required set<string> answerIds
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
+  )
+
   assessmentResults.FillInBlanksAttempt checkFillInBlanksAssessment(
     1: required string unitForkProjectId,
     2: required string assessmentId,
@@ -160,6 +167,14 @@ service PrometheusService {
     1: NotFoundException nfe,
     2: ArgumentException ae,
     3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  assessmentResults.FillInBlanksAttempt checkFillInBlanksAssessmentForAuthor(
+    1: required string assessmentJson,
+    2: required list<string> answers
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
   )
 
   void storeCodeTestPartialPoints(1: required string partialPointsKey, 2: required i32 points) throws (
@@ -177,6 +192,15 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
+  void checkCodeTestAssessmentForAuthor(
+    1: required string projectId,
+    2: required string assessmentJson,
+    3: required common.ReplyParameters replyParameters
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
+  )
+
   void checkCodeOutputCompareAssessment(
     1: required string unitForkProjectId,
     2: required string assessmentId,
@@ -185,6 +209,15 @@ service PrometheusService {
     1: NotFoundException nfe,
     2: ArgumentException ae,
     3: AssessmentAlreadyAnsweredException aaae
+  )
+
+  void checkCodeOutputCompareAssessmentForAuthor(
+    1: required string projectId,
+    2: required string assessmentJson,
+    3: required common.ReplyParameters replyParameters
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
   )
 
   assessmentResults.CustomTaskAttempt submitCustomAssessmentResult(

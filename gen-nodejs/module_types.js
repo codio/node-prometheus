@@ -172,6 +172,8 @@ var Module = module.exports.Module = function(args) {
     }
     if (args.unitIds !== undefined && args.unitIds !== null) {
       this.unitIds = Thrift.copyList(args.unitIds, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitIds is unset!');
     }
   }
 };
@@ -226,12 +228,12 @@ Module.prototype.read = function(input) {
       }
       break;
       case 4:
-      if (ftype == Thrift.Type.SET) {
+      if (ftype == Thrift.Type.LIST) {
         var _size15 = 0;
         var _rtmp319;
         this.unitIds = [];
         var _etype18 = 0;
-        _rtmp319 = input.readSetBegin();
+        _rtmp319 = input.readListBegin();
         _etype18 = _rtmp319.etype;
         _size15 = _rtmp319.size;
         for (var _i20 = 0; _i20 < _size15; ++_i20)
@@ -240,7 +242,7 @@ Module.prototype.read = function(input) {
           elem21 = input.readString();
           this.unitIds.push(elem21);
         }
-        input.readSetEnd();
+        input.readListEnd();
       } else {
         input.skip(ftype);
       }
@@ -281,8 +283,8 @@ Module.prototype.write = function(output) {
     output.writeFieldEnd();
   }
   if (this.unitIds !== null && this.unitIds !== undefined) {
-    output.writeFieldBegin('unitIds', Thrift.Type.SET, 4);
-    output.writeSetBegin(Thrift.Type.STRING, this.unitIds.length);
+    output.writeFieldBegin('unitIds', Thrift.Type.LIST, 4);
+    output.writeListBegin(Thrift.Type.STRING, this.unitIds.length);
     for (var iter23 in this.unitIds)
     {
       if (this.unitIds.hasOwnProperty(iter23))
@@ -291,7 +293,7 @@ Module.prototype.write = function(output) {
         output.writeString(iter23);
       }
     }
-    output.writeSetEnd();
+    output.writeListEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();

@@ -15,5 +15,5 @@ struct Module {
   1: required string id
   2: required ModuleDetails details
   3: optional list<unit.ModuleUnit> units
-  4: optional set<string> unitIds = []
+  4: required list<string> unitIds = []
 }

@@ -114,18 +114,22 @@ service PrometheusService {
 
   map<string, UnitToLatestStartableVersion> getLatestUnitVersions(1: required list<string> moduleIds)
 
-  void createUnitFork(
-    1: required common.ReplyParameters replyParameters,
-    2: required string unitVersionId,
-    3: required string accountId,
-    4: optional string gigaBoxSlot,
-    5: optional bool addSecureScripts
-  ) throws (1: NotFoundException nfe)
-
   unit.Guides getUnitGuides(
     1: required string unitVersionId,
     2: optional bool isTeacher = false
   ) throws (1: NotFoundException nfe, 2: NoGuidesInUnitException nge)
+
+  void createUnitFork(
+    1: required common.ReplyParameters replyParameters,
+    2: required string id,
+    3: required string unitVersionId,
+    4: required string accountId,
+    5: optional string gigaBoxSlot,
+    6: optional bool addSecureScripts
+  ) throws (1: NotFoundException nfe)
+
+  unitfork.UnitFork getUnitFork(1: required string id) throws (1: NotFoundException nfe)
+  list<unitfork.UnitFork> getUnitForks(1: required list<string> ids)
 
   unitfork.UnitFork getUnitForkByProjectId(1: required string projectId)
    throws (1: NotFoundException nfe)
@@ -134,7 +138,7 @@ service PrometheusService {
   void restoreUnitForkContent(
     1: required common.ReplyParameters replyParameters,
     2: required string userId,
-    3: required string projectId,
+    3: required string unitForkProjectId,
     4: required list<string> folders
   ) throws (1: NotFoundException nfe)
 
@@ -251,7 +255,11 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
-  map<string, i32> getAssessmentScores(1: required list<string> unitForkProjectIds);
+  map<string, i32> getAssessmentScores(1: required list<string> unitForkIds);
+  map<string, i32> getAssessmentScoresByProjectIds(1: required list<string> unitForkProjectIds);
 
-  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkProjectId);
+  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkId);
+  map<string, assessmentResults.CheckResult> getAssessmentAnswersByProjectId(
+    1: required string unitForkProjectId
+  );
 }

@@ -10,3 +10,21 @@ struct PublishUnitTask {
   4: required string projectId
   5: required string stackVersionId
 }
+
+struct TaskStatusCompleted {
+  1: required binary result
+}
+
+struct TaskStatusError {
+  1: required string errorMessage
+}
+
+union TaskStatus {
+  1: TaskStatusCompleted completed
+  2: TaskStatusError error
+}
+
+struct TaskResult {
+  1: required TaskStatus status
+  2: required string passthroughJson
+}

@@ -138,3 +138,252 @@ PublishUnitTask.prototype.write = function(output) {
   return;
 };
 
+var TaskStatusCompleted = module.exports.TaskStatusCompleted = function(args) {
+  this.result = null;
+  if (args) {
+    if (args.result !== undefined && args.result !== null) {
+      this.result = args.result;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field result is unset!');
+    }
+  }
+};
+TaskStatusCompleted.prototype = {};
+TaskStatusCompleted.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.result = input.readBinary();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TaskStatusCompleted.prototype.write = function(output) {
+  output.writeStructBegin('TaskStatusCompleted');
+  if (this.result !== null && this.result !== undefined) {
+    output.writeFieldBegin('result', Thrift.Type.STRING, 1);
+    output.writeBinary(this.result);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TaskStatusError = module.exports.TaskStatusError = function(args) {
+  this.errorMessage = null;
+  if (args) {
+    if (args.errorMessage !== undefined && args.errorMessage !== null) {
+      this.errorMessage = args.errorMessage;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field errorMessage is unset!');
+    }
+  }
+};
+TaskStatusError.prototype = {};
+TaskStatusError.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.errorMessage = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TaskStatusError.prototype.write = function(output) {
+  output.writeStructBegin('TaskStatusError');
+  if (this.errorMessage !== null && this.errorMessage !== undefined) {
+    output.writeFieldBegin('errorMessage', Thrift.Type.STRING, 1);
+    output.writeString(this.errorMessage);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TaskStatus = module.exports.TaskStatus = function(args) {
+  this.completed = null;
+  this.error = null;
+  if (args) {
+    if (args.completed !== undefined && args.completed !== null) {
+      this.completed = new ttypes.TaskStatusCompleted(args.completed);
+    }
+    if (args.error !== undefined && args.error !== null) {
+      this.error = new ttypes.TaskStatusError(args.error);
+    }
+  }
+};
+TaskStatus.prototype = {};
+TaskStatus.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.completed = new ttypes.TaskStatusCompleted();
+        this.completed.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.error = new ttypes.TaskStatusError();
+        this.error.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TaskStatus.prototype.write = function(output) {
+  output.writeStructBegin('TaskStatus');
+  if (this.completed !== null && this.completed !== undefined) {
+    output.writeFieldBegin('completed', Thrift.Type.STRUCT, 1);
+    this.completed.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.error !== null && this.error !== undefined) {
+    output.writeFieldBegin('error', Thrift.Type.STRUCT, 2);
+    this.error.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var TaskResult = module.exports.TaskResult = function(args) {
+  this.status = null;
+  this.passthroughJson = null;
+  if (args) {
+    if (args.status !== undefined && args.status !== null) {
+      this.status = new ttypes.TaskStatus(args.status);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
+    }
+    if (args.passthroughJson !== undefined && args.passthroughJson !== null) {
+      this.passthroughJson = args.passthroughJson;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field passthroughJson is unset!');
+    }
+  }
+};
+TaskResult.prototype = {};
+TaskResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.status = new ttypes.TaskStatus();
+        this.status.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.passthroughJson = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+TaskResult.prototype.write = function(output) {
+  output.writeStructBegin('TaskResult');
+  if (this.status !== null && this.status !== undefined) {
+    output.writeFieldBegin('status', Thrift.Type.STRUCT, 1);
+    this.status.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.passthroughJson !== null && this.passthroughJson !== undefined) {
+    output.writeFieldBegin('passthroughJson', Thrift.Type.STRING, 2);
+    output.writeString(this.passthroughJson);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

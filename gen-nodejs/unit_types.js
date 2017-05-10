@@ -545,6 +545,7 @@ var Guides = module.exports.Guides = function(args) {
   this.playbackMetadataJson = null;
   this.sections = null;
   this.assessments = null;
+  this.customStylesUrl = null;
   if (args) {
     if (args.playbackMetadataJson !== undefined && args.playbackMetadataJson !== null) {
       this.playbackMetadataJson = args.playbackMetadataJson;
@@ -560,6 +561,9 @@ var Guides = module.exports.Guides = function(args) {
       this.assessments = Thrift.copyList(args.assessments, [ttypes.Assessment]);
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessments is unset!');
+    }
+    if (args.customStylesUrl !== undefined && args.customStylesUrl !== null) {
+      this.customStylesUrl = args.customStylesUrl;
     }
   }
 };
@@ -626,6 +630,13 @@ Guides.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.customStylesUrl = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -668,6 +679,11 @@ Guides.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.customStylesUrl !== null && this.customStylesUrl !== undefined) {
+    output.writeFieldBegin('customStylesUrl', Thrift.Type.STRING, 4);
+    output.writeString(this.customStylesUrl);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

@@ -393,6 +393,8 @@ var ServerSideTest = module.exports.ServerSideTest = function(args) {
   if (args) {
     if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
       this.oneTimeTest = args.oneTimeTest;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field oneTimeTest is unset!');
     }
   }
 };
@@ -446,6 +448,8 @@ var Custom = module.exports.Custom = function(args) {
   if (args) {
     if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
       this.oneTimeTest = args.oneTimeTest;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field oneTimeTest is unset!');
     }
   }
 };
@@ -496,9 +500,17 @@ Custom.prototype.write = function(output) {
 
 var FreeText = module.exports.FreeText = function(args) {
   this.oneTimeTest = false;
+  this.arePartialPointsAllowed = false;
   if (args) {
     if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
       this.oneTimeTest = args.oneTimeTest;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field oneTimeTest is unset!');
+    }
+    if (args.arePartialPointsAllowed !== undefined && args.arePartialPointsAllowed !== null) {
+      this.arePartialPointsAllowed = args.arePartialPointsAllowed;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field arePartialPointsAllowed is unset!');
     }
   }
 };
@@ -523,9 +535,13 @@ FreeText.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 2:
+      if (ftype == Thrift.Type.BOOL) {
+        this.arePartialPointsAllowed = input.readBool();
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -540,6 +556,11 @@ FreeText.prototype.write = function(output) {
   if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
     output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 1);
     output.writeBool(this.oneTimeTest);
+    output.writeFieldEnd();
+  }
+  if (this.arePartialPointsAllowed !== null && this.arePartialPointsAllowed !== undefined) {
+    output.writeFieldBegin('arePartialPointsAllowed', Thrift.Type.BOOL, 2);
+    output.writeBool(this.arePartialPointsAllowed);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

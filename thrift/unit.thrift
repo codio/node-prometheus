@@ -43,6 +43,7 @@ struct Guides {
   1: required string playbackMetadataJson
   2: required list<guides.Section> sections
   3: required list<Assessment> assessments
+  4: optional string customStylesUrl
 }
 
 struct ModuleUnit {

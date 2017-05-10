@@ -108,6 +108,7 @@ service PrometheusService {
 
   void removeUnit(1: required string id) throws (1: NotFoundException nfe)
   unit.ModuleUnit getUnit(1: required string id) throws (1: NotFoundException nfe)
+  list<unit.ModuleUnit> getUnits(1: required list<string> ids, 2: bool withRemoved = false)
 
   void reorderUnits(1: required string moduleId, 2:  required list<string> unitIds)
       throws (1: NotFoundException nfe, 2: ReorderConflictException rce)
@@ -124,8 +125,7 @@ service PrometheusService {
     2: required string id,
     3: required string unitVersionId,
     4: required string accountId,
-    5: optional string gigaBoxSlot,
-    6: optional bool addSecureScripts
+    5: optional string gigaBoxSlot
   ) throws (1: NotFoundException nfe)
 
   unitfork.UnitFork getUnitFork(1: required string id) throws (1: NotFoundException nfe)
@@ -142,11 +142,30 @@ service PrometheusService {
     4: required list<string> folders
   ) throws (1: NotFoundException nfe)
 
+  void removeUnitFork(1: required string id) throws (1: NotFoundException nfe)
+
+  void incrementTimeSpentInUnitFork(
+    1: required string unitForkId,
+    2: required i32 seconds
+  ) throws (1: NotFoundException nfe)
+
+  void runAutogradeScript(
+    1: required common.ReplyParameters replyParameters,
+    2: required string unitForkId,
+    3: required string autogradeScript,
+    4: required string envVarJson
+  ) throws (1: NotFoundException nfe)
+
+  void updateUnitVersionInUnitFork(
+    1: required common.ReplyParameters replyParameters,
+    2: required string unitForkId,
+    3: required string unitVersionId
+  ) throws (1: NotFoundException nfe)
 
   /// Assessments
 
   assessmentResults.MultipleChoiceAttempt checkMultipleChoiceAssessment(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required set<string> answerIds
   ) throws (
@@ -164,7 +183,7 @@ service PrometheusService {
   )
 
   assessmentResults.FillInBlanksAttempt checkFillInBlanksAssessment(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required list<string> answers
   ) throws (
@@ -187,7 +206,7 @@ service PrometheusService {
   )
 
   void checkCodeTestAssessment(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required common.ReplyParameters replyParameters
   ) throws (
@@ -206,7 +225,7 @@ service PrometheusService {
   )
 
   void checkCodeOutputCompareAssessment(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required common.ReplyParameters replyParameters
   ) throws (
@@ -225,7 +244,7 @@ service PrometheusService {
   )
 
   assessmentResults.CustomTaskAttempt submitCustomAssessmentResult(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required i32 points
     // TODO: answer ?
@@ -236,7 +255,7 @@ service PrometheusService {
   )
 
   void submitFreeTextAssessmentAnswer(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required string answer
   ) throws (
@@ -246,7 +265,7 @@ service PrometheusService {
   )
 
   void markFreeTextAssessment(
-    1: required string unitForkProjectId,
+    1: required string unitForkId,
     2: required string assessmentId,
     3: required string answerId,
     4: required i32 points
@@ -255,11 +274,14 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
-  map<string, i32> getAssessmentScores(1: required list<string> unitForkIds);
-  map<string, i32> getAssessmentScoresByProjectIds(1: required list<string> unitForkProjectIds);
+  map<string, i32> getAssessmentScores(1: required list<string> unitForkIds)
+  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkId)
 
-  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkId);
-  map<string, assessmentResults.CheckResult> getAssessmentAnswersByProjectId(
-    1: required string unitForkProjectId
-  );
+  map<string, string> getAssessmentState(1: required string unitForkId)
+
+  void storeAssessmentState(
+    1: required string unitForkId,
+    2: required string assessmentId,
+    3: required string state
+  ) throws(1: NotFoundException nfe)
 }

@@ -24,15 +24,16 @@ struct FillInBlanks {
 }
 
 struct ServerSideTest {
-  1: optional bool oneTimeTest = false
+  1: required bool oneTimeTest = false
 }
 
 struct Custom {
-  1: optional bool oneTimeTest = false
+  1: required bool oneTimeTest = false
 }
 
 struct FreeText {
-  1: optional bool oneTimeTest = false
+  1: required bool oneTimeTest = false
+  2: required bool arePartialPointsAllowed = false
 }
 
 union Task {

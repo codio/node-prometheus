@@ -152,9 +152,21 @@ service PrometheusService {
   void runAutogradeScript(
     1: required common.ReplyParameters replyParameters,
     2: required string unitForkId,
-    3: required string autogradeScript,
+    3: required string autogradeScriptPath,
     4: required string envVarJson
   ) throws (1: NotFoundException nfe)
+
+  void runAutogradeScriptForAuthor(
+    1: required common.ReplyParameters replyParameters,
+    2: required string projectId,
+    3: required string autogradeScriptPath,
+    4: required string envVarJson
+  ) throws (1: NotFoundException nfe)
+
+  void storeAutogradePoints(1: required string autogradeToken, 2: required i32 points) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
+  )
 
   void updateUnitVersionInUnitFork(
     1: required common.ReplyParameters replyParameters,

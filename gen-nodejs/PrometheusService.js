@@ -4324,7 +4324,7 @@ PrometheusService_incrementTimeSpentInUnitFork_result.prototype.write = function
 var PrometheusService_runAutogradeScript_args = function(args) {
   this.replyParameters = null;
   this.unitForkId = null;
-  this.autogradeScript = null;
+  this.autogradeScriptPath = null;
   this.envVarJson = null;
   if (args) {
     if (args.replyParameters !== undefined && args.replyParameters !== null) {
@@ -4337,10 +4337,10 @@ var PrometheusService_runAutogradeScript_args = function(args) {
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitForkId is unset!');
     }
-    if (args.autogradeScript !== undefined && args.autogradeScript !== null) {
-      this.autogradeScript = args.autogradeScript;
+    if (args.autogradeScriptPath !== undefined && args.autogradeScriptPath !== null) {
+      this.autogradeScriptPath = args.autogradeScriptPath;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScript is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScriptPath is unset!');
     }
     if (args.envVarJson !== undefined && args.envVarJson !== null) {
       this.envVarJson = args.envVarJson;
@@ -4380,7 +4380,7 @@ PrometheusService_runAutogradeScript_args.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRING) {
-        this.autogradeScript = input.readString();
+        this.autogradeScriptPath = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -4413,9 +4413,9 @@ PrometheusService_runAutogradeScript_args.prototype.write = function(output) {
     output.writeString(this.unitForkId);
     output.writeFieldEnd();
   }
-  if (this.autogradeScript !== null && this.autogradeScript !== undefined) {
-    output.writeFieldBegin('autogradeScript', Thrift.Type.STRING, 3);
-    output.writeString(this.autogradeScript);
+  if (this.autogradeScriptPath !== null && this.autogradeScriptPath !== undefined) {
+    output.writeFieldBegin('autogradeScriptPath', Thrift.Type.STRING, 3);
+    output.writeString(this.autogradeScriptPath);
     output.writeFieldEnd();
   }
   if (this.envVarJson !== null && this.envVarJson !== undefined) {
@@ -4479,6 +4479,317 @@ PrometheusService_runAutogradeScript_result.prototype.write = function(output) {
   if (this.nfe !== null && this.nfe !== undefined) {
     output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
     this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var PrometheusService_runAutogradeScriptForAuthor_args = function(args) {
+  this.replyParameters = null;
+  this.projectId = null;
+  this.autogradeScriptPath = null;
+  this.envVarJson = null;
+  if (args) {
+    if (args.replyParameters !== undefined && args.replyParameters !== null) {
+      this.replyParameters = new common_ttypes.ReplyParameters(args.replyParameters);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
+    }
+    if (args.projectId !== undefined && args.projectId !== null) {
+      this.projectId = args.projectId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field projectId is unset!');
+    }
+    if (args.autogradeScriptPath !== undefined && args.autogradeScriptPath !== null) {
+      this.autogradeScriptPath = args.autogradeScriptPath;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScriptPath is unset!');
+    }
+    if (args.envVarJson !== undefined && args.envVarJson !== null) {
+      this.envVarJson = args.envVarJson;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field envVarJson is unset!');
+    }
+  }
+};
+PrometheusService_runAutogradeScriptForAuthor_args.prototype = {};
+PrometheusService_runAutogradeScriptForAuthor_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.replyParameters = new common_ttypes.ReplyParameters();
+        this.replyParameters.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.projectId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.autogradeScriptPath = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.envVarJson = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_runAutogradeScriptForAuthor_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_runAutogradeScriptForAuthor_args');
+  if (this.replyParameters !== null && this.replyParameters !== undefined) {
+    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
+    this.replyParameters.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.projectId !== null && this.projectId !== undefined) {
+    output.writeFieldBegin('projectId', Thrift.Type.STRING, 2);
+    output.writeString(this.projectId);
+    output.writeFieldEnd();
+  }
+  if (this.autogradeScriptPath !== null && this.autogradeScriptPath !== undefined) {
+    output.writeFieldBegin('autogradeScriptPath', Thrift.Type.STRING, 3);
+    output.writeString(this.autogradeScriptPath);
+    output.writeFieldEnd();
+  }
+  if (this.envVarJson !== null && this.envVarJson !== undefined) {
+    output.writeFieldBegin('envVarJson', Thrift.Type.STRING, 4);
+    output.writeString(this.envVarJson);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var PrometheusService_runAutogradeScriptForAuthor_result = function(args) {
+  this.nfe = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined && args.nfe !== null) {
+      this.nfe = args.nfe;
+    }
+  }
+};
+PrometheusService_runAutogradeScriptForAuthor_result.prototype = {};
+PrometheusService_runAutogradeScriptForAuthor_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_runAutogradeScriptForAuthor_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_runAutogradeScriptForAuthor_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var PrometheusService_storeAutogradePoints_args = function(args) {
+  this.autogradeToken = null;
+  this.points = null;
+  if (args) {
+    if (args.autogradeToken !== undefined && args.autogradeToken !== null) {
+      this.autogradeToken = args.autogradeToken;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeToken is unset!');
+    }
+    if (args.points !== undefined && args.points !== null) {
+      this.points = args.points;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field points is unset!');
+    }
+  }
+};
+PrometheusService_storeAutogradePoints_args.prototype = {};
+PrometheusService_storeAutogradePoints_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.autogradeToken = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I32) {
+        this.points = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_storeAutogradePoints_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_storeAutogradePoints_args');
+  if (this.autogradeToken !== null && this.autogradeToken !== undefined) {
+    output.writeFieldBegin('autogradeToken', Thrift.Type.STRING, 1);
+    output.writeString(this.autogradeToken);
+    output.writeFieldEnd();
+  }
+  if (this.points !== null && this.points !== undefined) {
+    output.writeFieldBegin('points', Thrift.Type.I32, 2);
+    output.writeI32(this.points);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var PrometheusService_storeAutogradePoints_result = function(args) {
+  this.nfe = null;
+  this.ae = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args instanceof ttypes.ArgumentException) {
+    this.ae = args;
+    return;
+  }
+  if (args) {
+    if (args.nfe !== undefined && args.nfe !== null) {
+      this.nfe = args.nfe;
+    }
+    if (args.ae !== undefined && args.ae !== null) {
+      this.ae = args.ae;
+    }
+  }
+};
+PrometheusService_storeAutogradePoints_result.prototype = {};
+PrometheusService_storeAutogradePoints_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ae = new ttypes.ArgumentException();
+        this.ae.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_storeAutogradePoints_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_storeAutogradePoints_result');
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.ae !== null && this.ae !== undefined) {
+    output.writeFieldBegin('ae', Thrift.Type.STRUCT, 2);
+    this.ae.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -8917,7 +9228,7 @@ PrometheusServiceClient.prototype.recv_incrementTimeSpentInUnitFork = function(i
   }
   callback(null);
 };
-PrometheusServiceClient.prototype.runAutogradeScript = function(replyParameters, unitForkId, autogradeScript, envVarJson, callback) {
+PrometheusServiceClient.prototype.runAutogradeScript = function(replyParameters, unitForkId, autogradeScriptPath, envVarJson, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -8928,21 +9239,21 @@ PrometheusServiceClient.prototype.runAutogradeScript = function(replyParameters,
         _defer.resolve(result);
       }
     };
-    this.send_runAutogradeScript(replyParameters, unitForkId, autogradeScript, envVarJson);
+    this.send_runAutogradeScript(replyParameters, unitForkId, autogradeScriptPath, envVarJson);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_runAutogradeScript(replyParameters, unitForkId, autogradeScript, envVarJson);
+    this.send_runAutogradeScript(replyParameters, unitForkId, autogradeScriptPath, envVarJson);
   }
 };
 
-PrometheusServiceClient.prototype.send_runAutogradeScript = function(replyParameters, unitForkId, autogradeScript, envVarJson) {
+PrometheusServiceClient.prototype.send_runAutogradeScript = function(replyParameters, unitForkId, autogradeScriptPath, envVarJson) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('runAutogradeScript', Thrift.MessageType.CALL, this.seqid());
   var args = new PrometheusService_runAutogradeScript_args();
   args.replyParameters = replyParameters;
   args.unitForkId = unitForkId;
-  args.autogradeScript = autogradeScript;
+  args.autogradeScriptPath = autogradeScriptPath;
   args.envVarJson = envVarJson;
   args.write(output);
   output.writeMessageEnd();
@@ -8964,6 +9275,107 @@ PrometheusServiceClient.prototype.recv_runAutogradeScript = function(input,mtype
 
   if (null !== result.nfe) {
     return callback(result.nfe);
+  }
+  callback(null);
+};
+PrometheusServiceClient.prototype.runAutogradeScriptForAuthor = function(replyParameters, projectId, autogradeScriptPath, envVarJson, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_runAutogradeScriptForAuthor(replyParameters, projectId, autogradeScriptPath, envVarJson);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_runAutogradeScriptForAuthor(replyParameters, projectId, autogradeScriptPath, envVarJson);
+  }
+};
+
+PrometheusServiceClient.prototype.send_runAutogradeScriptForAuthor = function(replyParameters, projectId, autogradeScriptPath, envVarJson) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('runAutogradeScriptForAuthor', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_runAutogradeScriptForAuthor_args();
+  args.replyParameters = replyParameters;
+  args.projectId = projectId;
+  args.autogradeScriptPath = autogradeScriptPath;
+  args.envVarJson = envVarJson;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_runAutogradeScriptForAuthor = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_runAutogradeScriptForAuthor_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  callback(null);
+};
+PrometheusServiceClient.prototype.storeAutogradePoints = function(autogradeToken, points, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_storeAutogradePoints(autogradeToken, points);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_storeAutogradePoints(autogradeToken, points);
+  }
+};
+
+PrometheusServiceClient.prototype.send_storeAutogradePoints = function(autogradeToken, points) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('storeAutogradePoints', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_storeAutogradePoints_args();
+  args.autogradeToken = autogradeToken;
+  args.points = points;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_storeAutogradePoints = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_storeAutogradePoints_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.ae) {
+    return callback(result.ae);
   }
   callback(null);
 };
@@ -11065,7 +11477,7 @@ PrometheusServiceProcessor.prototype.process_runAutogradeScript = function(seqid
   args.read(input);
   input.readMessageEnd();
   if (this._handler.runAutogradeScript.length === 4) {
-    Q.fcall(this._handler.runAutogradeScript, args.replyParameters, args.unitForkId, args.autogradeScript, args.envVarJson)
+    Q.fcall(this._handler.runAutogradeScript, args.replyParameters, args.unitForkId, args.autogradeScriptPath, args.envVarJson)
       .then(function(result) {
         var result_obj = new PrometheusService_runAutogradeScript_result({success: result});
         output.writeMessageBegin("runAutogradeScript", Thrift.MessageType.REPLY, seqid);
@@ -11086,7 +11498,7 @@ PrometheusServiceProcessor.prototype.process_runAutogradeScript = function(seqid
         output.flush();
       });
   } else {
-    this._handler.runAutogradeScript(args.replyParameters, args.unitForkId, args.autogradeScript, args.envVarJson, function (err, result) {
+    this._handler.runAutogradeScript(args.replyParameters, args.unitForkId, args.autogradeScriptPath, args.envVarJson, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof ttypes.NotFoundException) {
         result_obj = new PrometheusService_runAutogradeScript_result((err !== null || typeof err === 'undefined') ? err : {success: result});
@@ -11094,6 +11506,88 @@ PrometheusServiceProcessor.prototype.process_runAutogradeScript = function(seqid
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("runAutogradeScript", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+PrometheusServiceProcessor.prototype.process_runAutogradeScriptForAuthor = function(seqid, input, output) {
+  var args = new PrometheusService_runAutogradeScriptForAuthor_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.runAutogradeScriptForAuthor.length === 4) {
+    Q.fcall(this._handler.runAutogradeScriptForAuthor, args.replyParameters, args.projectId, args.autogradeScriptPath, args.envVarJson)
+      .then(function(result) {
+        var result_obj = new PrometheusService_runAutogradeScriptForAuthor_result({success: result});
+        output.writeMessageBegin("runAutogradeScriptForAuthor", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof ttypes.NotFoundException) {
+          result = new PrometheusService_runAutogradeScriptForAuthor_result(err);
+          output.writeMessageBegin("runAutogradeScriptForAuthor", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("runAutogradeScriptForAuthor", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.runAutogradeScriptForAuthor(args.replyParameters, args.projectId, args.autogradeScriptPath, args.envVarJson, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.NotFoundException) {
+        result_obj = new PrometheusService_runAutogradeScriptForAuthor_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("runAutogradeScriptForAuthor", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("runAutogradeScriptForAuthor", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+PrometheusServiceProcessor.prototype.process_storeAutogradePoints = function(seqid, input, output) {
+  var args = new PrometheusService_storeAutogradePoints_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.storeAutogradePoints.length === 2) {
+    Q.fcall(this._handler.storeAutogradePoints, args.autogradeToken, args.points)
+      .then(function(result) {
+        var result_obj = new PrometheusService_storeAutogradePoints_result({success: result});
+        output.writeMessageBegin("storeAutogradePoints", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof ttypes.NotFoundException || err instanceof ttypes.ArgumentException) {
+          result = new PrometheusService_storeAutogradePoints_result(err);
+          output.writeMessageBegin("storeAutogradePoints", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("storeAutogradePoints", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.storeAutogradePoints(args.autogradeToken, args.points, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.NotFoundException || err instanceof ttypes.ArgumentException) {
+        result_obj = new PrometheusService_storeAutogradePoints_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("storeAutogradePoints", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("storeAutogradePoints", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

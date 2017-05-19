@@ -16,5 +16,4 @@ struct Section {
   2: required string playbackMetadataJson
   3: required SectionContent content
   4: optional Media media
-  5: required set<string> assessmentIds
 }

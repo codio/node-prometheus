@@ -6,8 +6,11 @@ struct ReplyToExchange {
   2: required string routingKey
 }
 
+struct ReplyToBrowser {}
+
 union ReplyDestination {
   1: ReplyToExchange exchange
+  2: ReplyToBrowser browser
 }
 
 struct ReplyParameters {

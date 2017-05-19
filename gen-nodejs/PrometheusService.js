@@ -3152,105 +3152,6 @@ PrometheusService_getUnitGuides_result.prototype.write = function(output) {
   return;
 };
 
-var PrometheusService_createProjectForAuthor_args = function(args) {
-  this.replyParameters = null;
-  this.unitId = null;
-  if (args) {
-    if (args.replyParameters !== undefined && args.replyParameters !== null) {
-      this.replyParameters = new common_ttypes.ReplyParameters(args.replyParameters);
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field replyParameters is unset!');
-    }
-    if (args.unitId !== undefined && args.unitId !== null) {
-      this.unitId = args.unitId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitId is unset!');
-    }
-  }
-};
-PrometheusService_createProjectForAuthor_args.prototype = {};
-PrometheusService_createProjectForAuthor_args.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid)
-    {
-      case 1:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.replyParameters = new common_ttypes.ReplyParameters();
-        this.replyParameters.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 2:
-      if (ftype == Thrift.Type.STRING) {
-        this.unitId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-PrometheusService_createProjectForAuthor_args.prototype.write = function(output) {
-  output.writeStructBegin('PrometheusService_createProjectForAuthor_args');
-  if (this.replyParameters !== null && this.replyParameters !== undefined) {
-    output.writeFieldBegin('replyParameters', Thrift.Type.STRUCT, 1);
-    this.replyParameters.write(output);
-    output.writeFieldEnd();
-  }
-  if (this.unitId !== null && this.unitId !== undefined) {
-    output.writeFieldBegin('unitId', Thrift.Type.STRING, 2);
-    output.writeString(this.unitId);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-var PrometheusService_createProjectForAuthor_result = function(args) {
-};
-PrometheusService_createProjectForAuthor_result.prototype = {};
-PrometheusService_createProjectForAuthor_result.prototype.read = function(input) {
-  input.readStructBegin();
-  while (true)
-  {
-    var ret = input.readFieldBegin();
-    var fname = ret.fname;
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    input.skip(ftype);
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-PrometheusService_createProjectForAuthor_result.prototype.write = function(output) {
-  output.writeStructBegin('PrometheusService_createProjectForAuthor_result');
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
 var PrometheusService_createUnitFork_args = function(args) {
   this.replyParameters = null;
   this.id = null;
@@ -8937,51 +8838,6 @@ PrometheusServiceClient.prototype.recv_getUnitGuides = function(input,mtype,rseq
   }
   return callback('getUnitGuides failed: unknown result');
 };
-PrometheusServiceClient.prototype.createProjectForAuthor = function(replyParameters, unitId, callback) {
-  this._seqid = this.new_seqid();
-  if (callback === undefined) {
-    var _defer = Q.defer();
-    this._reqs[this.seqid()] = function(error, result) {
-      if (error) {
-        _defer.reject(error);
-      } else {
-        _defer.resolve(result);
-      }
-    };
-    this.send_createProjectForAuthor(replyParameters, unitId);
-    return _defer.promise;
-  } else {
-    this._reqs[this.seqid()] = callback;
-    this.send_createProjectForAuthor(replyParameters, unitId);
-  }
-};
-
-PrometheusServiceClient.prototype.send_createProjectForAuthor = function(replyParameters, unitId) {
-  var output = new this.pClass(this.output);
-  output.writeMessageBegin('createProjectForAuthor', Thrift.MessageType.CALL, this.seqid());
-  var args = new PrometheusService_createProjectForAuthor_args();
-  args.replyParameters = replyParameters;
-  args.unitId = unitId;
-  args.write(output);
-  output.writeMessageEnd();
-  return this.output.flush();
-};
-
-PrometheusServiceClient.prototype.recv_createProjectForAuthor = function(input,mtype,rseqid) {
-  var callback = this._reqs[rseqid] || function() {};
-  delete this._reqs[rseqid];
-  if (mtype == Thrift.MessageType.EXCEPTION) {
-    var x = new Thrift.TApplicationException();
-    x.read(input);
-    input.readMessageEnd();
-    return callback(x);
-  }
-  var result = new PrometheusService_createProjectForAuthor_result();
-  result.read(input);
-  input.readMessageEnd();
-
-  callback(null);
-};
 PrometheusServiceClient.prototype.createUnitFork = function(replyParameters, id, unitVersionId, accountId, gigaBoxSlot, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -11291,42 +11147,6 @@ PrometheusServiceProcessor.prototype.process_getUnitGuides = function(seqid, inp
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("getUnitGuides", Thrift.MessageType.EXCEPTION, seqid);
-      }
-      result_obj.write(output);
-      output.writeMessageEnd();
-      output.flush();
-    });
-  }
-};
-PrometheusServiceProcessor.prototype.process_createProjectForAuthor = function(seqid, input, output) {
-  var args = new PrometheusService_createProjectForAuthor_args();
-  args.read(input);
-  input.readMessageEnd();
-  if (this._handler.createProjectForAuthor.length === 2) {
-    Q.fcall(this._handler.createProjectForAuthor, args.replyParameters, args.unitId)
-      .then(function(result) {
-        var result_obj = new PrometheusService_createProjectForAuthor_result({success: result});
-        output.writeMessageBegin("createProjectForAuthor", Thrift.MessageType.REPLY, seqid);
-        result_obj.write(output);
-        output.writeMessageEnd();
-        output.flush();
-      }, function (err) {
-        var result;
-        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("createProjectForAuthor", Thrift.MessageType.EXCEPTION, seqid);
-        result.write(output);
-        output.writeMessageEnd();
-        output.flush();
-      });
-  } else {
-    this._handler.createProjectForAuthor(args.replyParameters, args.unitId, function (err, result) {
-      var result_obj;
-      if ((err === null || typeof err === 'undefined')) {
-        result_obj = new PrometheusService_createProjectForAuthor_result((err !== null || typeof err === 'undefined') ? err : {success: result});
-        output.writeMessageBegin("createProjectForAuthor", Thrift.MessageType.REPLY, seqid);
-      } else {
-        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("createProjectForAuthor", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

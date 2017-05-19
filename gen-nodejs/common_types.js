@@ -81,11 +81,43 @@ ReplyToExchange.prototype.write = function(output) {
   return;
 };
 
+var ReplyToBrowser = module.exports.ReplyToBrowser = function(args) {
+};
+ReplyToBrowser.prototype = {};
+ReplyToBrowser.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ReplyToBrowser.prototype.write = function(output) {
+  output.writeStructBegin('ReplyToBrowser');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var ReplyDestination = module.exports.ReplyDestination = function(args) {
   this.exchange = null;
+  this.browser = null;
   if (args) {
     if (args.exchange !== undefined && args.exchange !== null) {
       this.exchange = new ttypes.ReplyToExchange(args.exchange);
+    }
+    if (args.browser !== undefined && args.browser !== null) {
+      this.browser = new ttypes.ReplyToBrowser(args.browser);
     }
   }
 };
@@ -111,9 +143,14 @@ ReplyDestination.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.browser = new ttypes.ReplyToBrowser();
+        this.browser.read(input);
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -128,6 +165,11 @@ ReplyDestination.prototype.write = function(output) {
   if (this.exchange !== null && this.exchange !== undefined) {
     output.writeFieldBegin('exchange', Thrift.Type.STRUCT, 1);
     this.exchange.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.browser !== null && this.browser !== undefined) {
+    output.writeFieldBegin('browser', Thrift.Type.STRUCT, 2);
+    this.browser.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

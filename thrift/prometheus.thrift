@@ -120,11 +120,6 @@ service PrometheusService {
     2: optional bool isTeacher = false
   ) throws (1: NotFoundException nfe, 2: NoGuidesInUnitException nge)
 
-  void createProjectForAuthor(
-    1: required common.ReplyParameters replyParameters,
-    2: required string unitId
-  )
-
   void createUnitFork(
     1: required common.ReplyParameters replyParameters,
     2: required string id,

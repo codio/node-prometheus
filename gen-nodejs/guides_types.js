@@ -152,6 +152,7 @@ var Section = module.exports.Section = function(args) {
   this.playbackMetadataJson = null;
   this.content = null;
   this.media = null;
+  this.assessmentIds = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -170,6 +171,11 @@ var Section = module.exports.Section = function(args) {
     }
     if (args.media !== undefined && args.media !== null) {
       this.media = new ttypes.Media(args.media);
+    }
+    if (args.assessmentIds !== undefined && args.assessmentIds !== null) {
+      this.assessmentIds = Thrift.copyList(args.assessmentIds, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentIds is unset!');
     }
   }
 };
@@ -217,6 +223,26 @@ Section.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 5:
+      if (ftype == Thrift.Type.SET) {
+        var _size0 = 0;
+        var _rtmp34;
+        this.assessmentIds = [];
+        var _etype3 = 0;
+        _rtmp34 = input.readSetBegin();
+        _etype3 = _rtmp34.etype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        {
+          var elem6 = null;
+          elem6 = input.readString();
+          this.assessmentIds.push(elem6);
+        }
+        input.readSetEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -246,6 +272,20 @@ Section.prototype.write = function(output) {
   if (this.media !== null && this.media !== undefined) {
     output.writeFieldBegin('media', Thrift.Type.STRUCT, 4);
     this.media.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.assessmentIds !== null && this.assessmentIds !== undefined) {
+    output.writeFieldBegin('assessmentIds', Thrift.Type.SET, 5);
+    output.writeSetBegin(Thrift.Type.STRING, this.assessmentIds.length);
+    for (var iter7 in this.assessmentIds)
+    {
+      if (this.assessmentIds.hasOwnProperty(iter7))
+      {
+        iter7 = this.assessmentIds[iter7];
+        output.writeString(iter7);
+      }
+    }
+    output.writeSetEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();

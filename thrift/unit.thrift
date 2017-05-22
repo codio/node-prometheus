@@ -3,6 +3,7 @@ namespace java com.codio.prometheus.thrift.unit
 
 include "./assessments.thrift"
 include "./guides.thrift"
+include 'common.thrift'
 
 struct PublishStatusInProgress {
   1: required string taskId
@@ -50,4 +51,21 @@ struct ModuleUnit {
   1: required string id
   2: required Details details
   3: optional list<Version> versions
+}
+
+
+struct AutogradeScriptStatusComplete {
+  1: required i32 returnCode
+  2: required string stdout
+  3: required string stderr
+}
+
+union AutogradeScriptStatus {
+  1: AutogradeScriptStatusComplete complete
+  2: common.Empty error
+}
+
+struct AutogradeScriptResult {
+  1: required AutogradeScriptStatus status
+  2: optional i32 points
 }

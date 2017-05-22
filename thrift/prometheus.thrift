@@ -120,11 +120,18 @@ service PrometheusService {
     2: optional bool isTeacher = false
   ) throws (1: NotFoundException nfe, 2: NoGuidesInUnitException nge)
 
+  void createProjectForAuthor(
+    1: required common.ReplyParameters replyParameters,
+    2: required string unitId,
+    3: required string userId,
+    4: required string defaultStackVersionId
+  ) throws (1: NotFoundException nfe)
+
   void createUnitFork(
     1: required common.ReplyParameters replyParameters,
     2: required string id,
     3: required string unitVersionId,
-    4: required string accountId,
+    4: required string userId,
     5: optional string gigaBoxSlot
   ) throws (1: NotFoundException nfe)
 
@@ -137,7 +144,6 @@ service PrometheusService {
 
   void restoreUnitForkContent(
     1: required common.ReplyParameters replyParameters,
-    2: required string userId,
     3: required string unitForkProjectId,
     4: required list<string> folders
   ) throws (1: NotFoundException nfe)

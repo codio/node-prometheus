@@ -174,9 +174,9 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
-  void updateUnitVersionInUnitFork(
+  void updateUnitVersionInUnitForks(
     1: required common.ReplyParameters replyParameters,
-    2: required string unitForkId,
+    2: required list<string> unitForkIds,
     3: required string unitVersionId
   ) throws (1: NotFoundException nfe)
 
@@ -285,7 +285,7 @@ service PrometheusService {
   void markFreeTextAssessment(
     1: required string unitForkId,
     2: required string assessmentId,
-    3: required string answerId,
+    3: required string attemptId,
     4: required i32 points
   ) throws (
     1: NotFoundException nfe,

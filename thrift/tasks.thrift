@@ -26,5 +26,5 @@ union TaskStatus {
 
 struct TaskResult {
   1: required TaskStatus status
-  2: required string passthroughJson
+  2: optional string passthrough
 }

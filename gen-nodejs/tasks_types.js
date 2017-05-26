@@ -318,17 +318,15 @@ TaskStatus.prototype.write = function(output) {
 
 var TaskResult = module.exports.TaskResult = function(args) {
   this.status = null;
-  this.passthroughJson = null;
+  this.passthrough = null;
   if (args) {
     if (args.status !== undefined && args.status !== null) {
       this.status = new ttypes.TaskStatus(args.status);
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
     }
-    if (args.passthroughJson !== undefined && args.passthroughJson !== null) {
-      this.passthroughJson = args.passthroughJson;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field passthroughJson is unset!');
+    if (args.passthrough !== undefined && args.passthrough !== null) {
+      this.passthrough = args.passthrough;
     }
   }
 };
@@ -356,7 +354,7 @@ TaskResult.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.STRING) {
-        this.passthroughJson = input.readString();
+        this.passthrough = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -377,9 +375,9 @@ TaskResult.prototype.write = function(output) {
     this.status.write(output);
     output.writeFieldEnd();
   }
-  if (this.passthroughJson !== null && this.passthroughJson !== undefined) {
-    output.writeFieldBegin('passthroughJson', Thrift.Type.STRING, 2);
-    output.writeString(this.passthroughJson);
+  if (this.passthrough !== null && this.passthrough !== undefined) {
+    output.writeFieldBegin('passthrough', Thrift.Type.STRING, 2);
+    output.writeString(this.passthrough);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

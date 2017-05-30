@@ -115,6 +115,10 @@ service PrometheusService {
 
   map<string, UnitToLatestStartableVersion> getLatestUnitVersions(1: required list<string> moduleIds)
 
+  unit.S3Address getUnitUserArchiveTemplate(
+    1: required string unitVersionId
+  ) throws (1: NotFoundException nfe)
+
   unit.Guides getUnitGuides(
     1: required string unitVersionId,
     2: optional bool isTeacher = false

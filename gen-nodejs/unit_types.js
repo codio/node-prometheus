@@ -1027,3 +1027,73 @@ AutogradeScriptResult.prototype.write = function(output) {
   return;
 };
 
+var S3Address = module.exports.S3Address = function(args) {
+  this.bucket = null;
+  this.key = null;
+  if (args) {
+    if (args.bucket !== undefined && args.bucket !== null) {
+      this.bucket = args.bucket;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field bucket is unset!');
+    }
+    if (args.key !== undefined && args.key !== null) {
+      this.key = args.key;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field key is unset!');
+    }
+  }
+};
+S3Address.prototype = {};
+S3Address.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.bucket = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.key = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+S3Address.prototype.write = function(output) {
+  output.writeStructBegin('S3Address');
+  if (this.bucket !== null && this.bucket !== undefined) {
+    output.writeFieldBegin('bucket', Thrift.Type.STRING, 1);
+    output.writeString(this.bucket);
+    output.writeFieldEnd();
+  }
+  if (this.key !== null && this.key !== undefined) {
+    output.writeFieldBegin('key', Thrift.Type.STRING, 2);
+    output.writeString(this.key);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

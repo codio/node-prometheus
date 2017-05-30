@@ -2991,6 +2991,133 @@ PrometheusService_getLatestUnitVersions_result.prototype.write = function(output
   return;
 };
 
+var PrometheusService_getUnitUserArchiveTemplate_args = function(args) {
+  this.unitVersionId = null;
+  if (args) {
+    if (args.unitVersionId !== undefined && args.unitVersionId !== null) {
+      this.unitVersionId = args.unitVersionId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitVersionId is unset!');
+    }
+  }
+};
+PrometheusService_getUnitUserArchiveTemplate_args.prototype = {};
+PrometheusService_getUnitUserArchiveTemplate_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.unitVersionId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getUnitUserArchiveTemplate_args.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getUnitUserArchiveTemplate_args');
+  if (this.unitVersionId !== null && this.unitVersionId !== undefined) {
+    output.writeFieldBegin('unitVersionId', Thrift.Type.STRING, 1);
+    output.writeString(this.unitVersionId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var PrometheusService_getUnitUserArchiveTemplate_result = function(args) {
+  this.success = null;
+  this.nfe = null;
+  if (args instanceof ttypes.NotFoundException) {
+    this.nfe = args;
+    return;
+  }
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = new unit_ttypes.S3Address(args.success);
+    }
+    if (args.nfe !== undefined && args.nfe !== null) {
+      this.nfe = args.nfe;
+    }
+  }
+};
+PrometheusService_getUnitUserArchiveTemplate_result.prototype = {};
+PrometheusService_getUnitUserArchiveTemplate_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new unit_ttypes.S3Address();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.nfe = new ttypes.NotFoundException();
+        this.nfe.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+PrometheusService_getUnitUserArchiveTemplate_result.prototype.write = function(output) {
+  output.writeStructBegin('PrometheusService_getUnitUserArchiveTemplate_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.nfe !== null && this.nfe !== undefined) {
+    output.writeFieldBegin('nfe', Thrift.Type.STRUCT, 1);
+    this.nfe.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var PrometheusService_getUnitGuides_args = function(args) {
   this.unitVersionId = null;
   this.isTeacher = false;
@@ -8953,6 +9080,56 @@ PrometheusServiceClient.prototype.recv_getLatestUnitVersions = function(input,mt
   }
   return callback('getLatestUnitVersions failed: unknown result');
 };
+PrometheusServiceClient.prototype.getUnitUserArchiveTemplate = function(unitVersionId, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_getUnitUserArchiveTemplate(unitVersionId);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_getUnitUserArchiveTemplate(unitVersionId);
+  }
+};
+
+PrometheusServiceClient.prototype.send_getUnitUserArchiveTemplate = function(unitVersionId) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('getUnitUserArchiveTemplate', Thrift.MessageType.CALL, this.seqid());
+  var args = new PrometheusService_getUnitUserArchiveTemplate_args();
+  args.unitVersionId = unitVersionId;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+PrometheusServiceClient.prototype.recv_getUnitUserArchiveTemplate = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new PrometheusService_getUnitUserArchiveTemplate_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.nfe) {
+    return callback(result.nfe);
+  }
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('getUnitUserArchiveTemplate failed: unknown result');
+};
 PrometheusServiceClient.prototype.getUnitGuides = function(unitVersionId, isTeacher, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -11324,6 +11501,47 @@ PrometheusServiceProcessor.prototype.process_getLatestUnitVersions = function(se
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("getLatestUnitVersions", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+PrometheusServiceProcessor.prototype.process_getUnitUserArchiveTemplate = function(seqid, input, output) {
+  var args = new PrometheusService_getUnitUserArchiveTemplate_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.getUnitUserArchiveTemplate.length === 1) {
+    Q.fcall(this._handler.getUnitUserArchiveTemplate, args.unitVersionId)
+      .then(function(result) {
+        var result_obj = new PrometheusService_getUnitUserArchiveTemplate_result({success: result});
+        output.writeMessageBegin("getUnitUserArchiveTemplate", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof ttypes.NotFoundException) {
+          result = new PrometheusService_getUnitUserArchiveTemplate_result(err);
+          output.writeMessageBegin("getUnitUserArchiveTemplate", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("getUnitUserArchiveTemplate", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.getUnitUserArchiveTemplate(args.unitVersionId, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof ttypes.NotFoundException) {
+        result_obj = new PrometheusService_getUnitUserArchiveTemplate_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("getUnitUserArchiveTemplate", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("getUnitUserArchiveTemplate", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

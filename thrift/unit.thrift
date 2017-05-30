@@ -69,3 +69,8 @@ struct AutogradeScriptResult {
   1: required AutogradeScriptStatus status
   2: optional i32 points
 }
+
+struct S3Address {
+  1: required string bucket
+  2: required string key
+}

@@ -153,6 +153,7 @@ service PrometheusService {
   ) throws (1: NotFoundException nfe)
 
   void removeUnitFork(1: required string id) throws (1: NotFoundException nfe)
+  void removeUnitForks(1: required list<string> ids) throws (1: NotFoundException nfe)
 
   void incrementTimeSpentInUnitFork(
     1: required string unitForkId,

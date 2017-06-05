@@ -71,6 +71,14 @@ PublishStatusInProgress.prototype.write = function(output) {
 };
 
 var PublishStatusComplete = module.exports.PublishStatusComplete = function(args) {
+  this.autogradeScriptPaths = [];
+  if (args) {
+    if (args.autogradeScriptPaths !== undefined && args.autogradeScriptPaths !== null) {
+      this.autogradeScriptPaths = Thrift.copyList(args.autogradeScriptPaths, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScriptPaths is unset!');
+    }
+  }
 };
 PublishStatusComplete.prototype = {};
 PublishStatusComplete.prototype.read = function(input) {
@@ -84,7 +92,34 @@ PublishStatusComplete.prototype.read = function(input) {
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    input.skip(ftype);
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        var _size0 = 0;
+        var _rtmp34;
+        this.autogradeScriptPaths = [];
+        var _etype3 = 0;
+        _rtmp34 = input.readListBegin();
+        _etype3 = _rtmp34.etype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        {
+          var elem6 = null;
+          elem6 = input.readString();
+          this.autogradeScriptPaths.push(elem6);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
     input.readFieldEnd();
   }
   input.readStructEnd();
@@ -93,6 +128,20 @@ PublishStatusComplete.prototype.read = function(input) {
 
 PublishStatusComplete.prototype.write = function(output) {
   output.writeStructBegin('PublishStatusComplete');
+  if (this.autogradeScriptPaths !== null && this.autogradeScriptPaths !== undefined) {
+    output.writeFieldBegin('autogradeScriptPaths', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRING, this.autogradeScriptPaths.length);
+    for (var iter7 in this.autogradeScriptPaths)
+    {
+      if (this.autogradeScriptPaths.hasOwnProperty(iter7))
+      {
+        iter7 = this.autogradeScriptPaths[iter7];
+        output.writeString(iter7);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
@@ -122,22 +171,22 @@ PublishStatusError.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.MAP) {
-        var _size0 = 0;
-        var _rtmp34;
+        var _size8 = 0;
+        var _rtmp312;
         this.guidesErrors = {};
-        var _ktype1 = 0;
-        var _vtype2 = 0;
-        _rtmp34 = input.readMapBegin();
-        _ktype1 = _rtmp34.ktype;
-        _vtype2 = _rtmp34.vtype;
-        _size0 = _rtmp34.size;
-        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        var _ktype9 = 0;
+        var _vtype10 = 0;
+        _rtmp312 = input.readMapBegin();
+        _ktype9 = _rtmp312.ktype;
+        _vtype10 = _rtmp312.vtype;
+        _size8 = _rtmp312.size;
+        for (var _i13 = 0; _i13 < _size8; ++_i13)
         {
-          var key6 = null;
-          var val7 = null;
-          key6 = input.readString();
-          val7 = input.readString();
-          this.guidesErrors[key6] = val7;
+          var key14 = null;
+          var val15 = null;
+          key14 = input.readString();
+          val15 = input.readString();
+          this.guidesErrors[key14] = val15;
         }
         input.readMapEnd();
       } else {
@@ -161,13 +210,13 @@ PublishStatusError.prototype.write = function(output) {
   if (this.guidesErrors !== null && this.guidesErrors !== undefined) {
     output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 1);
     output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.guidesErrors));
-    for (var kiter8 in this.guidesErrors)
+    for (var kiter16 in this.guidesErrors)
     {
-      if (this.guidesErrors.hasOwnProperty(kiter8))
+      if (this.guidesErrors.hasOwnProperty(kiter16))
       {
-        var viter9 = this.guidesErrors[kiter8];
-        output.writeString(kiter8);
-        output.writeString(viter9);
+        var viter17 = this.guidesErrors[kiter16];
+        output.writeString(kiter16);
+        output.writeString(viter17);
       }
     }
     output.writeMapEnd();
@@ -591,19 +640,19 @@ Guides.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.LIST) {
-        var _size10 = 0;
-        var _rtmp314;
+        var _size18 = 0;
+        var _rtmp322;
         this.sections = [];
-        var _etype13 = 0;
-        _rtmp314 = input.readListBegin();
-        _etype13 = _rtmp314.etype;
-        _size10 = _rtmp314.size;
-        for (var _i15 = 0; _i15 < _size10; ++_i15)
+        var _etype21 = 0;
+        _rtmp322 = input.readListBegin();
+        _etype21 = _rtmp322.etype;
+        _size18 = _rtmp322.size;
+        for (var _i23 = 0; _i23 < _size18; ++_i23)
         {
-          var elem16 = null;
-          elem16 = new guides_ttypes.Section();
-          elem16.read(input);
-          this.sections.push(elem16);
+          var elem24 = null;
+          elem24 = new guides_ttypes.Section();
+          elem24.read(input);
+          this.sections.push(elem24);
         }
         input.readListEnd();
       } else {
@@ -612,19 +661,19 @@ Guides.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.LIST) {
-        var _size17 = 0;
-        var _rtmp321;
+        var _size25 = 0;
+        var _rtmp329;
         this.assessments = [];
-        var _etype20 = 0;
-        _rtmp321 = input.readListBegin();
-        _etype20 = _rtmp321.etype;
-        _size17 = _rtmp321.size;
-        for (var _i22 = 0; _i22 < _size17; ++_i22)
+        var _etype28 = 0;
+        _rtmp329 = input.readListBegin();
+        _etype28 = _rtmp329.etype;
+        _size25 = _rtmp329.size;
+        for (var _i30 = 0; _i30 < _size25; ++_i30)
         {
-          var elem23 = null;
-          elem23 = new ttypes.Assessment();
-          elem23.read(input);
-          this.assessments.push(elem23);
+          var elem31 = null;
+          elem31 = new ttypes.Assessment();
+          elem31.read(input);
+          this.assessments.push(elem31);
         }
         input.readListEnd();
       } else {
@@ -657,12 +706,12 @@ Guides.prototype.write = function(output) {
   if (this.sections !== null && this.sections !== undefined) {
     output.writeFieldBegin('sections', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.STRUCT, this.sections.length);
-    for (var iter24 in this.sections)
+    for (var iter32 in this.sections)
     {
-      if (this.sections.hasOwnProperty(iter24))
+      if (this.sections.hasOwnProperty(iter32))
       {
-        iter24 = this.sections[iter24];
-        iter24.write(output);
+        iter32 = this.sections[iter32];
+        iter32.write(output);
       }
     }
     output.writeListEnd();
@@ -671,12 +720,12 @@ Guides.prototype.write = function(output) {
   if (this.assessments !== null && this.assessments !== undefined) {
     output.writeFieldBegin('assessments', Thrift.Type.LIST, 3);
     output.writeListBegin(Thrift.Type.STRUCT, this.assessments.length);
-    for (var iter25 in this.assessments)
+    for (var iter33 in this.assessments)
     {
-      if (this.assessments.hasOwnProperty(iter25))
+      if (this.assessments.hasOwnProperty(iter33))
       {
-        iter25 = this.assessments[iter25];
-        iter25.write(output);
+        iter33 = this.assessments[iter33];
+        iter33.write(output);
       }
     }
     output.writeListEnd();
@@ -743,19 +792,19 @@ ModuleUnit.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.LIST) {
-        var _size26 = 0;
-        var _rtmp330;
+        var _size34 = 0;
+        var _rtmp338;
         this.versions = [];
-        var _etype29 = 0;
-        _rtmp330 = input.readListBegin();
-        _etype29 = _rtmp330.etype;
-        _size26 = _rtmp330.size;
-        for (var _i31 = 0; _i31 < _size26; ++_i31)
+        var _etype37 = 0;
+        _rtmp338 = input.readListBegin();
+        _etype37 = _rtmp338.etype;
+        _size34 = _rtmp338.size;
+        for (var _i39 = 0; _i39 < _size34; ++_i39)
         {
-          var elem32 = null;
-          elem32 = new ttypes.Version();
-          elem32.read(input);
-          this.versions.push(elem32);
+          var elem40 = null;
+          elem40 = new ttypes.Version();
+          elem40.read(input);
+          this.versions.push(elem40);
         }
         input.readListEnd();
       } else {
@@ -786,12 +835,12 @@ ModuleUnit.prototype.write = function(output) {
   if (this.versions !== null && this.versions !== undefined) {
     output.writeFieldBegin('versions', Thrift.Type.LIST, 3);
     output.writeListBegin(Thrift.Type.STRUCT, this.versions.length);
-    for (var iter33 in this.versions)
+    for (var iter41 in this.versions)
     {
-      if (this.versions.hasOwnProperty(iter33))
+      if (this.versions.hasOwnProperty(iter41))
       {
-        iter33 = this.versions[iter33];
-        iter33.write(output);
+        iter41 = this.versions[iter41];
+        iter41.write(output);
       }
     }
     output.writeListEnd();

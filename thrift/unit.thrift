@@ -9,7 +9,9 @@ struct PublishStatusInProgress {
   1: required string taskId
 }
 
-struct PublishStatusComplete {}
+struct PublishStatusComplete {
+  1: required list<string> autogradeScriptPaths = []
+}
 
 struct PublishStatusError {
   1: optional map<string,string> guidesErrors

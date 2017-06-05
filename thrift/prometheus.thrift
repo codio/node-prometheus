@@ -98,7 +98,8 @@ service PrometheusService {
   void migrateFromS3Archive(
     1: required string unitId,
     2: required string archiveS3Key,
-    3: required string stackVersionId
+    3: required string stackVersionId,
+    4: optional string assessmentsJson
   ) throws (1: NotFoundException nfe)
 
   ChangeStackVersionInUnitResult changeStackVersionInUnit(
@@ -153,6 +154,7 @@ service PrometheusService {
   ) throws (1: NotFoundException nfe)
 
   void removeUnitFork(1: required string id) throws (1: NotFoundException nfe)
+  void removeUnitForks(1: required list<string> ids) throws (1: NotFoundException nfe)
 
   void incrementTimeSpentInUnitFork(
     1: required string unitForkId,

@@ -153,6 +153,7 @@ var Section = module.exports.Section = function(args) {
   this.content = null;
   this.media = null;
   this.assessmentIds = null;
+  this.contentWebp = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -176,6 +177,9 @@ var Section = module.exports.Section = function(args) {
       this.assessmentIds = Thrift.copyList(args.assessmentIds, [null]);
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field assessmentIds is unset!');
+    }
+    if (args.contentWebp !== undefined && args.contentWebp !== null) {
+      this.contentWebp = new ttypes.SectionContent(args.contentWebp);
     }
   }
 };
@@ -243,6 +247,14 @@ Section.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 6:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.contentWebp = new ttypes.SectionContent();
+        this.contentWebp.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -286,6 +298,11 @@ Section.prototype.write = function(output) {
       }
     }
     output.writeSetEnd();
+    output.writeFieldEnd();
+  }
+  if (this.contentWebp !== null && this.contentWebp !== undefined) {
+    output.writeFieldBegin('contentWebp', Thrift.Type.STRUCT, 6);
+    this.contentWebp.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

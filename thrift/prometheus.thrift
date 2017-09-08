@@ -42,8 +42,11 @@ struct ChangeStackVersionInUnitResult {
 }
 
 typedef map<string, string> UnitToLatestStartableVersion
+typedef map<string, assessmentResults.AssessmentResult> UnitForkAssessmentResult
 
 exception NotFoundException {}
+
+exception StackException {}
 
 exception ReorderConflictException {
   1: required module.Module currentModule
@@ -54,6 +57,10 @@ exception NoGuidesInUnitException {}
 exception ArgumentException {}
 
 exception AssessmentAlreadyAnsweredException {}
+
+exception MathException {
+  1: required string message
+}
 
 service PrometheusService {
   list<course.Course> getCoursesByModuleIds(1: required list<string> ids)
@@ -82,7 +89,33 @@ service PrometheusService {
 
   unit.ModuleUnit addUnitToModule(
     1: required string moduleId,
-    2: required unit.Details unitDetails
+    2: required unit.Details unitDetails,
+    4: optional string createdById
+  ) throws (1: NotFoundException nfe)
+
+  unit.BookBasedUnit addBookBasedUnitToModule(
+    1: required string moduleId,
+    2: required unit.Details unitDetails,
+    3: optional string createdById,
+    4: required string bookUnitVersionId,
+    5: required list<string> pages
+  ) throws (1: NotFoundException nfe)
+
+  void updateBookBasedUnit(
+    1: required string id,
+    2: required UpdateUnitDetails details,
+    3: optional string bookUnitVersionId,
+    4: optional list<string> pages
+  )
+
+  void updateBookUnitVersion(
+    1: list<string> bookBasedUnitIds,
+    2: string bookUnitVersionId
+  )
+
+  unit.ModuleUnit createUnit(
+    1: required unit.Details unitDetails,
+    2: optional string createdById
   ) throws (1: NotFoundException nfe)
 
   void updateUnit(1: required string id, 2: required UpdateUnitDetails details)
@@ -92,7 +125,9 @@ service PrometheusService {
     1: required common.ReplyParameters replyParameters,
     2: required string unitId,
     3: required string projectId,
-    4: required string stackVersionId
+    4: required string stackVersionId,
+    5: optional string initiatedById,
+    6: optional string changelog
   ) throws (1: NotFoundException nfe)
 
   void migrateFromS3Archive(
@@ -109,58 +144,81 @@ service PrometheusService {
 
   void removeUnit(1: required string id) throws (1: NotFoundException nfe)
   unit.ModuleUnit getUnit(1: required string id) throws (1: NotFoundException nfe)
-  list<unit.ModuleUnit> getUnits(1: required list<string> ids, 2: bool withRemoved = false)
+  unit.ModuleUnit getUnitByVersionId(1: required string id) throws (1: NotFoundException nfe)
+  list<unit.ModuleUnit> getUnits(
+    1: required list<string> ids,
+    2: bool withRemoved = false,
+    3: bool withVersions = true
+  )
 
   void reorderUnits(1: required string moduleId, 2:  required list<string> unitIds)
       throws (1: NotFoundException nfe, 2: ReorderConflictException rce)
 
   map<string, UnitToLatestStartableVersion> getLatestUnitVersions(1: required list<string> moduleIds)
 
+  map<string, unit.StartableVersion> getUnitVersionsAsStartable(
+    1: required list<string> unitVersionIds,
+    2: optional bool isTeacher = false
+  )
+
+  unit.StartableVersion getUnitVersionAsStartable(
+    1: required string unitVersionId,
+    2: optional bool isTeacher = false
+  ) throws (1: NotFoundException nfe)
+
+  unit.StartableVersion getLatestStartableUnitVersion(
+    1: required string unitId,
+    2: optional bool isTeacher = false
+  ) throws (1: NotFoundException nfe)
+
+  // deprecated
   unit.S3Address getUnitUserArchiveTemplate(
     1: required string unitVersionId
   ) throws (1: NotFoundException nfe)
 
+  // deprecated
   unit.Guides getUnitGuides(
     1: required string unitVersionId,
     2: optional bool isTeacher = false
   ) throws (1: NotFoundException nfe, 2: NoGuidesInUnitException nge)
 
+  // replies to the queue with `server.CreateProjectInfo`
   void createProjectForAuthor(
     1: required common.ReplyParameters replyParameters,
     2: required string unitId,
     3: required string userId,
     4: required string defaultStackVersionId
-  ) throws (1: NotFoundException nfe)
+  ) throws (1: NotFoundException nfe, 2: StackException se)
 
+  // replies to the queue with `unitfork.UnitFork`
   void createUnitFork(
     1: required common.ReplyParameters replyParameters,
     2: required string id,
     3: required string unitVersionId,
     4: required string userId,
     5: optional string gigaBoxSlot
-  ) throws (1: NotFoundException nfe)
+  ) throws (1: NotFoundException nfe, 2: StackException se)
 
   unitfork.UnitFork getUnitFork(1: required string id) throws (1: NotFoundException nfe)
   list<unitfork.UnitFork> getUnitForks(1: required list<string> ids)
 
-  unitfork.UnitFork getUnitForkByProjectId(1: required string projectId)
-   throws (1: NotFoundException nfe)
-  list<unitfork.UnitFork> getUnitForksByProjectIds(1: required list<string> projectIds)
-
+  // replies to the queue with `string="done"`
   void restoreUnitForkContent(
     1: required common.ReplyParameters replyParameters,
-    3: required string unitForkProjectId,
+    3: required string unitForkId,
     4: required list<string> folders
-  ) throws (1: NotFoundException nfe)
+  ) throws (1: NotFoundException nfe, 2: StackException se)
 
   void removeUnitFork(1: required string id) throws (1: NotFoundException nfe)
   void removeUnitForks(1: required list<string> ids) throws (1: NotFoundException nfe)
 
   void incrementTimeSpentInUnitFork(
     1: required string unitForkId,
-    2: required i32 seconds
+    2: required i32 seconds,
+    3: optional string unitId
   ) throws (1: NotFoundException nfe)
 
+  // replies to the queue with `unit.AutogradeScriptResult`
   void runAutogradeScript(
     1: required common.ReplyParameters replyParameters,
     2: required string unitForkId,
@@ -168,6 +226,7 @@ service PrometheusService {
     4: required string envVarJson
   ) throws (1: NotFoundException nfe)
 
+  // replies to the queue with `unit.AutogradeScriptResult`
   void runAutogradeScriptForAuthor(
     1: required common.ReplyParameters replyParameters,
     2: required string projectId,
@@ -180,6 +239,7 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
+  // replies to the queue with `common.Empty`
   void updateUnitVersionInUnitForks(
     1: required common.ReplyParameters replyParameters,
     2: required list<string> unitForkIds,
@@ -188,7 +248,7 @@ service PrometheusService {
 
   /// Assessments
 
-  assessmentResults.MultipleChoiceAttempt checkMultipleChoiceAssessment(
+  assessmentResults.CheckResult checkMultipleChoiceAssessment(
     1: required string unitForkId,
     2: required string assessmentId,
     3: required set<string> answerIds
@@ -206,7 +266,7 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
-  assessmentResults.FillInBlanksAttempt checkFillInBlanksAssessment(
+  assessmentResults.CheckResult checkFillInBlanksAssessment(
     1: required string unitForkId,
     2: required string assessmentId,
     3: required list<string> answers
@@ -224,11 +284,32 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
+  assessmentResults.MathAttempt checkMathAssessmentForAuthor(
+    1: required string assessmentJson,
+    2: required map<string, string> answers,
+    3: required i32 seed
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae
+  )
+
+  assessmentResults.CheckResult submitMathAssessmentAnswer(
+    1: required string unitForkId,
+    2: required string assessmentId,
+    3: required map<string, string> answers,
+    4: required i32 seed
+  ) throws (
+    1: NotFoundException nfe,
+    2: ArgumentException ae,
+    3: AssessmentAlreadyAnsweredException aaae
+  )
+
   void storeCodeTestPartialPoints(1: required string partialPointsKey, 2: required i32 points) throws (
     1: NotFoundException nfe,
     2: ArgumentException ae
   )
 
+  // replies to the queue with `assessmentResults.CheckResult`
   void checkCodeTestAssessment(
     1: required string unitForkId,
     2: required string assessmentId,
@@ -239,6 +320,7 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
+  // replies to the queue with `assessmentResults.CodeTestAttempt`
   void checkCodeTestAssessmentForAuthor(
     1: required string projectId,
     2: required string assessmentJson,
@@ -248,6 +330,7 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
+  // replies to the queue with `assessmentResults.CheckResult`
   void checkCodeOutputCompareAssessment(
     1: required string unitForkId,
     2: required string assessmentId,
@@ -258,6 +341,7 @@ service PrometheusService {
     3: AssessmentAlreadyAnsweredException aaae
   )
 
+  // replies to the queue with `assessmentResults.CodeOutputCompareAttempt`
   void checkCodeOutputCompareAssessmentForAuthor(
     1: required string projectId,
     2: required string assessmentJson,
@@ -267,7 +351,7 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
-  assessmentResults.CustomTaskAttempt submitCustomAssessmentResult(
+  assessmentResults.CheckResult submitCustomAssessmentResult(
     1: required string unitForkId,
     2: required string assessmentId,
     3: required i32 points
@@ -298,14 +382,17 @@ service PrometheusService {
     2: ArgumentException ae
   )
 
+  map<string, map<string, i32>> getAssessmentScoresByAssessment(1: required list<string> unitForkIds)
   map<string, i32> getAssessmentScores(1: required list<string> unitForkIds)
-  map<string, assessmentResults.CheckResult> getAssessmentAnswers(1: required string unitForkId)
+  UnitForkAssessmentResult getAssessmentAnswers(1: required string unitForkId) throws (1: NotFoundException nfe)
 
-  map<string, string> getAssessmentState(1: required string unitForkId)
+  map<string, string> getAssessmentState(1: required string unitForkId) throws (1: NotFoundException nfe)
 
   void storeAssessmentState(
     1: required string unitForkId,
     2: required string assessmentId,
     3: required string state
   ) throws(1: NotFoundException nfe)
+
+  assessments.MathQuestionCompiled compileMath(1: required assessments.MathRequest req) throws(1: MathException me)
 }

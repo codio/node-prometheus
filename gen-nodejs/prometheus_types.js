@@ -578,6 +578,37 @@ NotFoundException.prototype.write = function(output) {
   return;
 };
 
+var StackException = module.exports.StackException = function(args) {
+  Thrift.TException.call(this, "StackException");
+  this.name = "StackException";
+};
+Thrift.inherits(StackException, Thrift.TException);
+StackException.prototype.name = 'StackException';
+StackException.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StackException.prototype.write = function(output) {
+  output.writeStructBegin('StackException');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var ReorderConflictException = module.exports.ReorderConflictException = function(args) {
   Thrift.TException.call(this, "ReorderConflictException");
   this.name = "ReorderConflictException";
@@ -725,6 +756,64 @@ AssessmentAlreadyAnsweredException.prototype.read = function(input) {
 
 AssessmentAlreadyAnsweredException.prototype.write = function(output) {
   output.writeStructBegin('AssessmentAlreadyAnsweredException');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var MathException = module.exports.MathException = function(args) {
+  Thrift.TException.call(this, "MathException");
+  this.name = "MathException";
+  this.message = null;
+  if (args) {
+    if (args.message !== undefined && args.message !== null) {
+      this.message = args.message;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field message is unset!');
+    }
+  }
+};
+Thrift.inherits(MathException, Thrift.TException);
+MathException.prototype.name = 'MathException';
+MathException.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.message = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MathException.prototype.write = function(output) {
+  output.writeStructBegin('MathException');
+  if (this.message !== null && this.message !== undefined) {
+    output.writeFieldBegin('message', Thrift.Type.STRING, 1);
+    output.writeString(this.message);
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;

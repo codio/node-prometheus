@@ -17,4 +17,5 @@ struct Section {
   3: required SectionContent content
   4: optional Media media
   5: required set<string> assessmentIds
+  6: optional SectionContent contentWebp
 }

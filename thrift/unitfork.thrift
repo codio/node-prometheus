@@ -6,4 +6,6 @@ struct UnitFork {
   2: required string accountId
   3: required string projectId
   4: required i32 secondsSpentIn
+  5: required string id
+  6: required map<string, i32> secondsSpentInUnits = {}
 }

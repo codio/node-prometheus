@@ -14,6 +14,7 @@ struct ModuleDetails {
 struct Module {
   1: required string id
   2: required ModuleDetails details
-  3: optional list<unit.ModuleUnit> units
+  3: optional list<unit.UnitType> units
   4: required list<string> unitIds = []
+  5: required bool isRemoved
 }

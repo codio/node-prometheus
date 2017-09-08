@@ -16,6 +16,10 @@ var UnitFork = module.exports.UnitFork = function(args) {
   this.accountId = null;
   this.projectId = null;
   this.secondsSpentIn = null;
+  this.id = null;
+  this.secondsSpentInUnits = {
+
+};
   if (args) {
     if (args.unitVersionId !== undefined && args.unitVersionId !== null) {
       this.unitVersionId = args.unitVersionId;
@@ -36,6 +40,16 @@ var UnitFork = module.exports.UnitFork = function(args) {
       this.secondsSpentIn = args.secondsSpentIn;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field secondsSpentIn is unset!');
+    }
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
+    }
+    if (args.secondsSpentInUnits !== undefined && args.secondsSpentInUnits !== null) {
+      this.secondsSpentInUnits = Thrift.copyMap(args.secondsSpentInUnits, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field secondsSpentInUnits is unset!');
     }
   }
 };
@@ -81,6 +95,37 @@ UnitFork.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.MAP) {
+        var _size0 = 0;
+        var _rtmp34;
+        this.secondsSpentInUnits = {};
+        var _ktype1 = 0;
+        var _vtype2 = 0;
+        _rtmp34 = input.readMapBegin();
+        _ktype1 = _rtmp34.ktype;
+        _vtype2 = _rtmp34.vtype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        {
+          var key6 = null;
+          var val7 = null;
+          key6 = input.readString();
+          val7 = input.readI32();
+          this.secondsSpentInUnits[key6] = val7;
+        }
+        input.readMapEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -110,6 +155,26 @@ UnitFork.prototype.write = function(output) {
   if (this.secondsSpentIn !== null && this.secondsSpentIn !== undefined) {
     output.writeFieldBegin('secondsSpentIn', Thrift.Type.I32, 4);
     output.writeI32(this.secondsSpentIn);
+    output.writeFieldEnd();
+  }
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 5);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.secondsSpentInUnits !== null && this.secondsSpentInUnits !== undefined) {
+    output.writeFieldBegin('secondsSpentInUnits', Thrift.Type.MAP, 6);
+    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.I32, Thrift.objectLength(this.secondsSpentInUnits));
+    for (var kiter8 in this.secondsSpentInUnits)
+    {
+      if (this.secondsSpentInUnits.hasOwnProperty(kiter8))
+      {
+        var viter9 = this.secondsSpentInUnits[kiter8];
+        output.writeString(kiter8);
+        output.writeI32(viter9);
+      }
+    }
+    output.writeMapEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();

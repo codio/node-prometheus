@@ -156,6 +156,7 @@ var Module = module.exports.Module = function(args) {
   this.details = null;
   this.units = null;
   this.unitIds = [];
+  this.isRemoved = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -168,12 +169,17 @@ var Module = module.exports.Module = function(args) {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field details is unset!');
     }
     if (args.units !== undefined && args.units !== null) {
-      this.units = Thrift.copyList(args.units, [unit_ttypes.ModuleUnit]);
+      this.units = Thrift.copyList(args.units, [unit_ttypes.UnitType]);
     }
     if (args.unitIds !== undefined && args.unitIds !== null) {
       this.unitIds = Thrift.copyList(args.unitIds, [null]);
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field unitIds is unset!');
+    }
+    if (args.isRemoved !== undefined && args.isRemoved !== null) {
+      this.isRemoved = args.isRemoved;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field isRemoved is unset!');
     }
   }
 };
@@ -218,7 +224,7 @@ Module.prototype.read = function(input) {
         for (var _i13 = 0; _i13 < _size8; ++_i13)
         {
           var elem14 = null;
-          elem14 = new unit_ttypes.ModuleUnit();
+          elem14 = new unit_ttypes.UnitType();
           elem14.read(input);
           this.units.push(elem14);
         }
@@ -243,6 +249,13 @@ Module.prototype.read = function(input) {
           this.unitIds.push(elem21);
         }
         input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isRemoved = input.readBool();
       } else {
         input.skip(ftype);
       }
@@ -294,6 +307,11 @@ Module.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.isRemoved !== null && this.isRemoved !== undefined) {
+    output.writeFieldBegin('isRemoved', Thrift.Type.BOOL, 5);
+    output.writeBool(this.isRemoved);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

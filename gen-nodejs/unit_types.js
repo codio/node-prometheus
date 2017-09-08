@@ -15,6 +15,76 @@ var common_ttypes = require('./common_types');
 
 
 var ttypes = module.exports = {};
+var S3Address = module.exports.S3Address = function(args) {
+  this.bucket = null;
+  this.key = null;
+  if (args) {
+    if (args.bucket !== undefined && args.bucket !== null) {
+      this.bucket = args.bucket;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field bucket is unset!');
+    }
+    if (args.key !== undefined && args.key !== null) {
+      this.key = args.key;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field key is unset!');
+    }
+  }
+};
+S3Address.prototype = {};
+S3Address.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.bucket = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.key = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+S3Address.prototype.write = function(output) {
+  output.writeStructBegin('S3Address');
+  if (this.bucket !== null && this.bucket !== undefined) {
+    output.writeFieldBegin('bucket', Thrift.Type.STRING, 1);
+    output.writeString(this.bucket);
+    output.writeFieldEnd();
+  }
+  if (this.key !== null && this.key !== undefined) {
+    output.writeFieldBegin('key', Thrift.Type.STRING, 2);
+    output.writeString(this.key);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var PublishStatusInProgress = module.exports.PublishStatusInProgress = function(args) {
   this.taskId = null;
   if (args) {
@@ -71,12 +141,12 @@ PublishStatusInProgress.prototype.write = function(output) {
 };
 
 var PublishStatusComplete = module.exports.PublishStatusComplete = function(args) {
-  this.autogradeScriptPaths = [];
+  this.stackVersionId = null;
   if (args) {
-    if (args.autogradeScriptPaths !== undefined && args.autogradeScriptPaths !== null) {
-      this.autogradeScriptPaths = Thrift.copyList(args.autogradeScriptPaths, [null]);
+    if (args.stackVersionId !== undefined && args.stackVersionId !== null) {
+      this.stackVersionId = args.stackVersionId;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScriptPaths is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stackVersionId is unset!');
     }
   }
 };
@@ -95,21 +165,8 @@ PublishStatusComplete.prototype.read = function(input) {
     switch (fid)
     {
       case 1:
-      if (ftype == Thrift.Type.LIST) {
-        var _size0 = 0;
-        var _rtmp34;
-        this.autogradeScriptPaths = [];
-        var _etype3 = 0;
-        _rtmp34 = input.readListBegin();
-        _etype3 = _rtmp34.etype;
-        _size0 = _rtmp34.size;
-        for (var _i5 = 0; _i5 < _size0; ++_i5)
-        {
-          var elem6 = null;
-          elem6 = input.readString();
-          this.autogradeScriptPaths.push(elem6);
-        }
-        input.readListEnd();
+      if (ftype == Thrift.Type.STRING) {
+        this.stackVersionId = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -128,18 +185,9 @@ PublishStatusComplete.prototype.read = function(input) {
 
 PublishStatusComplete.prototype.write = function(output) {
   output.writeStructBegin('PublishStatusComplete');
-  if (this.autogradeScriptPaths !== null && this.autogradeScriptPaths !== undefined) {
-    output.writeFieldBegin('autogradeScriptPaths', Thrift.Type.LIST, 1);
-    output.writeListBegin(Thrift.Type.STRING, this.autogradeScriptPaths.length);
-    for (var iter7 in this.autogradeScriptPaths)
-    {
-      if (this.autogradeScriptPaths.hasOwnProperty(iter7))
-      {
-        iter7 = this.autogradeScriptPaths[iter7];
-        output.writeString(iter7);
-      }
-    }
-    output.writeListEnd();
+  if (this.stackVersionId !== null && this.stackVersionId !== undefined) {
+    output.writeFieldBegin('stackVersionId', Thrift.Type.STRING, 1);
+    output.writeString(this.stackVersionId);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -171,22 +219,22 @@ PublishStatusError.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.MAP) {
-        var _size8 = 0;
-        var _rtmp312;
+        var _size0 = 0;
+        var _rtmp34;
         this.guidesErrors = {};
-        var _ktype9 = 0;
-        var _vtype10 = 0;
-        _rtmp312 = input.readMapBegin();
-        _ktype9 = _rtmp312.ktype;
-        _vtype10 = _rtmp312.vtype;
-        _size8 = _rtmp312.size;
-        for (var _i13 = 0; _i13 < _size8; ++_i13)
+        var _ktype1 = 0;
+        var _vtype2 = 0;
+        _rtmp34 = input.readMapBegin();
+        _ktype1 = _rtmp34.ktype;
+        _vtype2 = _rtmp34.vtype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
         {
-          var key14 = null;
-          var val15 = null;
-          key14 = input.readString();
-          val15 = input.readString();
-          this.guidesErrors[key14] = val15;
+          var key6 = null;
+          var val7 = null;
+          key6 = input.readString();
+          val7 = input.readString();
+          this.guidesErrors[key6] = val7;
         }
         input.readMapEnd();
       } else {
@@ -210,13 +258,13 @@ PublishStatusError.prototype.write = function(output) {
   if (this.guidesErrors !== null && this.guidesErrors !== undefined) {
     output.writeFieldBegin('guidesErrors', Thrift.Type.MAP, 1);
     output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.guidesErrors));
-    for (var kiter16 in this.guidesErrors)
+    for (var kiter8 in this.guidesErrors)
     {
-      if (this.guidesErrors.hasOwnProperty(kiter16))
+      if (this.guidesErrors.hasOwnProperty(kiter8))
       {
-        var viter17 = this.guidesErrors[kiter16];
-        output.writeString(kiter16);
-        output.writeString(viter17);
+        var viter9 = this.guidesErrors[kiter8];
+        output.writeString(kiter8);
+        output.writeString(viter9);
       }
     }
     output.writeMapEnd();
@@ -231,6 +279,7 @@ var PublishStatus = module.exports.PublishStatus = function(args) {
   this.inProgress = null;
   this.complete = null;
   this.error = null;
+  this.changeStack = null;
   if (args) {
     if (args.inProgress !== undefined && args.inProgress !== null) {
       this.inProgress = new ttypes.PublishStatusInProgress(args.inProgress);
@@ -240,6 +289,9 @@ var PublishStatus = module.exports.PublishStatus = function(args) {
     }
     if (args.error !== undefined && args.error !== null) {
       this.error = new ttypes.PublishStatusError(args.error);
+    }
+    if (args.changeStack !== undefined && args.changeStack !== null) {
+      this.changeStack = new ttypes.PublishStatusComplete(args.changeStack);
     }
   }
 };
@@ -281,6 +333,14 @@ PublishStatus.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 4:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.changeStack = new ttypes.PublishStatusComplete();
+        this.changeStack.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -305,6 +365,11 @@ PublishStatus.prototype.write = function(output) {
   if (this.error !== null && this.error !== undefined) {
     output.writeFieldBegin('error', Thrift.Type.STRUCT, 3);
     this.error.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.changeStack !== null && this.changeStack !== undefined) {
+    output.writeFieldBegin('changeStack', Thrift.Type.STRUCT, 4);
+    this.changeStack.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -398,27 +463,31 @@ Details.prototype.write = function(output) {
 
 var Version = module.exports.Version = function(args) {
   this.id = null;
-  this.stackVersionId = null;
   this.status = null;
   this.createdAt = null;
+  this.createdById = null;
+  this.changelog = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
     }
-    if (args.stackVersionId !== undefined && args.stackVersionId !== null) {
-      this.stackVersionId = args.stackVersionId;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stackVersionId is unset!');
-    }
     if (args.status !== undefined && args.status !== null) {
       this.status = new ttypes.PublishStatus(args.status);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field status is unset!');
     }
     if (args.createdAt !== undefined && args.createdAt !== null) {
       this.createdAt = args.createdAt;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field createdAt is unset!');
+    }
+    if (args.createdById !== undefined && args.createdById !== null) {
+      this.createdById = args.createdById;
+    }
+    if (args.changelog !== undefined && args.changelog !== null) {
+      this.changelog = args.changelog;
     }
   }
 };
@@ -443,13 +512,6 @@ Version.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 2:
-      if (ftype == Thrift.Type.STRING) {
-        this.stackVersionId = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
       case 3:
       if (ftype == Thrift.Type.STRUCT) {
         this.status = new ttypes.PublishStatus();
@@ -461,6 +523,20 @@ Version.prototype.read = function(input) {
       case 4:
       if (ftype == Thrift.Type.STRING) {
         this.createdAt = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.createdById = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.changelog = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -481,11 +557,6 @@ Version.prototype.write = function(output) {
     output.writeString(this.id);
     output.writeFieldEnd();
   }
-  if (this.stackVersionId !== null && this.stackVersionId !== undefined) {
-    output.writeFieldBegin('stackVersionId', Thrift.Type.STRING, 2);
-    output.writeString(this.stackVersionId);
-    output.writeFieldEnd();
-  }
   if (this.status !== null && this.status !== undefined) {
     output.writeFieldBegin('status', Thrift.Type.STRUCT, 3);
     this.status.write(output);
@@ -494,6 +565,16 @@ Version.prototype.write = function(output) {
   if (this.createdAt !== null && this.createdAt !== undefined) {
     output.writeFieldBegin('createdAt', Thrift.Type.STRING, 4);
     output.writeString(this.createdAt);
+    output.writeFieldEnd();
+  }
+  if (this.createdById !== null && this.createdById !== undefined) {
+    output.writeFieldBegin('createdById', Thrift.Type.STRING, 5);
+    output.writeString(this.createdById);
+    output.writeFieldEnd();
+  }
+  if (this.changelog !== null && this.changelog !== undefined) {
+    output.writeFieldBegin('changelog', Thrift.Type.STRING, 6);
+    output.writeString(this.changelog);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -596,6 +677,7 @@ var Guides = module.exports.Guides = function(args) {
   this.sections = null;
   this.assessments = null;
   this.customStylesUrl = null;
+  this.bookStructure = null;
   if (args) {
     if (args.playbackMetadataJson !== undefined && args.playbackMetadataJson !== null) {
       this.playbackMetadataJson = args.playbackMetadataJson;
@@ -614,6 +696,9 @@ var Guides = module.exports.Guides = function(args) {
     }
     if (args.customStylesUrl !== undefined && args.customStylesUrl !== null) {
       this.customStylesUrl = args.customStylesUrl;
+    }
+    if (args.bookStructure !== undefined && args.bookStructure !== null) {
+      this.bookStructure = args.bookStructure;
     }
   }
 };
@@ -640,19 +725,19 @@ Guides.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.LIST) {
-        var _size18 = 0;
-        var _rtmp322;
+        var _size10 = 0;
+        var _rtmp314;
         this.sections = [];
-        var _etype21 = 0;
-        _rtmp322 = input.readListBegin();
-        _etype21 = _rtmp322.etype;
-        _size18 = _rtmp322.size;
-        for (var _i23 = 0; _i23 < _size18; ++_i23)
+        var _etype13 = 0;
+        _rtmp314 = input.readListBegin();
+        _etype13 = _rtmp314.etype;
+        _size10 = _rtmp314.size;
+        for (var _i15 = 0; _i15 < _size10; ++_i15)
         {
-          var elem24 = null;
-          elem24 = new guides_ttypes.Section();
-          elem24.read(input);
-          this.sections.push(elem24);
+          var elem16 = null;
+          elem16 = new guides_ttypes.Section();
+          elem16.read(input);
+          this.sections.push(elem16);
         }
         input.readListEnd();
       } else {
@@ -661,19 +746,19 @@ Guides.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.LIST) {
-        var _size25 = 0;
-        var _rtmp329;
+        var _size17 = 0;
+        var _rtmp321;
         this.assessments = [];
-        var _etype28 = 0;
-        _rtmp329 = input.readListBegin();
-        _etype28 = _rtmp329.etype;
-        _size25 = _rtmp329.size;
-        for (var _i30 = 0; _i30 < _size25; ++_i30)
+        var _etype20 = 0;
+        _rtmp321 = input.readListBegin();
+        _etype20 = _rtmp321.etype;
+        _size17 = _rtmp321.size;
+        for (var _i22 = 0; _i22 < _size17; ++_i22)
         {
-          var elem31 = null;
-          elem31 = new ttypes.Assessment();
-          elem31.read(input);
-          this.assessments.push(elem31);
+          var elem23 = null;
+          elem23 = new ttypes.Assessment();
+          elem23.read(input);
+          this.assessments.push(elem23);
         }
         input.readListEnd();
       } else {
@@ -683,6 +768,13 @@ Guides.prototype.read = function(input) {
       case 4:
       if (ftype == Thrift.Type.STRING) {
         this.customStylesUrl = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.bookStructure = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -706,12 +798,12 @@ Guides.prototype.write = function(output) {
   if (this.sections !== null && this.sections !== undefined) {
     output.writeFieldBegin('sections', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.STRUCT, this.sections.length);
-    for (var iter32 in this.sections)
+    for (var iter24 in this.sections)
     {
-      if (this.sections.hasOwnProperty(iter32))
+      if (this.sections.hasOwnProperty(iter24))
       {
-        iter32 = this.sections[iter32];
-        iter32.write(output);
+        iter24 = this.sections[iter24];
+        iter24.write(output);
       }
     }
     output.writeListEnd();
@@ -720,12 +812,12 @@ Guides.prototype.write = function(output) {
   if (this.assessments !== null && this.assessments !== undefined) {
     output.writeFieldBegin('assessments', Thrift.Type.LIST, 3);
     output.writeListBegin(Thrift.Type.STRUCT, this.assessments.length);
-    for (var iter33 in this.assessments)
+    for (var iter25 in this.assessments)
     {
-      if (this.assessments.hasOwnProperty(iter33))
+      if (this.assessments.hasOwnProperty(iter25))
       {
-        iter33 = this.assessments[iter33];
-        iter33.write(output);
+        iter25 = this.assessments[iter25];
+        iter25.write(output);
       }
     }
     output.writeListEnd();
@@ -734,6 +826,157 @@ Guides.prototype.write = function(output) {
   if (this.customStylesUrl !== null && this.customStylesUrl !== undefined) {
     output.writeFieldBegin('customStylesUrl', Thrift.Type.STRING, 4);
     output.writeString(this.customStylesUrl);
+    output.writeFieldEnd();
+  }
+  if (this.bookStructure !== null && this.bookStructure !== undefined) {
+    output.writeFieldBegin('bookStructure', Thrift.Type.STRING, 5);
+    output.writeString(this.bookStructure);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var StartableVersion = module.exports.StartableVersion = function(args) {
+  this.id = null;
+  this.stackVersionId = null;
+  this.autogradeScriptPaths = [];
+  this.userArchiveTemplate = null;
+  this.guides = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
+    }
+    if (args.stackVersionId !== undefined && args.stackVersionId !== null) {
+      this.stackVersionId = args.stackVersionId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stackVersionId is unset!');
+    }
+    if (args.autogradeScriptPaths !== undefined && args.autogradeScriptPaths !== null) {
+      this.autogradeScriptPaths = Thrift.copyList(args.autogradeScriptPaths, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field autogradeScriptPaths is unset!');
+    }
+    if (args.userArchiveTemplate !== undefined && args.userArchiveTemplate !== null) {
+      this.userArchiveTemplate = new ttypes.S3Address(args.userArchiveTemplate);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field userArchiveTemplate is unset!');
+    }
+    if (args.guides !== undefined && args.guides !== null) {
+      this.guides = new ttypes.Guides(args.guides);
+    }
+  }
+};
+StartableVersion.prototype = {};
+StartableVersion.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.stackVersionId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size26 = 0;
+        var _rtmp330;
+        this.autogradeScriptPaths = [];
+        var _etype29 = 0;
+        _rtmp330 = input.readListBegin();
+        _etype29 = _rtmp330.etype;
+        _size26 = _rtmp330.size;
+        for (var _i31 = 0; _i31 < _size26; ++_i31)
+        {
+          var elem32 = null;
+          elem32 = input.readString();
+          this.autogradeScriptPaths.push(elem32);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.userArchiveTemplate = new ttypes.S3Address();
+        this.userArchiveTemplate.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.guides = new ttypes.Guides();
+        this.guides.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StartableVersion.prototype.write = function(output) {
+  output.writeStructBegin('StartableVersion');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.stackVersionId !== null && this.stackVersionId !== undefined) {
+    output.writeFieldBegin('stackVersionId', Thrift.Type.STRING, 2);
+    output.writeString(this.stackVersionId);
+    output.writeFieldEnd();
+  }
+  if (this.autogradeScriptPaths !== null && this.autogradeScriptPaths !== undefined) {
+    output.writeFieldBegin('autogradeScriptPaths', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRING, this.autogradeScriptPaths.length);
+    for (var iter33 in this.autogradeScriptPaths)
+    {
+      if (this.autogradeScriptPaths.hasOwnProperty(iter33))
+      {
+        iter33 = this.autogradeScriptPaths[iter33];
+        output.writeString(iter33);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.userArchiveTemplate !== null && this.userArchiveTemplate !== undefined) {
+    output.writeFieldBegin('userArchiveTemplate', Thrift.Type.STRUCT, 4);
+    this.userArchiveTemplate.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.guides !== null && this.guides !== undefined) {
+    output.writeFieldBegin('guides', Thrift.Type.STRUCT, 5);
+    this.guides.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -745,6 +988,8 @@ var ModuleUnit = module.exports.ModuleUnit = function(args) {
   this.id = null;
   this.details = null;
   this.versions = null;
+  this.isRemoved = null;
+  this.createdById = null;
   if (args) {
     if (args.id !== undefined && args.id !== null) {
       this.id = args.id;
@@ -758,6 +1003,14 @@ var ModuleUnit = module.exports.ModuleUnit = function(args) {
     }
     if (args.versions !== undefined && args.versions !== null) {
       this.versions = Thrift.copyList(args.versions, [ttypes.Version]);
+    }
+    if (args.isRemoved !== undefined && args.isRemoved !== null) {
+      this.isRemoved = args.isRemoved;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field isRemoved is unset!');
+    }
+    if (args.createdById !== undefined && args.createdById !== null) {
+      this.createdById = args.createdById;
     }
   }
 };
@@ -811,6 +1064,20 @@ ModuleUnit.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 5:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isRemoved = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.createdById = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -844,6 +1111,231 @@ ModuleUnit.prototype.write = function(output) {
       }
     }
     output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.isRemoved !== null && this.isRemoved !== undefined) {
+    output.writeFieldBegin('isRemoved', Thrift.Type.BOOL, 5);
+    output.writeBool(this.isRemoved);
+    output.writeFieldEnd();
+  }
+  if (this.createdById !== null && this.createdById !== undefined) {
+    output.writeFieldBegin('createdById', Thrift.Type.STRING, 6);
+    output.writeString(this.createdById);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var BookBasedUnit = module.exports.BookBasedUnit = function(args) {
+  this.id = null;
+  this.details = null;
+  this.bookUnitVersionId = null;
+  this.pages = null;
+  this.bookUnitId = null;
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
+    }
+    if (args.details !== undefined && args.details !== null) {
+      this.details = new ttypes.Details(args.details);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field details is unset!');
+    }
+    if (args.bookUnitVersionId !== undefined && args.bookUnitVersionId !== null) {
+      this.bookUnitVersionId = args.bookUnitVersionId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field bookUnitVersionId is unset!');
+    }
+    if (args.pages !== undefined && args.pages !== null) {
+      this.pages = Thrift.copyList(args.pages, [null]);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field pages is unset!');
+    }
+    if (args.bookUnitId !== undefined && args.bookUnitId !== null) {
+      this.bookUnitId = args.bookUnitId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field bookUnitId is unset!');
+    }
+  }
+};
+BookBasedUnit.prototype = {};
+BookBasedUnit.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.details = new ttypes.Details();
+        this.details.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.bookUnitVersionId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.LIST) {
+        var _size42 = 0;
+        var _rtmp346;
+        this.pages = [];
+        var _etype45 = 0;
+        _rtmp346 = input.readListBegin();
+        _etype45 = _rtmp346.etype;
+        _size42 = _rtmp346.size;
+        for (var _i47 = 0; _i47 < _size42; ++_i47)
+        {
+          var elem48 = null;
+          elem48 = input.readString();
+          this.pages.push(elem48);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.bookUnitId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+BookBasedUnit.prototype.write = function(output) {
+  output.writeStructBegin('BookBasedUnit');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
+    output.writeFieldEnd();
+  }
+  if (this.details !== null && this.details !== undefined) {
+    output.writeFieldBegin('details', Thrift.Type.STRUCT, 2);
+    this.details.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.bookUnitVersionId !== null && this.bookUnitVersionId !== undefined) {
+    output.writeFieldBegin('bookUnitVersionId', Thrift.Type.STRING, 3);
+    output.writeString(this.bookUnitVersionId);
+    output.writeFieldEnd();
+  }
+  if (this.pages !== null && this.pages !== undefined) {
+    output.writeFieldBegin('pages', Thrift.Type.LIST, 4);
+    output.writeListBegin(Thrift.Type.STRING, this.pages.length);
+    for (var iter49 in this.pages)
+    {
+      if (this.pages.hasOwnProperty(iter49))
+      {
+        iter49 = this.pages[iter49];
+        output.writeString(iter49);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.bookUnitId !== null && this.bookUnitId !== undefined) {
+    output.writeFieldBegin('bookUnitId', Thrift.Type.STRING, 5);
+    output.writeString(this.bookUnitId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var UnitType = module.exports.UnitType = function(args) {
+  this.normal = null;
+  this.bookBased = null;
+  if (args) {
+    if (args.normal !== undefined && args.normal !== null) {
+      this.normal = new ttypes.ModuleUnit(args.normal);
+    }
+    if (args.bookBased !== undefined && args.bookBased !== null) {
+      this.bookBased = new ttypes.BookBasedUnit(args.bookBased);
+    }
+  }
+};
+UnitType.prototype = {};
+UnitType.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.normal = new ttypes.ModuleUnit();
+        this.normal.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.bookBased = new ttypes.BookBasedUnit();
+        this.bookBased.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+UnitType.prototype.write = function(output) {
+  output.writeStructBegin('UnitType');
+  if (this.normal !== null && this.normal !== undefined) {
+    output.writeFieldBegin('normal', Thrift.Type.STRUCT, 1);
+    this.normal.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.bookBased !== null && this.bookBased !== undefined) {
+    output.writeFieldBegin('bookBased', Thrift.Type.STRUCT, 2);
+    this.bookBased.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -1076,24 +1568,18 @@ AutogradeScriptResult.prototype.write = function(output) {
   return;
 };
 
-var S3Address = module.exports.S3Address = function(args) {
-  this.bucket = null;
-  this.key = null;
+var StackSourceExisting = module.exports.StackSourceExisting = function(args) {
+  this.stackVersionId = null;
   if (args) {
-    if (args.bucket !== undefined && args.bucket !== null) {
-      this.bucket = args.bucket;
+    if (args.stackVersionId !== undefined && args.stackVersionId !== null) {
+      this.stackVersionId = args.stackVersionId;
     } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field bucket is unset!');
-    }
-    if (args.key !== undefined && args.key !== null) {
-      this.key = args.key;
-    } else {
-      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field key is unset!');
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field stackVersionId is unset!');
     }
   }
 };
-S3Address.prototype = {};
-S3Address.prototype.read = function(input) {
+StackSourceExisting.prototype = {};
+StackSourceExisting.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -1108,14 +1594,73 @@ S3Address.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.STRING) {
-        this.bucket = input.readString();
+        this.stackVersionId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StackSourceExisting.prototype.write = function(output) {
+  output.writeStructBegin('StackSourceExisting');
+  if (this.stackVersionId !== null && this.stackVersionId !== undefined) {
+    output.writeFieldBegin('stackVersionId', Thrift.Type.STRING, 1);
+    output.writeString(this.stackVersionId);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var StackSourceNewStackVersion = module.exports.StackSourceNewStackVersion = function(args) {
+  this.id = null;
+  this.changelog = '';
+  if (args) {
+    if (args.id !== undefined && args.id !== null) {
+      this.id = args.id;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field id is unset!');
+    }
+    if (args.changelog !== undefined && args.changelog !== null) {
+      this.changelog = args.changelog;
+    }
+  }
+};
+StackSourceNewStackVersion.prototype = {};
+StackSourceNewStackVersion.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.id = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
       case 2:
       if (ftype == Thrift.Type.STRING) {
-        this.key = input.readString();
+        this.changelog = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -1129,16 +1674,185 @@ S3Address.prototype.read = function(input) {
   return;
 };
 
-S3Address.prototype.write = function(output) {
-  output.writeStructBegin('S3Address');
-  if (this.bucket !== null && this.bucket !== undefined) {
-    output.writeFieldBegin('bucket', Thrift.Type.STRING, 1);
-    output.writeString(this.bucket);
+StackSourceNewStackVersion.prototype.write = function(output) {
+  output.writeStructBegin('StackSourceNewStackVersion');
+  if (this.id !== null && this.id !== undefined) {
+    output.writeFieldBegin('id', Thrift.Type.STRING, 1);
+    output.writeString(this.id);
     output.writeFieldEnd();
   }
-  if (this.key !== null && this.key !== undefined) {
-    output.writeFieldBegin('key', Thrift.Type.STRING, 2);
-    output.writeString(this.key);
+  if (this.changelog !== null && this.changelog !== undefined) {
+    output.writeFieldBegin('changelog', Thrift.Type.STRING, 2);
+    output.writeString(this.changelog);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var StackSourceNewStack = module.exports.StackSourceNewStack = function(args) {
+  this.name = null;
+  this.isPrivate = false;
+  this.owner = null;
+  if (args) {
+    if (args.name !== undefined && args.name !== null) {
+      this.name = args.name;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field name is unset!');
+    }
+    if (args.isPrivate !== undefined && args.isPrivate !== null) {
+      this.isPrivate = args.isPrivate;
+    }
+    if (args.owner !== undefined && args.owner !== null) {
+      this.owner = args.owner;
+    }
+  }
+};
+StackSourceNewStack.prototype = {};
+StackSourceNewStack.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.name = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.BOOL) {
+        this.isPrivate = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.owner = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StackSourceNewStack.prototype.write = function(output) {
+  output.writeStructBegin('StackSourceNewStack');
+  if (this.name !== null && this.name !== undefined) {
+    output.writeFieldBegin('name', Thrift.Type.STRING, 1);
+    output.writeString(this.name);
+    output.writeFieldEnd();
+  }
+  if (this.isPrivate !== null && this.isPrivate !== undefined) {
+    output.writeFieldBegin('isPrivate', Thrift.Type.BOOL, 2);
+    output.writeBool(this.isPrivate);
+    output.writeFieldEnd();
+  }
+  if (this.owner !== null && this.owner !== undefined) {
+    output.writeFieldBegin('owner', Thrift.Type.STRING, 3);
+    output.writeString(this.owner);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var StackSource = module.exports.StackSource = function(args) {
+  this.existing = null;
+  this.version = null;
+  this.stack = null;
+  if (args) {
+    if (args.existing !== undefined && args.existing !== null) {
+      this.existing = new ttypes.StackSourceExisting(args.existing);
+    }
+    if (args.version !== undefined && args.version !== null) {
+      this.version = new ttypes.StackSourceNewStackVersion(args.version);
+    }
+    if (args.stack !== undefined && args.stack !== null) {
+      this.stack = new ttypes.StackSourceNewStack(args.stack);
+    }
+  }
+};
+StackSource.prototype = {};
+StackSource.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.existing = new ttypes.StackSourceExisting();
+        this.existing.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.version = new ttypes.StackSourceNewStackVersion();
+        this.version.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.stack = new ttypes.StackSourceNewStack();
+        this.stack.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StackSource.prototype.write = function(output) {
+  output.writeStructBegin('StackSource');
+  if (this.existing !== null && this.existing !== undefined) {
+    output.writeFieldBegin('existing', Thrift.Type.STRUCT, 1);
+    this.existing.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.version !== null && this.version !== undefined) {
+    output.writeFieldBegin('version', Thrift.Type.STRUCT, 2);
+    this.version.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.stack !== null && this.stack !== undefined) {
+    output.writeFieldBegin('stack', Thrift.Type.STRUCT, 3);
+    this.stack.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();

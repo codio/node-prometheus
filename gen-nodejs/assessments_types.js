@@ -11,11 +11,306 @@ var Q = thrift.Q;
 
 
 var ttypes = module.exports = {};
+var MathRequest = module.exports.MathRequest = function(args) {
+  this.readOnly = null;
+  this.feedback = null;
+  this.score = null;
+  this.question = null;
+  this.seed = null;
+  this.answer = null;
+  if (args) {
+    if (args.readOnly !== undefined && args.readOnly !== null) {
+      this.readOnly = args.readOnly;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field readOnly is unset!');
+    }
+    if (args.feedback !== undefined && args.feedback !== null) {
+      this.feedback = args.feedback;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field feedback is unset!');
+    }
+    if (args.score !== undefined && args.score !== null) {
+      this.score = args.score;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field score is unset!');
+    }
+    if (args.question !== undefined && args.question !== null) {
+      this.question = args.question;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field question is unset!');
+    }
+    if (args.seed !== undefined && args.seed !== null) {
+      this.seed = args.seed;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field seed is unset!');
+    }
+    if (args.answer !== undefined && args.answer !== null) {
+      this.answer = Thrift.copyMap(args.answer, [null]);
+    }
+  }
+};
+MathRequest.prototype = {};
+MathRequest.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.BOOL) {
+        this.readOnly = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.BOOL) {
+        this.feedback = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.BOOL) {
+        this.score = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.question = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.I32) {
+        this.seed = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.MAP) {
+        var _size0 = 0;
+        var _rtmp34;
+        this.answer = {};
+        var _ktype1 = 0;
+        var _vtype2 = 0;
+        _rtmp34 = input.readMapBegin();
+        _ktype1 = _rtmp34.ktype;
+        _vtype2 = _rtmp34.vtype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        {
+          var key6 = null;
+          var val7 = null;
+          key6 = input.readString();
+          val7 = input.readString();
+          this.answer[key6] = val7;
+        }
+        input.readMapEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MathRequest.prototype.write = function(output) {
+  output.writeStructBegin('MathRequest');
+  if (this.readOnly !== null && this.readOnly !== undefined) {
+    output.writeFieldBegin('readOnly', Thrift.Type.BOOL, 1);
+    output.writeBool(this.readOnly);
+    output.writeFieldEnd();
+  }
+  if (this.feedback !== null && this.feedback !== undefined) {
+    output.writeFieldBegin('feedback', Thrift.Type.BOOL, 2);
+    output.writeBool(this.feedback);
+    output.writeFieldEnd();
+  }
+  if (this.score !== null && this.score !== undefined) {
+    output.writeFieldBegin('score', Thrift.Type.BOOL, 3);
+    output.writeBool(this.score);
+    output.writeFieldEnd();
+  }
+  if (this.question !== null && this.question !== undefined) {
+    output.writeFieldBegin('question', Thrift.Type.STRING, 5);
+    output.writeString(this.question);
+    output.writeFieldEnd();
+  }
+  if (this.seed !== null && this.seed !== undefined) {
+    output.writeFieldBegin('seed', Thrift.Type.I32, 6);
+    output.writeI32(this.seed);
+    output.writeFieldEnd();
+  }
+  if (this.answer !== null && this.answer !== undefined) {
+    output.writeFieldBegin('answer', Thrift.Type.MAP, 7);
+    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.answer));
+    for (var kiter8 in this.answer)
+    {
+      if (this.answer.hasOwnProperty(kiter8))
+      {
+        var viter9 = this.answer[kiter8];
+        output.writeString(kiter8);
+        output.writeString(viter9);
+      }
+    }
+    output.writeMapEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var MathQuestionCompiled = module.exports.MathQuestionCompiled = function(args) {
+  this.questionText = null;
+  this.generalFeedback = null;
+  this.answerNotes = null;
+  this.summariseResponse = null;
+  this.score = null;
+  if (args) {
+    if (args.questionText !== undefined && args.questionText !== null) {
+      this.questionText = args.questionText;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field questionText is unset!');
+    }
+    if (args.generalFeedback !== undefined && args.generalFeedback !== null) {
+      this.generalFeedback = args.generalFeedback;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field generalFeedback is unset!');
+    }
+    if (args.answerNotes !== undefined && args.answerNotes !== null) {
+      this.answerNotes = args.answerNotes;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field answerNotes is unset!');
+    }
+    if (args.summariseResponse !== undefined && args.summariseResponse !== null) {
+      this.summariseResponse = args.summariseResponse;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field summariseResponse is unset!');
+    }
+    if (args.score !== undefined && args.score !== null) {
+      this.score = args.score;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field score is unset!');
+    }
+  }
+};
+MathQuestionCompiled.prototype = {};
+MathQuestionCompiled.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.questionText = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.generalFeedback = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.answerNotes = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.summariseResponse = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 5:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.score = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MathQuestionCompiled.prototype.write = function(output) {
+  output.writeStructBegin('MathQuestionCompiled');
+  if (this.questionText !== null && this.questionText !== undefined) {
+    output.writeFieldBegin('questionText', Thrift.Type.STRING, 1);
+    output.writeString(this.questionText);
+    output.writeFieldEnd();
+  }
+  if (this.generalFeedback !== null && this.generalFeedback !== undefined) {
+    output.writeFieldBegin('generalFeedback', Thrift.Type.STRING, 2);
+    output.writeString(this.generalFeedback);
+    output.writeFieldEnd();
+  }
+  if (this.answerNotes !== null && this.answerNotes !== undefined) {
+    output.writeFieldBegin('answerNotes', Thrift.Type.STRING, 3);
+    output.writeString(this.answerNotes);
+    output.writeFieldEnd();
+  }
+  if (this.summariseResponse !== null && this.summariseResponse !== undefined) {
+    output.writeFieldBegin('summariseResponse', Thrift.Type.STRING, 4);
+    output.writeString(this.summariseResponse);
+    output.writeFieldEnd();
+  }
+  if (this.score !== null && this.score !== undefined) {
+    output.writeFieldBegin('score', Thrift.Type.DOUBLE, 5);
+    output.writeDouble(this.score);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var Details = module.exports.Details = function(args) {
   this.name = null;
   this.points = null;
   this.showName = false;
   this.instructions = '';
+  this.learningObjectives = '';
+  this.bloomsObjectiveLevel = '';
+  this.guidance = null;
+  this.showExpectedAnswer = false;
   if (args) {
     if (args.name !== undefined && args.name !== null) {
       this.name = args.name;
@@ -32,6 +327,18 @@ var Details = module.exports.Details = function(args) {
     }
     if (args.instructions !== undefined && args.instructions !== null) {
       this.instructions = args.instructions;
+    }
+    if (args.learningObjectives !== undefined && args.learningObjectives !== null) {
+      this.learningObjectives = args.learningObjectives;
+    }
+    if (args.bloomsObjectiveLevel !== undefined && args.bloomsObjectiveLevel !== null) {
+      this.bloomsObjectiveLevel = args.bloomsObjectiveLevel;
+    }
+    if (args.guidance !== undefined && args.guidance !== null) {
+      this.guidance = args.guidance;
+    }
+    if (args.showExpectedAnswer !== undefined && args.showExpectedAnswer !== null) {
+      this.showExpectedAnswer = args.showExpectedAnswer;
     }
   }
 };
@@ -77,6 +384,34 @@ Details.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 5:
+      if (ftype == Thrift.Type.STRING) {
+        this.learningObjectives = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 6:
+      if (ftype == Thrift.Type.STRING) {
+        this.bloomsObjectiveLevel = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.STRING) {
+        this.guidance = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 8:
+      if (ftype == Thrift.Type.BOOL) {
+        this.showExpectedAnswer = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -106,6 +441,26 @@ Details.prototype.write = function(output) {
   if (this.instructions !== null && this.instructions !== undefined) {
     output.writeFieldBegin('instructions', Thrift.Type.STRING, 4);
     output.writeString(this.instructions);
+    output.writeFieldEnd();
+  }
+  if (this.learningObjectives !== null && this.learningObjectives !== undefined) {
+    output.writeFieldBegin('learningObjectives', Thrift.Type.STRING, 5);
+    output.writeString(this.learningObjectives);
+    output.writeFieldEnd();
+  }
+  if (this.bloomsObjectiveLevel !== null && this.bloomsObjectiveLevel !== undefined) {
+    output.writeFieldBegin('bloomsObjectiveLevel', Thrift.Type.STRING, 6);
+    output.writeString(this.bloomsObjectiveLevel);
+    output.writeFieldEnd();
+  }
+  if (this.guidance !== null && this.guidance !== undefined) {
+    output.writeFieldBegin('guidance', Thrift.Type.STRING, 7);
+    output.writeString(this.guidance);
+    output.writeFieldEnd();
+  }
+  if (this.showExpectedAnswer !== null && this.showExpectedAnswer !== undefined) {
+    output.writeFieldBegin('showExpectedAnswer', Thrift.Type.BOOL, 8);
+    output.writeBool(this.showExpectedAnswer);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -186,6 +541,7 @@ ChoiceOption.prototype.write = function(output) {
 var MultipleChoice = module.exports.MultipleChoice = function(args) {
   this.options = null;
   this.isMultipleResponse = null;
+  this.expectedAnswerIds = null;
   if (args) {
     if (args.options !== undefined && args.options !== null) {
       this.options = Thrift.copyList(args.options, [ttypes.ChoiceOption]);
@@ -196,6 +552,9 @@ var MultipleChoice = module.exports.MultipleChoice = function(args) {
       this.isMultipleResponse = args.isMultipleResponse;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field isMultipleResponse is unset!');
+    }
+    if (args.expectedAnswerIds !== undefined && args.expectedAnswerIds !== null) {
+      this.expectedAnswerIds = Thrift.copyList(args.expectedAnswerIds, [null]);
     }
   }
 };
@@ -215,19 +574,19 @@ MultipleChoice.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.LIST) {
-        var _size0 = 0;
-        var _rtmp34;
+        var _size10 = 0;
+        var _rtmp314;
         this.options = [];
-        var _etype3 = 0;
-        _rtmp34 = input.readListBegin();
-        _etype3 = _rtmp34.etype;
-        _size0 = _rtmp34.size;
-        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        var _etype13 = 0;
+        _rtmp314 = input.readListBegin();
+        _etype13 = _rtmp314.etype;
+        _size10 = _rtmp314.size;
+        for (var _i15 = 0; _i15 < _size10; ++_i15)
         {
-          var elem6 = null;
-          elem6 = new ttypes.ChoiceOption();
-          elem6.read(input);
-          this.options.push(elem6);
+          var elem16 = null;
+          elem16 = new ttypes.ChoiceOption();
+          elem16.read(input);
+          this.options.push(elem16);
         }
         input.readListEnd();
       } else {
@@ -237,6 +596,26 @@ MultipleChoice.prototype.read = function(input) {
       case 2:
       if (ftype == Thrift.Type.BOOL) {
         this.isMultipleResponse = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.SET) {
+        var _size17 = 0;
+        var _rtmp321;
+        this.expectedAnswerIds = [];
+        var _etype20 = 0;
+        _rtmp321 = input.readSetBegin();
+        _etype20 = _rtmp321.etype;
+        _size17 = _rtmp321.size;
+        for (var _i22 = 0; _i22 < _size17; ++_i22)
+        {
+          var elem23 = null;
+          elem23 = input.readString();
+          this.expectedAnswerIds.push(elem23);
+        }
+        input.readSetEnd();
       } else {
         input.skip(ftype);
       }
@@ -255,12 +634,12 @@ MultipleChoice.prototype.write = function(output) {
   if (this.options !== null && this.options !== undefined) {
     output.writeFieldBegin('options', Thrift.Type.LIST, 1);
     output.writeListBegin(Thrift.Type.STRUCT, this.options.length);
-    for (var iter7 in this.options)
+    for (var iter24 in this.options)
     {
-      if (this.options.hasOwnProperty(iter7))
+      if (this.options.hasOwnProperty(iter24))
       {
-        iter7 = this.options[iter7];
-        iter7.write(output);
+        iter24 = this.options[iter24];
+        iter24.write(output);
       }
     }
     output.writeListEnd();
@@ -271,6 +650,20 @@ MultipleChoice.prototype.write = function(output) {
     output.writeBool(this.isMultipleResponse);
     output.writeFieldEnd();
   }
+  if (this.expectedAnswerIds !== null && this.expectedAnswerIds !== undefined) {
+    output.writeFieldBegin('expectedAnswerIds', Thrift.Type.SET, 3);
+    output.writeSetBegin(Thrift.Type.STRING, this.expectedAnswerIds.length);
+    for (var iter25 in this.expectedAnswerIds)
+    {
+      if (this.expectedAnswerIds.hasOwnProperty(iter25))
+      {
+        iter25 = this.expectedAnswerIds[iter25];
+        output.writeString(iter25);
+      }
+    }
+    output.writeSetEnd();
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
@@ -279,6 +672,7 @@ MultipleChoice.prototype.write = function(output) {
 var FillInBlanks = module.exports.FillInBlanks = function(args) {
   this.texts = null;
   this.selectableAnswers = null;
+  this.expectedAnswers = null;
   if (args) {
     if (args.texts !== undefined && args.texts !== null) {
       this.texts = Thrift.copyList(args.texts, [null]);
@@ -287,6 +681,9 @@ var FillInBlanks = module.exports.FillInBlanks = function(args) {
     }
     if (args.selectableAnswers !== undefined && args.selectableAnswers !== null) {
       this.selectableAnswers = Thrift.copyList(args.selectableAnswers, [null]);
+    }
+    if (args.expectedAnswers !== undefined && args.expectedAnswers !== null) {
+      this.expectedAnswers = Thrift.copyList(args.expectedAnswers, [null]);
     }
   }
 };
@@ -306,18 +703,18 @@ FillInBlanks.prototype.read = function(input) {
     {
       case 1:
       if (ftype == Thrift.Type.LIST) {
-        var _size8 = 0;
-        var _rtmp312;
+        var _size26 = 0;
+        var _rtmp330;
         this.texts = [];
-        var _etype11 = 0;
-        _rtmp312 = input.readListBegin();
-        _etype11 = _rtmp312.etype;
-        _size8 = _rtmp312.size;
-        for (var _i13 = 0; _i13 < _size8; ++_i13)
+        var _etype29 = 0;
+        _rtmp330 = input.readListBegin();
+        _etype29 = _rtmp330.etype;
+        _size26 = _rtmp330.size;
+        for (var _i31 = 0; _i31 < _size26; ++_i31)
         {
-          var elem14 = null;
-          elem14 = input.readString();
-          this.texts.push(elem14);
+          var elem32 = null;
+          elem32 = input.readString();
+          this.texts.push(elem32);
         }
         input.readListEnd();
       } else {
@@ -326,18 +723,38 @@ FillInBlanks.prototype.read = function(input) {
       break;
       case 2:
       if (ftype == Thrift.Type.LIST) {
-        var _size15 = 0;
-        var _rtmp319;
+        var _size33 = 0;
+        var _rtmp337;
         this.selectableAnswers = [];
-        var _etype18 = 0;
-        _rtmp319 = input.readListBegin();
-        _etype18 = _rtmp319.etype;
-        _size15 = _rtmp319.size;
-        for (var _i20 = 0; _i20 < _size15; ++_i20)
+        var _etype36 = 0;
+        _rtmp337 = input.readListBegin();
+        _etype36 = _rtmp337.etype;
+        _size33 = _rtmp337.size;
+        for (var _i38 = 0; _i38 < _size33; ++_i38)
         {
-          var elem21 = null;
-          elem21 = input.readString();
-          this.selectableAnswers.push(elem21);
+          var elem39 = null;
+          elem39 = input.readString();
+          this.selectableAnswers.push(elem39);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.LIST) {
+        var _size40 = 0;
+        var _rtmp344;
+        this.expectedAnswers = [];
+        var _etype43 = 0;
+        _rtmp344 = input.readListBegin();
+        _etype43 = _rtmp344.etype;
+        _size40 = _rtmp344.size;
+        for (var _i45 = 0; _i45 < _size40; ++_i45)
+        {
+          var elem46 = null;
+          elem46 = input.readString();
+          this.expectedAnswers.push(elem46);
         }
         input.readListEnd();
       } else {
@@ -358,12 +775,12 @@ FillInBlanks.prototype.write = function(output) {
   if (this.texts !== null && this.texts !== undefined) {
     output.writeFieldBegin('texts', Thrift.Type.LIST, 1);
     output.writeListBegin(Thrift.Type.STRING, this.texts.length);
-    for (var iter22 in this.texts)
+    for (var iter47 in this.texts)
     {
-      if (this.texts.hasOwnProperty(iter22))
+      if (this.texts.hasOwnProperty(iter47))
       {
-        iter22 = this.texts[iter22];
-        output.writeString(iter22);
+        iter47 = this.texts[iter47];
+        output.writeString(iter47);
       }
     }
     output.writeListEnd();
@@ -372,12 +789,26 @@ FillInBlanks.prototype.write = function(output) {
   if (this.selectableAnswers !== null && this.selectableAnswers !== undefined) {
     output.writeFieldBegin('selectableAnswers', Thrift.Type.LIST, 2);
     output.writeListBegin(Thrift.Type.STRING, this.selectableAnswers.length);
-    for (var iter23 in this.selectableAnswers)
+    for (var iter48 in this.selectableAnswers)
     {
-      if (this.selectableAnswers.hasOwnProperty(iter23))
+      if (this.selectableAnswers.hasOwnProperty(iter48))
       {
-        iter23 = this.selectableAnswers[iter23];
-        output.writeString(iter23);
+        iter48 = this.selectableAnswers[iter48];
+        output.writeString(iter48);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  if (this.expectedAnswers !== null && this.expectedAnswers !== undefined) {
+    output.writeFieldBegin('expectedAnswers', Thrift.Type.LIST, 3);
+    output.writeListBegin(Thrift.Type.STRING, this.expectedAnswers.length);
+    for (var iter49 in this.expectedAnswers)
+    {
+      if (this.expectedAnswers.hasOwnProperty(iter49))
+      {
+        iter49 = this.expectedAnswers[iter49];
+        output.writeString(iter49);
       }
     }
     output.writeListEnd();
@@ -388,7 +819,7 @@ FillInBlanks.prototype.write = function(output) {
   return;
 };
 
-var ServerSideTest = module.exports.ServerSideTest = function(args) {
+var CodeTest = module.exports.CodeTest = function(args) {
   this.oneTimeTest = false;
   if (args) {
     if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
@@ -398,8 +829,8 @@ var ServerSideTest = module.exports.ServerSideTest = function(args) {
     }
   }
 };
-ServerSideTest.prototype = {};
-ServerSideTest.prototype.read = function(input) {
+CodeTest.prototype = {};
+CodeTest.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -431,11 +862,170 @@ ServerSideTest.prototype.read = function(input) {
   return;
 };
 
-ServerSideTest.prototype.write = function(output) {
-  output.writeStructBegin('ServerSideTest');
+CodeTest.prototype.write = function(output) {
+  output.writeStructBegin('CodeTest');
   if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
     output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 1);
     output.writeBool(this.oneTimeTest);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var ExpectedCodeOutputCompareResult = module.exports.ExpectedCodeOutputCompareResult = function(args) {
+  this.output = null;
+  this.returnCode = null;
+  if (args) {
+    if (args.output !== undefined && args.output !== null) {
+      this.output = args.output;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field output is unset!');
+    }
+    if (args.returnCode !== undefined && args.returnCode !== null) {
+      this.returnCode = args.returnCode;
+    }
+  }
+};
+ExpectedCodeOutputCompareResult.prototype = {};
+ExpectedCodeOutputCompareResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.output = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I32) {
+        this.returnCode = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ExpectedCodeOutputCompareResult.prototype.write = function(output) {
+  output.writeStructBegin('ExpectedCodeOutputCompareResult');
+  if (this.output !== null && this.output !== undefined) {
+    output.writeFieldBegin('output', Thrift.Type.STRING, 1);
+    output.writeString(this.output);
+    output.writeFieldEnd();
+  }
+  if (this.returnCode !== null && this.returnCode !== undefined) {
+    output.writeFieldBegin('returnCode', Thrift.Type.I32, 2);
+    output.writeI32(this.returnCode);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var CodeOutputCompare = module.exports.CodeOutputCompare = function(args) {
+  this.oneTimeTest = false;
+  this.expectedOutputs = null;
+  if (args) {
+    if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
+      this.oneTimeTest = args.oneTimeTest;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field oneTimeTest is unset!');
+    }
+    if (args.expectedOutputs !== undefined && args.expectedOutputs !== null) {
+      this.expectedOutputs = Thrift.copyList(args.expectedOutputs, [ttypes.ExpectedCodeOutputCompareResult]);
+    }
+  }
+};
+CodeOutputCompare.prototype = {};
+CodeOutputCompare.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.BOOL) {
+        this.oneTimeTest = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.LIST) {
+        var _size50 = 0;
+        var _rtmp354;
+        this.expectedOutputs = [];
+        var _etype53 = 0;
+        _rtmp354 = input.readListBegin();
+        _etype53 = _rtmp354.etype;
+        _size50 = _rtmp354.size;
+        for (var _i55 = 0; _i55 < _size50; ++_i55)
+        {
+          var elem56 = null;
+          elem56 = new ttypes.ExpectedCodeOutputCompareResult();
+          elem56.read(input);
+          this.expectedOutputs.push(elem56);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+CodeOutputCompare.prototype.write = function(output) {
+  output.writeStructBegin('CodeOutputCompare');
+  if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
+    output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 1);
+    output.writeBool(this.oneTimeTest);
+    output.writeFieldEnd();
+  }
+  if (this.expectedOutputs !== null && this.expectedOutputs !== undefined) {
+    output.writeFieldBegin('expectedOutputs', Thrift.Type.LIST, 2);
+    output.writeListBegin(Thrift.Type.STRUCT, this.expectedOutputs.length);
+    for (var iter57 in this.expectedOutputs)
+    {
+      if (this.expectedOutputs.hasOwnProperty(iter57))
+      {
+        iter57 = this.expectedOutputs[iter57];
+        iter57.write(output);
+      }
+    }
+    output.writeListEnd();
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -501,6 +1091,7 @@ Custom.prototype.write = function(output) {
 var FreeText = module.exports.FreeText = function(args) {
   this.oneTimeTest = false;
   this.arePartialPointsAllowed = false;
+  this.previewType = 'NONE';
   if (args) {
     if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
       this.oneTimeTest = args.oneTimeTest;
@@ -511,6 +1102,11 @@ var FreeText = module.exports.FreeText = function(args) {
       this.arePartialPointsAllowed = args.arePartialPointsAllowed;
     } else {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field arePartialPointsAllowed is unset!');
+    }
+    if (args.previewType !== undefined && args.previewType !== null) {
+      this.previewType = args.previewType;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field previewType is unset!');
     }
   }
 };
@@ -542,6 +1138,13 @@ FreeText.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.previewType = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -563,6 +1166,79 @@ FreeText.prototype.write = function(output) {
     output.writeBool(this.arePartialPointsAllowed);
     output.writeFieldEnd();
   }
+  if (this.previewType !== null && this.previewType !== undefined) {
+    output.writeFieldBegin('previewType', Thrift.Type.STRING, 3);
+    output.writeString(this.previewType);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var MathStack = module.exports.MathStack = function(args) {
+  this.question = null;
+  this.oneTimeTest = false;
+  if (args) {
+    if (args.question !== undefined && args.question !== null) {
+      this.question = args.question;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field question is unset!');
+    }
+    if (args.oneTimeTest !== undefined && args.oneTimeTest !== null) {
+      this.oneTimeTest = args.oneTimeTest;
+    }
+  }
+};
+MathStack.prototype = {};
+MathStack.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.question = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.BOOL) {
+        this.oneTimeTest = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+MathStack.prototype.write = function(output) {
+  output.writeStructBegin('MathStack');
+  if (this.question !== null && this.question !== undefined) {
+    output.writeFieldBegin('question', Thrift.Type.STRING, 1);
+    output.writeString(this.question);
+    output.writeFieldEnd();
+  }
+  if (this.oneTimeTest !== null && this.oneTimeTest !== undefined) {
+    output.writeFieldBegin('oneTimeTest', Thrift.Type.BOOL, 2);
+    output.writeBool(this.oneTimeTest);
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
@@ -575,6 +1251,7 @@ var Task = module.exports.Task = function(args) {
   this.codeOutputCompare = null;
   this.custom = null;
   this.freeText = null;
+  this.mathStack = null;
   if (args) {
     if (args.multipleChoice !== undefined && args.multipleChoice !== null) {
       this.multipleChoice = new ttypes.MultipleChoice(args.multipleChoice);
@@ -583,16 +1260,19 @@ var Task = module.exports.Task = function(args) {
       this.fillInBlanks = new ttypes.FillInBlanks(args.fillInBlanks);
     }
     if (args.codeTest !== undefined && args.codeTest !== null) {
-      this.codeTest = new ttypes.ServerSideTest(args.codeTest);
+      this.codeTest = new ttypes.CodeTest(args.codeTest);
     }
     if (args.codeOutputCompare !== undefined && args.codeOutputCompare !== null) {
-      this.codeOutputCompare = new ttypes.ServerSideTest(args.codeOutputCompare);
+      this.codeOutputCompare = new ttypes.CodeOutputCompare(args.codeOutputCompare);
     }
     if (args.custom !== undefined && args.custom !== null) {
       this.custom = new ttypes.Custom(args.custom);
     }
     if (args.freeText !== undefined && args.freeText !== null) {
       this.freeText = new ttypes.FreeText(args.freeText);
+    }
+    if (args.mathStack !== undefined && args.mathStack !== null) {
+      this.mathStack = new ttypes.MathStack(args.mathStack);
     }
   }
 };
@@ -628,7 +1308,7 @@ Task.prototype.read = function(input) {
       break;
       case 3:
       if (ftype == Thrift.Type.STRUCT) {
-        this.codeTest = new ttypes.ServerSideTest();
+        this.codeTest = new ttypes.CodeTest();
         this.codeTest.read(input);
       } else {
         input.skip(ftype);
@@ -636,7 +1316,7 @@ Task.prototype.read = function(input) {
       break;
       case 4:
       if (ftype == Thrift.Type.STRUCT) {
-        this.codeOutputCompare = new ttypes.ServerSideTest();
+        this.codeOutputCompare = new ttypes.CodeOutputCompare();
         this.codeOutputCompare.read(input);
       } else {
         input.skip(ftype);
@@ -654,6 +1334,14 @@ Task.prototype.read = function(input) {
       if (ftype == Thrift.Type.STRUCT) {
         this.freeText = new ttypes.FreeText();
         this.freeText.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 7:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.mathStack = new ttypes.MathStack();
+        this.mathStack.read(input);
       } else {
         input.skip(ftype);
       }
@@ -697,6 +1385,11 @@ Task.prototype.write = function(output) {
   if (this.freeText !== null && this.freeText !== undefined) {
     output.writeFieldBegin('freeText', Thrift.Type.STRUCT, 6);
     this.freeText.write(output);
+    output.writeFieldEnd();
+  }
+  if (this.mathStack !== null && this.mathStack !== undefined) {
+    output.writeFieldBegin('mathStack', Thrift.Type.STRUCT, 7);
+    this.mathStack.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
